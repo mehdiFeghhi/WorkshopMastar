@@ -15,6 +15,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.*;
 
 
@@ -133,28 +134,59 @@ public class VertxHttpServer extends AbstractVerticle {
             newHoldWorkShop = findThisHoldWorkShop(id);
             if (newHoldWorkShop == null)
                 response.end("{\"status\":0}");
+            else {
+                boolean canSendRequest = true;
                 Student student = (Student) newPerson.findOurType(Student.class);
-                if (!this.isThisPersonIsInOneOfTheGroupOfThisWorkShop(newHoldWorkShop,student.getId())) {
+                ArrayList<Workshop> workshopPrerequisites = findALLworkShopThatPrerequisiteWithThisWorkshop(newHoldWorkShop.getWorkshop().getId());
+                JsonObject jsonObject = new JsonObject();
+                ArrayList<String>titleMain = null;
+                ArrayList<String>titleStudent = null;
+                if (!workshopPrerequisites.isEmpty()){
+                    ArrayList<Workshop> workshopsStudentSpend = findALLworkShopThatThisPersonSpend(student.getId());
+                    for (Workshop i :workshopPrerequisites){
+                        titleMain.add(i.getTitle());
+                    }
+                    for (Workshop d :workshopsStudentSpend){
+                        titleStudent.add(d.getTitle());
+                    }
+                    int f = 0;
+                    for (String s : titleMain){
+                        if (!titleStudent.contains(s)){
+                            canSendRequest = false;
+                            jsonObject.getString(String.valueOf(f),s);
+                            f++;
+                        }
+                    }
+                    if(!canSendRequest){
+                        response.end("{\"status\":5\"workShopMustSpend\":"+jsonObject+"}");//must spend this workshop befor
+                    }
+
+
+                }
+                JsonObject json2 = new JsonObject();
+                json2 = PersonHoldWorkShopThatHaveInThisTime(newPerson,newHoldWorkShop.getStart(),newHoldWorkShop.getEnd(),newHoldWorkShop.getHourStart(),newHoldWorkShop.getHourEnd());
+                if (!json2.isEmpty())
+                    response.end("{\"status\":5\"workShopMustSpend\":"+json2+"}");//have this WorkShopInThisTime
+                if (!this.isThisPersonIsInOneOfTheGroupOfThisWorkShop(newHoldWorkShop, student.getId())) {
                     if (pay.equals("2")) {
                         if (!newHoldWorkShop.getIs_installment())
                             response.end("{\"status\":3}");
                     }
-                    if (pay.equals("2")){
-                        Installment payment = new Installment(newHoldWorkShop.getMoney(),newHoldWorkShop.getPayMoneyInHowTimes());
-                        newRequestStudent = new RequestStudent(massage,newHoldWorkShop,(Student) newPerson.findOurType(new Student()),payment);
-                    }
-                    else {
-                        Pay payment = new Pay(newHoldWorkShop.getMoney(),newHoldWorkShop.getIs_installment());
-                        newRequestStudent = new RequestStudent(massage,newHoldWorkShop,(Student) newPerson.findOurType(new Student()),payment);
+                    if (pay.equals("2")) {
+                        Installment payment = new Installment(newHoldWorkShop.getMoney(), newHoldWorkShop.getPayMoneyInHowTimes());
+                        newRequestStudent = new RequestStudent(massage, newHoldWorkShop, (Student) newPerson.findOurType(new Student()), payment);
+                    } else {
+                        Pay payment = new Pay(newHoldWorkShop.getMoney(), newHoldWorkShop.getIs_installment());
+                        newRequestStudent = new RequestStudent(massage, newHoldWorkShop, (Student) newPerson.findOurType(new Student()), payment);
                     }
                     // bayad tozihat ye chiz ezafeh konam
                     if (AddToRequestListINDataBase(newRequestStudent)) {
                         response.end("{\"status\":1}");
-                    }
-                    else
+                    } else
                         response.end("{\"status\":2");// this person request before
                 }
-                    response.end("{\"status\":0}");
+                response.end("{\"status\":0}");
+            }
 
         });
         router.route().handler(BodyHandler.create());
@@ -268,7 +300,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 response.end("{\"status\":0}");
         });
         router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.POST,"/requestStudentCancel").handler(rc -> {
+        router.route(HttpMethod.POST,"/requestStudentCancelFromStudent").handler(rc -> {
                     JsonObject json = rc.getBodyAsJson();
                     HttpServerResponse response = rc.response();
                     response.putHeader("content-type", "application/json");
@@ -296,6 +328,10 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
+            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            if (!isthisMangmentOfTHisWorkShop(managment.id,json.getInteger("IdWorkShop")))
+                response.end("{\"status\":3}");//permissionDenaid
+
             JsonObject HistoryOfHim = findHistoryOfGreater(json.getInteger("idGreater"));
             response.end("{\"status\":1\"information\":"+HistoryOfHim+"}");
         });
@@ -318,10 +354,100 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
+            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+                response.end("{\"status\":3}");//permissionDenaid
+
             JsonObject AllGreaterRequest = seeAllRequestGreater(jsonObject.getInteger("WorkShopId"));
 
             response.end("{\"status\":1\"information\":"+AllGreaterRequest+"}");
 
+        });
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/seeAllStudentRequestOneWorkShop").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Managment.class)){
+                response.end("{\"status\":0}");
+            }
+            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+                response.end("{\"status\":3}");//permissionDenaid
+
+            JsonObject allRequestStudnet = seeAllRequestStudent(jsonObject.getInteger("WorkShopId"));
+            if (allRequestStudnet == null)
+                response.end("{\"status\":3}");//we haven't any Student Request
+            response.end("{\"status\":1\"information\":"+allRequestStudnet+"}");
+
+        });
+
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/InstallmentPay").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            RequestStudent requestStudent;
+            if((requestStudent = getOneRequestStudent(jsonObject.getInteger("RequestStudentId")))== null)
+                response.end("{\"status\":0}");
+            int howMuchPay  = jsonObject.getInteger("HowMuchPay");
+
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Managment.class)){
+                response.end("{\"status\":0}");
+            }
+            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+                response.end("{\"status\":3}");//permissionDenaid
+            if (requestStudent.getPay().getClass().equals(Installment.class)){
+                Installment installment = (Installment) requestStudent.getPay();
+                if(!installment.decreseInstallment(howMuchPay))
+                    response.end("{\"status\":4}");//we can haven't this mount
+                updateThisRequestInDataBase(requestStudent);
+                response.end("{\"status\":1}");
+            }
+            else {
+                response.end("{\"status\":03}");//this person have not installmentPay
+            }
+        });
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/payCompactly").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            RequestStudent requestStudent;
+            if((requestStudent = getOneRequestStudent(jsonObject.getInteger("RequestStudentId")))== null)
+                response.end("{\"status\":0}");
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Managment.class)){
+                response.end("{\"status\":0}");
+            }
+            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+                response.end("{\"status\":3}");//permissionDenaid
+            if (requestStudent.getPay().getClass().equals(Installment.class)){
+                Installment installment = (Installment) requestStudent.getPay();
+                if(!installment.decreseInstallment(installment.getHow_much_installment_must_pay()))
+                    response.end("{\"status\":4}");//we can haven't this mount
+                updateThisRequestInDataBase(requestStudent);
+                response.end("{\"status\":1}");
+            }
+            else {
+                requestStudent.getPay().ChangePayComplite();
+                updateThisRequestInDataBase(requestStudent);
+                response.end("{\"status\":1}");
+            }
         });
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/AcceptRequestGreater").handler(rc ->{
@@ -335,22 +461,131 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
+            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+                response.end("{\"status\":3}");//permissionDenaid
             int numberGroup = jsonObject.getInteger("GroupNumber");
             String groupName = jsonObject.getString("GroupName");
-            RequestGreater = getOneRequestGreater(jsonObject.getInteger("RequestGreaterId"));
-            newRequestGreater.setAccetply(Accetply.Accept);
+            int numberIdWorkShop = jsonObject.getInteger("IdGroup");
+            Group group ;
+            if((group = getOnGroupFromDataBase(numberGroup,groupName,numberIdWorkShop))== null)
+                    response.end("{\"status\":0}");
 
-            response.end("{\"status\":1\"information\":1}");
+            RequestGreater requestGreater;
+            if((requestGreater = getOneRequestGreater(jsonObject.getInteger("RequestGreaterId")))== null)
+                response.end("{\"status\":0}");
+            if (newRequestGreater.getAccetply() != Accetply.Accept) {
+                newRequestGreater.setAccetply(Accetply.Accept);
+                GroupStatus groupStatus = new GroupStatus(group, requestGreater.getGreater());
+                AddNewGroupStatusToDatabase(groupStatus);
+                response.end("{\"status\":1}");
+            }
+            response.end("{\"status\":0}");
 
         });
         router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/AcceptRequestStudent").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Managment.class)){
+                response.end("{\"status\":0}");
+            }
+            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+                response.end("{\"status\":3}");//permissionDenaid
+            RequestStudent requestStudent;
+            if((requestStudent = getOneRequestStudent(jsonObject.getInteger("RequestStudentId")))== null)
+                response.end("{\"status\":0}");
+            if(requestStudent.getPay().isPayComplite()) {
+                int numberGroup = jsonObject.getInteger("GroupNumber");
+                String groupName = jsonObject.getString("GroupName");
+                int numberIdWorkShop = jsonObject.getInteger("IdGroup");
+                Group group ;
+                if((group = getOnGroupFromDataBase(numberGroup, groupName, numberIdWorkShop))== null)
+                    response.end("{\"status\":0}");
+                if (requestStudent.getAccetply() != Accetply.Accept) {
+                    requestStudent.setAccetply(Accetply.Accept);
+                    GroupStatus groupStatus = new GroupStatus(group, requestStudent.getStudent());
+                    AddNewGroupStatusToDatabase(groupStatus);
+                    response.end("{\"status\":1}");
+                }
+                response.end("{\"status\":0}");
+            }
+            else
+                response.end("{\"status\":3}");//this person don't pay it's payment Complite
+        });
         httpServer
                 .requestHandler(router::accept)
                 .listen(5000);
 
         }
 
-    private Object getOneRequestGreater(Integer requestGreaterId) {
+    private JsonObject PersonHoldWorkShopThatHaveInThisTime(Person newPerson, Date start, Date end, LocalTime hourStart, LocalTime hourEnd) {
+            Student student = (Student)newPerson.findOurType(Student.class);
+            Greater greater = (Greater)newPerson.findOurType(Greater.class);
+            ArrayList<RequestStudent>  requestStudents= getALLStudentRequestThatThisPersonSend(student.getId());
+            ArrayList<RequestGreater> requestGreaters = getALLGreaterRequestThatThisPersonSend(greater.getId());
+            JsonObject jsonObjectMain = new JsonObject();
+            JsonObject jsonObjectGreater = new JsonObject();
+            JsonObject jsonObjectStudent = new JsonObject();
+            int dd = 0;
+            for (RequestStudent i : requestStudents) {
+                if (((i.getHoldWorkShop().getStart().before(start) && i.getHoldWorkShop().getEnd().after(start))|| (i.getHoldWorkShop().getStart().after(start) && i.getHoldWorkShop().getStart().before(end))) &&((i.getHoldWorkShop().getHourStart().isAfter(hourStart) && i.getHoldWorkShop().getHourStart().isBefore(hourEnd)) || (i.getHoldWorkShop().getHourStart().isBefore(hourStart) && i.getHoldWorkShop().getHourEnd().isAfter(hourStart)))){
+                    jsonObjectStudent.put(String.valueOf(dd),i.getHoldWorkShop().getName());
+                    dd++;
+                }
+            }
+            dd = 0;
+            for (RequestGreater s : requestGreaters){
+                if (((s.getHoldWorkShop().getStart().before(start) && s.getHoldWorkShop().getEnd().after(start))|| (s.getHoldWorkShop().getStart().after(start) && s.getHoldWorkShop().getStart().before(end))) &&((s.getHoldWorkShop().getHourStart().isAfter(hourStart) && s.getHoldWorkShop().getHourStart().isBefore(hourEnd)) || (s.getHoldWorkShop().getHourStart().isBefore(hourStart) && s.getHoldWorkShop().getHourEnd().isAfter(hourStart)))){
+                    jsonObjectGreater.put(String.valueOf(dd),s.getHoldWorkShop().getName());
+                    dd++;
+                }
+            }
+            if (jsonObjectGreater.isEmpty() && jsonObjectStudent.isEmpty())
+                return jsonObjectMain;
+            else
+                return jsonObjectMain.put("greater",jsonObjectGreater)
+                        .put("student",jsonObjectStudent);
+
+    }
+
+    private ArrayList<RequestGreater> getALLGreaterRequestThatThisPersonSend(int id) {
+    }
+
+    private ArrayList<RequestStudent> getALLStudentRequestThatThisPersonSend(int id) {
+    }
+
+    private ArrayList<Workshop> findALLworkShopThatThisPersonSpend(int id) {
+    }
+
+    private ArrayList<Workshop> findALLworkShopThatPrerequisiteWithThisWorkshop(int id) {
+    }
+
+    private boolean isthisMangmentOfTHisWorkShop(int id, Integer idWorkShop) {
+    }
+
+    private void updateThisRequestInDataBase(RequestStudent requestStudent) {
+    }
+
+    private JsonObject seeAllRequestStudent(Integer workShopId) {
+    }
+
+    private RequestStudent getOneRequestStudent(Integer requestGreaterId) {
+    }
+
+    private void AddNewGroupStatusToDatabase(GroupStatus groupStatus) {
+    }
+
+    private Group getOnGroupFromDataBase(int numberGroup, String groupName, int numberIdWorkShop) {
+    }
+
+    private RequestGreater getOneRequestGreater(Integer requestGreaterId) {
     }
 
     private void AddPersonTodataBase(Person newPerson) {

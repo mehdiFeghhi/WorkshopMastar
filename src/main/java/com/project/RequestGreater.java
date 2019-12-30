@@ -28,4 +28,8 @@ public class RequestGreater extends Requests {
     public void setAcceptly(Accetply acceptly){
         super.setAccetply(acceptly);
     }
+    @Override
+    public HoldWorkShop getHoldWorkShop(){
+        return super.getHoldWorkShop();
+    }
 }

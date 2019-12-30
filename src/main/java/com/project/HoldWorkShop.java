@@ -1,13 +1,14 @@
 package com.project;
 
 import javax.xml.crypto.Data;
+import java.time.LocalTime;
 import java.util.Date;
 
 public class HoldWorkShop {
     private Date Start;
     private Date End;
-    private Date hourStart;
-    private Date hourEnd;
+    private LocalTime hourStart;
+    private LocalTime hourEnd;
     private String Name;
     private int id;
     private Managment managment;
@@ -16,7 +17,7 @@ public class HoldWorkShop {
     private Long money;
     private int payMoneyInHowTimes;
 
-    public HoldWorkShop(Date start, Date end, Date hourStart, Date hourEnd, String name,Managment managment,Workshop workshop,Boolean is_installment,Long Money) {
+    public HoldWorkShop(Date start, Date end, LocalTime hourStart, LocalTime hourEnd, String name,Managment managment,Workshop workshop,Boolean is_installment,Long Money) {
         Start = start;
         End = end;
         this.hourStart = hourStart;
@@ -28,7 +29,7 @@ public class HoldWorkShop {
         this.money = money;
     }
 
-    public HoldWorkShop(Date hourStrart, Date hourEnd, Date start, Date end, String name, int id, Managment managment, Workshop workshop, Boolean is_installment, Long Money) {
+    public HoldWorkShop(LocalTime hourStrart, LocalTime hourEnd, Date start, Date end, String name, int id, Managment managment, Workshop workshop, Boolean is_installment, Long Money) {
         this.hourEnd = hourEnd;
         this.hourStart = hourStrart;
         Start = start;
@@ -39,6 +40,22 @@ public class HoldWorkShop {
         this.workshop = workshop;
         this.is_installment = is_installment;
         this.money = Money;
+    }
+
+    public LocalTime getHourStart() {
+        return hourStart;
+    }
+
+    public LocalTime getHourEnd() {
+        return hourEnd;
+    }
+
+    public void setHourStart(LocalTime hourStart) {
+        this.hourStart = hourStart;
+    }
+
+    public void setHourEnd(LocalTime hourEnd) {
+        this.hourEnd = hourEnd;
     }
 
     public int getPayMoneyInHowTimes() {
