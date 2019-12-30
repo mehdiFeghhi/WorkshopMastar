@@ -44,4 +44,5 @@ public class GroupStatus {
     public void setAttendance(ArrayList<Boolean> attendance) {
         this.attendance = attendance;
     }
+
 }

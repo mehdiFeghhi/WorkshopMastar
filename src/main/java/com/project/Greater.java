@@ -1,16 +1,15 @@
 package com.project;
 
 public class Greater implements RoleOfWorkShape{
-   private String  user;
-   public Greater(String user){
-       this.user = user;
+   private int id;
+   public Greater(){
    }
 
-    public String getUser() {
-        return user;
+    public int getId() {
+        return id;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setId(int id) {
+        this.id = id;
     }
 }

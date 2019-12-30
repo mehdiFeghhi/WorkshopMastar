@@ -17,7 +17,7 @@ import javax.ejb.Singleton;
 class OurEmail {
     @Asynchronous
     @Lock(LockType.READ)
-    public void sendMail(String eml, String massage) {
+    public boolean sendMail(String eml, String massage) {
         //Setting up configurations for the email connection to the Google SMTP server using TLS
         Properties props = new Properties();
         props.put("mail.smtp.host", "true");
@@ -48,9 +48,10 @@ class OurEmail {
             msg.setHeader("XPriority", "1");
             Transport.send(msg);
             System.out.println("Mail has been sent successfully");
+            return true;
         } catch (MessagingException mex) {
             System.out.println("Unable to send an email" + mex);
-            throw new RuntimeException(mex);
+            return false;
         }
 
     }

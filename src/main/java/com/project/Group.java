@@ -6,9 +6,8 @@ public class Group {
     private String Head;
     private int id;
     private HoldWorkShop holdWorkShop;
-    public Group(String name, int id, HoldWorkShop holdWorkShop, int number){
+    public Group(String name, HoldWorkShop holdWorkShop, int number){
         this.name = name;
-        this.id = id;
         this.number = number;
         this.holdWorkShop = holdWorkShop;
 

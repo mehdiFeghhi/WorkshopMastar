@@ -134,13 +134,13 @@ public class Person  {
                 return i;
         }
         if (Student.class == object.getClass()){
-            Student student = new Student(this.user);
+            Student student = new Student();
             this.roleOfWorkShapes.add(student);
             return student;
 
         }
         else if (object.getClass() == Greater.class){
-            Greater greater = new Greater(this.getUser());
+            Greater greater = new Greater();
             this.roleOfWorkShapes.add(greater);
             return greater;
         }
