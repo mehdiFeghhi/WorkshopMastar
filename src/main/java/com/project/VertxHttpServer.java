@@ -7,6 +7,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.PubSecKeyOptions;
 import io.vertx.ext.auth.jwt.JWTAuth;
@@ -70,7 +71,13 @@ public class VertxHttpServer extends AbstractVerticle {
 
                 String token = provider.generateToken(new JsonObject().put("userName",user));
                 mapLogin.put(token,newPerson);
-                response.end("{\"status\": 1 \"validation\": "+token+"}");
+                if(!newPerson.getIs_Active())
+                    response.end("{\"status\":13");//this person Can't activity
+                if(newPerson.is_this_role_in_our_person(Addmin.class)){
+                    response.end("{\"status\": 100 \"validation\": "+token+"}");//this person is Admin
+                }
+                else
+                    response.end("{\"status\": 1 \"validation\": "+token+"}");
             }
             else
                 response.end("{\"status\":0}");
@@ -232,6 +239,12 @@ public class VertxHttpServer extends AbstractVerticle {
             }
         });
         router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.GET,"/seeAllRecentWorkShop").handler(rc ->{
+            JsonObject json = seeAllRecentWorkShop();
+            HttpServerResponse response = rc.response();
+            response.end("{\"status\":1"+json+"}");
+        });
+        router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/CheckValidationCode").handler(rc -> {
             JsonObject json = rc.getBodyAsJson();
             HttpServerResponse response = rc.response();
@@ -335,12 +348,8 @@ public class VertxHttpServer extends AbstractVerticle {
             JsonObject HistoryOfHim = findHistoryOfGreater(json.getInteger("idGreater"));
             response.end("{\"status\":1\"information\":"+HistoryOfHim+"}");
         });
-        router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.GET,"/seeAllRecentWorkShop").handler(rc ->{
-            JsonObject json = seeAllRecentWorkShop();
-            HttpServerResponse response = rc.response();
-            response.end("{\"status\":1"+json+"}");
-        });
+
+
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/seeAllGreaterRequestOneWorkShop").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
@@ -360,7 +369,7 @@ public class VertxHttpServer extends AbstractVerticle {
 
             JsonObject AllGreaterRequest = seeAllRequestGreater(jsonObject.getInteger("WorkShopId"));
 
-            response.end("{\"status\":1\"information\":"+AllGreaterRequest+"}");
+            response.end("{\"status\":1\"information\":"+AllGreaterRequest.toString()+"}");
 
         });
         router.route().handler(BodyHandler.create());
@@ -386,7 +395,34 @@ public class VertxHttpServer extends AbstractVerticle {
             response.end("{\"status\":1\"information\":"+allRequestStudnet+"}");
 
         });
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/seeAllHoldWorkShopThatManagmentHave").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
 
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Managment.class)){
+                response.end("{\"status\":0}");
+            }
+            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            JsonObject allWorkShopOfThisManagment = null;
+            int dd = 0;
+            ArrayList<HoldWorkShop>Thathave  = findWorkShophaveThisManager(managment.id);
+            for(HoldWorkShop i: Thathave){
+                JsonObject json2 = new JsonObject()
+                        .put("setId",i.getId())
+                        .put("setName",i.getName())
+                        .put("setStart",i.getStart())
+                        .put("setEnd",i.getEnd());
+                allWorkShopOfThisManagment.put(String.valueOf(dd),json2);
+                dd++;
+            }
+            response.end("{\"status\":1\"information\":"+allWorkShopOfThisManagment.toString()+"}");
+        });
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/InstallmentPay").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
@@ -483,6 +519,7 @@ public class VertxHttpServer extends AbstractVerticle {
             response.end("{\"status\":0}");
 
         });
+
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/AcceptRequestStudent").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
@@ -519,11 +556,209 @@ public class VertxHttpServer extends AbstractVerticle {
             else
                 response.end("{\"status\":3}");//this person don't pay it's payment Complite
         });
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/MakeNewGroup").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            ObjectMapper objectMapper = new ObjectMapper();
+            Group group = null;
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Managment.class)){
+                response.end("{\"status\":0}");
+            }
+            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+                response.end("{\"status\":3}");//permissionDenaid
+            try {
+                group = objectMapper.readValue(jsonObject.getJsonObject("Group").toString(),Group.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                response.end("{\"status\":5}");//can get json correctly
+            }
+            HoldWorkShop holdWorkShop = findThisHoldWorkShop(jsonObject.getInteger("IdWorkShop"));
+            group.setHoldWorkShop(holdWorkShop);
+            if(AddNewGroupTodatabase())
+                response.end("{\"status\":1}");
+            response.end("{\"status\":0}");
+        });
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/MakeNewWorkShop").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Addmin.class)){
+                response.end("{\"status\":0}");
+            }
+            ObjectMapper objectMapper = new ObjectMapper();
+            Workshop workshop = null;
+            try {
+                workshop = objectMapper.readValue(jsonObject.getJsonObject("WorkShop").toString(),Workshop.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                response.end("{\"status\":0}");
+            }
+            if(!AddNewWorkShopTOdataBase(workshop))
+                response.end("{\"status\":0}");
+            ArrayList<Workshop>workshopsPrerequisite = findThisWorkShop(jsonObject.getJsonArray("WorkShopPrerequisite"));
+            for(Workshop i: workshopsPrerequisite){
+                AddNewReqirmentsToDataBase(new Requirments(i,workshop, Relation.Prerequisite));
+            }
+            ArrayList<Workshop>workshopsNeed = findThisWorkShop(jsonObject.getJsonArray("WorkShopNeed"));
+            for (Workshop i: workshopsNeed){
+                AddNewReqirmentsToDataBase(new Requirments(i,workshop,Relation.TheNeed));
+            }
+            response.end("{\"status\":1}");
+        });
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/MakeNewHoldWorkShop").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Addmin.class)){
+                response.end("{\"status\":0}");
+            }
+            ObjectMapper objectMapper = new ObjectMapper();
+            Person person = findPersonIndataBase(jsonObject.getString("user"),jsonObject.getString("NationCode"));
+            if(person == null)
+                response.end("{\"status\":4}");//can't find this person in dataBase
+            HoldWorkShop holdWorkShop = null;
+            try {
+                holdWorkShop = objectMapper.readValue(jsonObject.getJsonObject("HoldWorkShop").toString(), HoldWorkShop.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                response.end("{\"status\":0}");
+            }
+            holdWorkShop.setManagment((Managment) person.findOurType(Managment.class));
+            if(!addNewHoldWorkShop(holdWorkShop))
+                response.end("{\"status\":0}");
+            response.end("{\"status\":1}");
+        });
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/AdminSeeAllPerson").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            JsonObject json = null;
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Addmin.class)){
+                response.end("{\"status\":0}");
+            }
+            ArrayList<Person> persons = allPersonIndataBase();
+            int dd = 0;
+            Addmin addmin = (Addmin)newPerson.findOurType(Addmin.class);
+            for(Person i : persons){
+                if(!i.is_this_role_in_our_person(Addmin.class)|| (addmin.getAdminType() == AdminType.General)) {
+                    JsonObject jsonObject1 = new JsonObject().put("setId", i.getId())
+                            .put("setGender", i.getGender())
+                            .put("setUser", i.getUser())
+                            .put("setName",i.getName())
+                            .put("setNationalCode",i.getNationalCode())
+                            .put("setLastName",i.getLastName())
+                            .put("setDate_birthday",i.getDate_birthday())
+                            .put("setActivity",i.getIs_Active());
+                    json.put(String.valueOf(dd),jsonObject1);
+                    dd++;
+                }
+            }
+            response.end("{\"status\":1\"information\":"+json+"}");
+        });
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/AdminChangePersonActivity").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            JsonObject json = null;
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Addmin.class)){
+                response.end("{\"status\":0}");
+            }
+            Addmin addmin = (Addmin)newPerson.findOurType(Addmin.class);
+            Person person = findPersonIndataBase(json.getString("user"),json.getString("nationCode"));
+            if(person == null)
+                response.end("{\"status\":0}");
+            if(!person.is_this_role_in_our_person(Addmin.class) || addmin.getAdminType() == AdminType.General){
+                boolean activity = json.getBoolean("activity");
+                person.setIs_Active(activity);
+                response.end("{\"status\":1}");
+            }
+            response.end("{\"status\":13}");//Don't Access
+        });
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/LogoutAllPersonInSystem").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            JsonObject json = null;
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Addmin.class)){
+                response.end("{\"status\":0}");
+            }
+            Addmin addmin = (Addmin)newPerson.findOurType(Addmin.class);
+            String Level = jsonObject.getString("Level");
+            List keys = new ArrayList(mapLogin.keySet());
+            if(Level.equals("AllPerson")){
+                if (addmin.getAdminType() == AdminType.General) {
+                    mapLogin.clear();
+                    mapLogin.put(jsonObject.getString("token"), newPerson);
+                }
+            }
+            else{
+                for (int i = 0 ; i < keys.size();i++){
+                    if (!mapLogin.get(keys.get(i)).is_this_role_in_our_person(Addmin.class))
+                        mapLogin.remove(keys.get(i));
+                }
+
+            }
+            response.end("{\"status\":Ok}");
+        });
         httpServer
                 .requestHandler(router::accept)
                 .listen(5000);
 
         }
+
+    private boolean AddNewGroupTodatabase() {
+    }
+
+    private ArrayList<Person> allPersonIndataBase() {
+    }
+
+    private Person findPersonIndataBase(String user,String nationCode) {
+    }
+
+    private boolean addNewHoldWorkShop(HoldWorkShop holdWorkShop) {
+    }
+
+    private boolean AddNewWorkShopTOdataBase(Workshop workshop) {
+        return false;
+    }
+
+    private void AddNewReqirmentsToDataBase(Requirments requirments) {
+    }
+
+    private ArrayList<Workshop> findThisWorkShop(JsonArray workShopPrerequisite) {
+    }
 
     private JsonObject PersonHoldWorkShopThatHaveInThisTime(Person newPerson, Date start, Date end, LocalTime hourStart, LocalTime hourEnd) {
             Student student = (Student)newPerson.findOurType(Student.class);

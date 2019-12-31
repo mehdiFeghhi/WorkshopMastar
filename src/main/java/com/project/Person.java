@@ -17,14 +17,22 @@ public class Person  {
     private String nationalCode;
     private String phoneNumber;
     private String emailAddress;
+    private boolean is_Active;
     private ArrayList<RoleOfWorkShape> roleOfWorkShapes = new ArrayList<RoleOfWorkShape>() ;
     private Image image;
 
     public Person() {
+        this.is_Active = true;
     }
-
     public void setRoleOfWorkShapes(ArrayList<RoleOfWorkShape> roleOfWorkShapes) {
         this.roleOfWorkShapes = roleOfWorkShapes;
+    }
+
+    public boolean getIs_Active() {
+        return is_Active;
+    }
+    public void setIs_Active(boolean is_Active) {
+        this.is_Active = is_Active;
     }
 
     public ArrayList<RoleOfWorkShape> getRoleOfWorkShapes() {
@@ -130,21 +138,21 @@ public class Person  {
     public RoleOfWorkShape findOurType(Object object){
 
         for (RoleOfWorkShape i : roleOfWorkShapes){
-            if (i.getClass() == object.getClass())
+            if (i.getClass().equals(object.getClass()))
                 return i;
         }
-        if (Student.class == object.getClass()){
+        if (Student.class .equals(object.getClass())){
             Student student = new Student();
             this.roleOfWorkShapes.add(student);
             return student;
 
         }
-        else if (object.getClass() == Greater.class){
+        else if (object.getClass().equals(Greater.class)){
             Greater greater = new Greater();
             this.roleOfWorkShapes.add(greater);
             return greater;
         }
-        else if (object.getClass() == Managment.class){
+        else if (object.getClass().equals(Managment.class)){
             Managment whoMakeWorkShape = new Managment();
             this.roleOfWorkShapes.add(whoMakeWorkShape);
             return whoMakeWorkShape;
@@ -154,13 +162,29 @@ public class Person  {
     }
     public boolean is_this_role_in_our_person(Object object){
         for (RoleOfWorkShape i : roleOfWorkShapes)
-            if (i.getClass() == object.getClass())
+            if (i.getClass().equals(object.getClass()))
                 return true;
         return false;
     }
+    public boolean addRoleOfWorkShop(Object object){
+        for(RoleOfWorkShape i : roleOfWorkShapes)
+            if(i.getClass().equals(object.getClass()))
+                return false;
+        if(object.getClass().equals(Student.class))
+            this.roleOfWorkShapes.add(new Student());
+        else if (object.getClass().equals(Managment.class))
+            this.roleOfWorkShapes.add(new Managment());
+        else if (object.getClass().equals(Greater.class))
+            this.roleOfWorkShapes.add(new Greater());
+        else if(object.getClass().equals(Addmin.class))
+            this.roleOfWorkShapes.add(new Addmin(AdminType.Soldier));
+        else
+            return false;
+        return true;
+    }
     public boolean addToArrayListOfRole(RoleOfWorkShape roleOfWorkShape){
         for (RoleOfWorkShape i : this.roleOfWorkShapes)
-            if (i.getClass() == roleOfWorkShape.getClass())
+            if (i.getClass().equals(roleOfWorkShape.getClass()))
                 return false;
         this.roleOfWorkShapes.add(roleOfWorkShape);
         return true;
