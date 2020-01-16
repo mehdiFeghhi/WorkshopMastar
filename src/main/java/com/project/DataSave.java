@@ -257,4 +257,12 @@ public class DataSave {
         }
         return null;
     }
+
+    public Person findPersonByUser(String user) {
+        for (Person i :persons){
+            if (i.getUser().equals(user))
+                return i;
+        }
+        return null;
+    }
 }

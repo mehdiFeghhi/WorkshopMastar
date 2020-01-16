@@ -207,7 +207,7 @@ public class VertxHttpServer extends AbstractVerticle {
             HttpServerResponse response = rc.response();
             response.putHeader("content-type", "application/json");
             final String codeValidation;
-            if (json.getString("IN").equals("0")) {                 //have account or have not;
+            if (json.getString("IN").equals("1")) {                 //have account or have not;
 
                 if ((newPerson = findInDataBase2(user, email)) != null) {
                     codeValidation = make_Password(6);
@@ -227,7 +227,7 @@ public class VertxHttpServer extends AbstractVerticle {
                     response.end("{\"status\":0}");
             }
             else {
-                if ((newPerson = findInDataBase2(user, email)) != null){
+                if ((newPerson = findPersonByUser(user)) != null){
                     response.end("{\"status\":0}");
                 }
                 codeValidation = make_Password(6);
@@ -743,6 +743,10 @@ public class VertxHttpServer extends AbstractVerticle {
                 .listen(5000);
 
         }
+
+    private Person findPersonByUser(String user) {
+        return dataSave.findPersonByUser(user);
+    }
 
     private boolean AddNewGroupTodatabase() {
         return true;
