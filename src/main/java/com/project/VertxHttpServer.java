@@ -227,6 +227,9 @@ public class VertxHttpServer extends AbstractVerticle {
                     response.end("{\"status\":0}");
             }
             else {
+                if ((newPerson = findInDataBase2(user, email)) != null){
+                    response.end("{\"status\":0}");
+                }
                 codeValidation = make_Password(6);
                 OurEmail ourEmail = new OurEmail();
                 Thread t = new Thread(new Runnable() {
