@@ -176,7 +176,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 JsonObject json2 = new JsonObject();
                 json2 = PersonHoldWorkShopThatHaveInThisTime(newPerson,newHoldWorkShop.getStart(),newHoldWorkShop.getEnd(),newHoldWorkShop.getHourStart(),newHoldWorkShop.getHourEnd());
                 if (!json2.isEmpty())
-                    response.end("{\"status\":5\"workShopMustSpend\":"+json2+"}");//have this WorkShopInThisTime
+                    response.end("{\"status\":5,\"workShopMustSpend\":"+json2+"}");//have this WorkShopInThisTime
                 if (!this.isThisPersonIsInOneOfTheGroupOfThisWorkShop(newHoldWorkShop, student.getId())) {
                     if (pay.equals("2")) {
                         if (!newHoldWorkShop.getIs_installment())
@@ -207,7 +207,7 @@ public class VertxHttpServer extends AbstractVerticle {
             HttpServerResponse response = rc.response();
             response.putHeader("content-type", "application/json");
             final String codeValidation;
-            if (json.containsKey("IN")) {                 //have account or have not;
+            if (json.getString("IN").equals("0")) {                 //have account or have not;
 
                 if ((newPerson = findInDataBase2(user, email)) != null) {
                     codeValidation = make_Password(6);
@@ -242,7 +242,7 @@ public class VertxHttpServer extends AbstractVerticle {
             }
         });
         router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.GET,"/wer").handler(rc ->{
+        router.route(HttpMethod.GET,"/seeAllRecentWorkShop").handler(rc ->{
             JsonObject json = seeAllRecentWorkShop();
             HttpServerResponse response = rc.response();
             response.end("{\"status\":1"+json+"}");
@@ -262,7 +262,7 @@ public class VertxHttpServer extends AbstractVerticle {
 
                 String token = provider.generateToken(new JsonObject().put("userName",user));
                 mapLogin.put(token,new Person());
-                response.end("{\"status\":1\"token\":"+token+"}");
+                response.end("{\"status\":1 ,\"token\":"+token+"}");
             }
             else
                 response.end("{\"status\":0}");
@@ -952,8 +952,8 @@ public class VertxHttpServer extends AbstractVerticle {
             return person;
         }
     }
-    private Person findInDataBase2(String user, String pass) {
-        return new Person();
+    private Person findInDataBase2(String user, String email) {
+        return dataSave.findPersonIndataBase2(user,email);
     }
 
     private void upadateDataBaseWithWorkShop(Workshop newWorkshop) {
