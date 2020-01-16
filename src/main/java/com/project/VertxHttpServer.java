@@ -232,6 +232,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 }
                 codeValidation = make_Password(6);
                 OurEmail ourEmail = new OurEmail();
+
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -240,7 +241,7 @@ public class VertxHttpServer extends AbstractVerticle {
 
                     }
                 });
-
+                response.end("{\"status\": 1 }");
 
             }
         });
