@@ -252,8 +252,9 @@ public class DataSave {
     public Person findPersonIndataBase2(String user, String pass) {
         for(Person i : persons){
             if(i.getUser().equals(user) && i.getEmailAddress().equals(pass)){
-
+                    return i;
             }
         }
+        return null;
     }
 }
