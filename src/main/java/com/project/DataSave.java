@@ -12,6 +12,7 @@ public class DataSave {
     private ArrayList<Group> groups = new ArrayList<Group>();
     private ArrayList<Requests> requests = new ArrayList<Requests>();
     private ArrayList<Requirments> requirments = new ArrayList<Requirments>();
+    private ArrayList<GroupStatus> groupStatuses = new ArrayList<GroupStatus>();
     public ArrayList<RequestGreater>getAllGreaterRequestThatThisPersonSend(int id){
         RequestGreater requestGreater = new RequestGreater();
         ArrayList<RequestGreater> allOfThem = new ArrayList<RequestGreater>();
@@ -245,7 +246,11 @@ public class DataSave {
     }
 
     public void AddNewGroupStatusToDatabase(GroupStatus groupStatus) {
-        return;
+        for (GroupStatus i : groupStatuses){
+            if(i.getRoleOfWorkShape().equals(groupStatus.getRoleOfWorkShape()) && i.getGroup().equals(groupStatus.getGroup()))
+                return;
+        }
+        this.groupStatuses.add(groupStatus);
     }
 
 
@@ -264,5 +269,44 @@ public class DataSave {
                 return i;
         }
         return null;
+    }
+
+    public ArrayList<GroupStatus> getALLGroupStatuseINdataBase() {
+        return groupStatuses;
+    }
+
+    public ArrayList<Group> getALLGroupINdataBase() {
+        return this.groups;
+    }
+
+
+    public boolean searchInDataBase(String user) {
+        for (Person i : persons)
+            if (i.getUser().equals(user))
+                return true;
+        return false;
+    }
+
+    public void updateInPersonINdataBase(Person person) {
+        for(Person i : persons){
+            if(i.getUser().equals(person.getUser())){
+                if(person.getEmailAddress()!= null)
+                    i.setEmailAddress(person.getEmailAddress());
+                if(person.getPass()!= null)
+                    i.setPass(person.getPass());
+                if(person.getNationalCode()!= null)
+                    i.setNationalCode(person.getNationalCode());
+                if(person.getLastName() != null)
+                    i.setLastName(person.getLastName());
+                if(person.getName() != null)
+                    i.setLastName(person.getLastName());
+                if(person.getGender() != null)
+                    i.setGender(person.getGender());
+                if(person.getPhoneNumber() != null)
+                    i.setPhoneNumber(person.getPhoneNumber());
+                if (person.getDate_birthday() != null)
+                    i.setDate_birthday(person.getDate_birthday());
+            }
+        }
     }
 }

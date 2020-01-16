@@ -168,7 +168,7 @@ public class VertxHttpServer extends AbstractVerticle {
                         }
                     }
                     if(!canSendRequest){
-                        response.end("{\"status\":5\"workShopMustSpend\":"+jsonObject+"}");//must spend this workshop befor
+                        response.end("{\"status\":5,\"workShopMustSpend\":"+jsonObject+"}");//must spend this workshop befor
                     }
 
 
@@ -976,36 +976,26 @@ public class VertxHttpServer extends AbstractVerticle {
     }
 
     private void updateInPersonINdataBase(Person person) {
+        dataSave.updateInPersonINdataBase(person);
+
     }
 
     private boolean searchInDataBase(String user) {
-        return true;
+        return dataSave.searchInDataBase(user);
     }
 
-    private  Person findInDataBase(String Usr,String Pass){
-        Person person = new Person();
-        //person = in data base
-        return  person;
-    }
-    private boolean AddToDataBass(Person person){
-        if (searchInDataBase(person.getUser())) {
-            System.out.println(person.toString());
-            return false;
-        }
-        else
-            addPersonTodataBase(person);
-            return true;
+//    private boolean AddToDataBass(Person person){
+//        if (searchInDataBase(person.getUser())) {
+//            System.out.println(person.toString());
+//            return false;
+//        }
+//        else
+//            addPersonTodataBase(person);
+//            return true;
+//
+//    }
 
-    }
 
-    private void addPersonTodataBase(Person person) {
-    }
-    private boolean isThisWorkShopeInDatabase(String name , String ID){
-        return true;
-    }
-    private boolean isThisPayInstallment(String Id){
-       return true;
-    }
     private JsonObject findHistoryOfGreater(Integer id){
             ArrayList<GroupStatus> AllGroupStatuse = getALLGroupStatuseINdataBase();
             JsonObject jsonObject = new JsonObject();
@@ -1030,15 +1020,15 @@ public class VertxHttpServer extends AbstractVerticle {
     }
 
     private ArrayList<HoldWorkShop> getALLHoldWorkShop() {
-        return null;
+        return dataSave.getHoldWorkShops();
     }
 
     private ArrayList<Group> getALLGroupINdataBase() {
-        return null;
+        return dataSave.getALLGroupINdataBase();
     }
 
     private ArrayList<GroupStatus> getALLGroupStatuseINdataBase() {
-        return null;
+        return dataSave.getALLGroupStatuseINdataBase();
     }
 
     static String make_Password(int len) {
