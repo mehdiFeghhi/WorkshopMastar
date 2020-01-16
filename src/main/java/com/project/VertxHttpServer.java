@@ -30,6 +30,7 @@ public class VertxHttpServer extends AbstractVerticle {
     HoldWorkShop newHoldWorkShop = null;
     RequestStudent newRequestStudent = null;
     RequestGreater newRequestGreater = null;
+    DataSave dataSave = new DataSave();
 //    JsonObject jsonMongo = new JsonObject().put("host","127.0.0.1")
 //            .put("port","27017")
 //            .put("username","mehdi")
@@ -40,13 +41,14 @@ public class VertxHttpServer extends AbstractVerticle {
     Map<String,Date> mapValidtionCode = new HashMap<>();
     @Override
     public void start() throws Exception {
+        dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
         Vertx vertx = Vertx.vertx() ;
        // MongoClient client = MongoClient.createShared(vertx,jsonMongo) ;
        // MongoDb MyDataBase = new MongoDb(client);
         HttpServer httpServer = vertx.createHttpServer();
         Router router = Router.router(vertx);
         router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.POST, "/loggine").handler(rc -> {
+        router.route(HttpMethod.POST, "/login").handler(rc -> {
             JsonObject json = rc.getBodyAsJson();
             this.user = json.getString("user");
             this.pass = json.getString("pass");
@@ -239,7 +241,7 @@ public class VertxHttpServer extends AbstractVerticle {
             }
         });
         router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.GET,"/seeAllRecentWorkShop").handler(rc ->{
+        router.route(HttpMethod.GET,"/wer").handler(rc ->{
             JsonObject json = seeAllRecentWorkShop();
             HttpServerResponse response = rc.response();
             response.end("{\"status\":1"+json+"}");
@@ -739,25 +741,31 @@ public class VertxHttpServer extends AbstractVerticle {
         }
 
     private boolean AddNewGroupTodatabase() {
+        return true;
     }
 
     private ArrayList<Person> allPersonIndataBase() {
+        return dataSave.getPersons();
     }
 
     private Person findPersonIndataBase(String user,String nationCode) {
+        return dataSave.finPersonINdataBase(user,nationCode);
     }
 
     private boolean addNewHoldWorkShop(HoldWorkShop holdWorkShop) {
+        return dataSave.addNewHoldWorkShop(holdWorkShop);
     }
 
     private boolean AddNewWorkShopTOdataBase(Workshop workshop) {
-        return false;
+        return dataSave.AddNewWorkShopTOdataBase(workshop);
     }
 
     private void AddNewReqirmentsToDataBase(Requirments requirments) {
+        dataSave.AddNewReqirmentsToDataBase(requirments);
     }
 
     private ArrayList<Workshop> findThisWorkShop(JsonArray workShopPrerequisite) {
+        return dataSave.findThisWorkShop(workShopPrerequisite);
     }
 
     private JsonObject PersonHoldWorkShopThatHaveInThisTime(Person newPerson, Date start, Date end, LocalTime hourStart, LocalTime hourEnd) {
@@ -791,42 +799,55 @@ public class VertxHttpServer extends AbstractVerticle {
     }
 
     private ArrayList<RequestGreater> getALLGreaterRequestThatThisPersonSend(int id) {
+        return dataSave.getAllGreaterRequestThatThisPersonSend(id);
     }
 
     private ArrayList<RequestStudent> getALLStudentRequestThatThisPersonSend(int id) {
+        return dataSave.getAllStudentRequestThatThisPersonSend(id);
     }
 
     private ArrayList<Workshop> findALLworkShopThatThisPersonSpend(int id) {
+        return dataSave.findALLworkShopThatThisPersonSpend(id);
     }
 
     private ArrayList<Workshop> findALLworkShopThatPrerequisiteWithThisWorkshop(int id) {
+        return dataSave.findALLworkShopThatPrerequisiteWithThisWorkshop(id);
     }
 
-    private boolean isthisMangmentOfTHisWorkShop(int id, Integer idWorkShop) {
+    private boolean isthisMangmentOfTHisWorkShop(int id, int idWorkShop) {
+        return dataSave.isthisMangmentOfTHisWorkShop(id,idWorkShop);
     }
 
     private void updateThisRequestInDataBase(RequestStudent requestStudent) {
+        dataSave.updateThisRequestInDataBase(requestStudent);
     }
 
-    private JsonObject seeAllRequestStudent(Integer workShopId) {
+    private JsonObject seeAllRequestStudent(int workShopId) {
+        return dataSave.seeAllRequestStudent(workShopId);
     }
 
-    private RequestStudent getOneRequestStudent(Integer requestGreaterId) {
+    private RequestStudent getOneRequestStudent(int requestStudentId) {
+        return dataSave.getOneRequestStudent(requestStudentId);
     }
 
     private void AddNewGroupStatusToDatabase(GroupStatus groupStatus) {
+        //return dataSave.AddNewGroupStatusToDatabase(groupStatus);
+        return;
     }
 
     private Group getOnGroupFromDataBase(int numberGroup, String groupName, int numberIdWorkShop) {
+        return null;
     }
 
     private RequestGreater getOneRequestGreater(Integer requestGreaterId) {
+        return null;
     }
 
     private void AddPersonTodataBase(Person newPerson) {
     }
 
     private HoldWorkShop findThisHoldWorkShop(int id) {
+        return null;
     }
 
     private JsonObject seeAllRequestGreater(int id) {
@@ -846,13 +867,15 @@ public class VertxHttpServer extends AbstractVerticle {
     }
 
     private Person findPersonOfThisGreater(int id) {
+        return null;
     }
 
     private ArrayList<RequestGreater> findAllRequestGreater(int id) {
-
+        return null;
     }
 
     private ArrayList<HoldWorkShop> findWorkShophaveThisManager(int id) {
+        return null;
     }
 
     private JsonObject seeAllRecentWorkShop() {
@@ -880,10 +903,13 @@ public class VertxHttpServer extends AbstractVerticle {
     }
 
     private Person findPersonOfThisManagment(int id) {
-        return new Person();
+        return dataSave.findPersonOfThisManagment(id);
 
     }
+    private Person findPersonOfThisStudent(int id) {
+        return dataSave.findPersonOfThisStudent(id);
 
+    }
     private boolean deletRequestOf(int requestID) {
         return true;
     }
@@ -908,6 +934,7 @@ public class VertxHttpServer extends AbstractVerticle {
     }
 
     private ArrayList<RequestStudent> findAllRequestStudent(int id) {
+        return null;
     }
 
     private Person findPersonIndatabase(String user,String pass){
@@ -994,12 +1021,15 @@ public class VertxHttpServer extends AbstractVerticle {
     }
 
     private ArrayList<HoldWorkShop> getALLHoldWorkShop() {
+        return null;
     }
 
     private ArrayList<Group> getALLGroupINdataBase() {
+        return null;
     }
 
     private ArrayList<GroupStatus> getALLGroupStatuseINdataBase() {
+        return null;
     }
 
     static String make_Password(int len) {

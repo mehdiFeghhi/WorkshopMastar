@@ -16,6 +16,9 @@ abstract public class Requests {
         this.massage = request;
         this.holdWorkShop = holdWorkShop;
     }
+    public Requests() {
+
+    }
 
     public HoldWorkShop getHoldWorkShop() {
         return holdWorkShop;

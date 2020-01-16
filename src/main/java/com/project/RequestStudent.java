@@ -11,6 +11,10 @@ public class RequestStudent extends Requests {
         this.pay = pay;
     }
 
+    public RequestStudent() {
+
+    }
+
     public int getId() {
         return id;
     }

@@ -5,6 +5,10 @@ public class RequestGreater extends Requests {
     private int id;
     private Greater greater;
     private Type_Request type = Type_Request.BeGreater;
+    public RequestGreater(){
+        super();
+
+    }
     public RequestGreater(String request,HoldWorkShop holdWorkShop, Greater greater) {
         super(request,holdWorkShop);
         this.greater = greater;

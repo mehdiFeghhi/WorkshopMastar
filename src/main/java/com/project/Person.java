@@ -24,6 +24,18 @@ public class Person  {
     public Person() {
         this.is_Active = true;
     }
+
+    public Person(String name, String lastName, String date_birthday, String user, String pass,String nationalCode, String phoneNumber, String emailAddress) {
+        this.name = name;
+        this.lastName = lastName;
+        this.date_birthday = date_birthday;
+        this.user = user;
+        this.pass = pass;
+        this.nationalCode = nationalCode;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
+    }
+
     public void setRoleOfWorkShapes(ArrayList<RoleOfWorkShape> roleOfWorkShapes) {
         this.roleOfWorkShapes = roleOfWorkShapes;
     }
