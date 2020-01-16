@@ -77,10 +77,10 @@ public class VertxHttpServer extends AbstractVerticle {
                 if(!newPerson.getIs_Active())
                     response.end("{\"status\":13");//this person Can't activity
                 if(newPerson.is_this_role_in_our_person(Addmin.class)){
-                    response.end("{\"status\": 100 \"validation\": "+token+"}");//this person is Admin
+                    response.end("{\"status\": 100 ,\"validation\": "+token+"}");//this person is Admin
                 }
                 else
-                    response.end("{\"status\": 1 \"validation\": "+token+"}");
+                    response.end("{\"status\": 1 ,\"validation\": "+token+"}");
             }
             else
                 response.end("{\"status\":0}");
