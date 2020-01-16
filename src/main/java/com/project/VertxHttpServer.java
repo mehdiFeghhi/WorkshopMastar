@@ -42,6 +42,7 @@ public class VertxHttpServer extends AbstractVerticle {
     @Override
     public void start() throws Exception {
         dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
+
         Vertx vertx = Vertx.vertx() ;
        // MongoClient client = MongoClient.createShared(vertx,jsonMongo) ;
        // MongoDb MyDataBase = new MongoDb(client);
@@ -938,7 +939,7 @@ public class VertxHttpServer extends AbstractVerticle {
     }
 
     private Person findPersonIndatabase(String user,String pass){
-        return new Person();
+        return dataSave.finPersonINdataBase(user,pass);
     }
     private Person makePerson(List<JsonObject> result) throws IOException {
         JsonObject jsonObject = new JsonObject();

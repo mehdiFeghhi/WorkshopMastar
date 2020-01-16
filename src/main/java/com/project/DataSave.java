@@ -183,9 +183,9 @@ public class DataSave {
         return null;
     }
 
-    public Person finPersonINdataBase(String user, String nationCode) {
+    public Person finPersonINdataBase(String user, String pass) {
         for (Person i : this.persons){
-            if(i.getUser().equals(user) && i.getNationalCode().equals(nationCode))
+            if(i.getUser().equals(user) && i.getPass().equals(pass))
                 return i;
         }
         return null;
@@ -247,4 +247,6 @@ public class DataSave {
     public void AddNewGroupStatusToDatabase(GroupStatus groupStatus) {
         return;
     }
+
+
 }

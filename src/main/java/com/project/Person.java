@@ -34,6 +34,7 @@ public class Person  {
         this.nationalCode = nationalCode;
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
+        this.is_Active = true;
     }
 
     public void setRoleOfWorkShapes(ArrayList<RoleOfWorkShape> roleOfWorkShapes) {
