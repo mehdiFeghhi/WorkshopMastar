@@ -89,6 +89,22 @@ public class VertxHttpServer extends AbstractVerticle {
         });
 
         router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST, "/person").handler(rc -> {
+            JsonObject json = rc.getBodyAsJson();
+
+            String token = json.getString("token");
+            System.out.println(json.toString());
+            HttpServerResponse response = rc.response();
+            response.putHeader("content-type", "application/json");
+            if (mapLogin.containsKey(token)) {
+                response.end("{\"status\":1,\"person\""+mapLogin.get(token)+"}");
+            }
+            else {
+                response.end("{\"status\":0}");
+            }
+
+        });
+        router.route().handler(BodyHandler.create());
         router.route(HttpMethod.GET, "/logOut").handler(rc -> {
             JsonObject json = rc.getBodyAsJson();
 
@@ -234,7 +250,6 @@ public class VertxHttpServer extends AbstractVerticle {
                 }
                 codeValidation = make_Password(6);
                 OurEmail ourEmail = new OurEmail();
-
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
