@@ -895,7 +895,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 requestStudent = (RequestStudent) i;
                 if (requestStudent.getId() == student.id) {
                     if(requestStudent.getAccetply().equals(Accetply.Accept))
-                        return "sdaf"
+                        return "";
                 }
             }
             if (i.getClass().equals(Greater.class)){
