@@ -2,6 +2,7 @@ package com.project;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.omg.CORBA.Request;
 
 import java.util.ArrayList;
 
@@ -309,4 +310,157 @@ public class DataSave {
             }
         }
     }
+
+    public boolean AddNewGroupTOdatabase(Group group) {
+        for (Group i : groups){
+            if(i.getHoldWorkShop().getId() == group.getHoldWorkShop().getId() && i.getName().equals(group.getName()))
+                return false;
+        }
+        this.groups.add(group);
+        return true;
+    }
+
+    public Group getOneGroupFrommDataBase(int numberGroup, String groupName, int numberIdWorkShop) {
+        for (Group i :groups){
+            if(i.getHoldWorkShop().getId() == numberIdWorkShop  && i.getNumber() == numberGroup && i.getName().equals(groupName)){
+                return i;
+            }
+        }
+        return null;
+    }
+
+    public RequestGreater getOneRequestGreater(Integer requestGreaterId) {
+        RequestGreater requestGreater = null;
+        for(Requests i : this.requests){
+            if(i.getClass().equals(RequestGreater.class)){
+                requestGreater = (RequestGreater) i;
+                if(requestGreater.getId() == requestGreaterId)
+                    return requestGreater;
+            }
+        }
+        return null;
+    }
+
+    public boolean AddNewPersonTodataBase(Person newPerson) {
+            for(Person i : persons){
+                if(i.getUser().equals(newPerson.getUser()))
+                    return false;
+            }
+            newPerson.setId(persons.size()+1);
+            newPerson.setIs_Active(true);
+            return true;
+    }
+
+    public HoldWorkShop findThisHoldWorkShop(int id) {
+        for(HoldWorkShop i : holdWorkShops){
+            if(i.getId() == id){
+                return i;
+            }
+        }
+        return null;
+    }
+
+
+    public Person findPersonOfThisGreater(int id) {
+        Greater greater = null;
+        for(Person i : persons){
+            if(i.is_this_role_in_our_person(Greater.class)){
+                greater = (Greater) i.findOurType(Greater.class);
+                if(greater.getId() == id)
+                    return i;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<RequestGreater> findAllRequestGreater(int id) {
+        ArrayList<RequestGreater> requestGreaters = new ArrayList<RequestGreater>();
+        RequestGreater requestGreater = new RequestGreater();
+        for(Requests i : requests){
+            if(i.getClass().equals(RequestGreater.class)){
+                    requestGreater = (RequestGreater) i;
+                    if(requestGreater.getId() == id)
+                        requestGreaters.add(requestGreater);
+
+            }
+        }
+        return requestGreaters;
+    }
+    public ArrayList<RequestStudent> findAllRequestStudent(int id) {
+        ArrayList<RequestStudent> requestStudents = new ArrayList<RequestStudent>();
+        RequestStudent requestStudent = new RequestStudent();
+        for(Requests i : requests){
+            if(i.getClass().equals(RequestStudent.class)){
+                requestStudent = (RequestStudent) i;
+                if(requestStudent.getId() == id)
+                    requestStudents.add(requestStudent);
+
+            }
+        }
+        return requestStudents;
+
+    }
+
+    public ArrayList<HoldWorkShop> findWorkShophaveThisManager(int id) {
+        ArrayList<HoldWorkShop>holdWorkShops = new ArrayList<HoldWorkShop>();
+        for(HoldWorkShop i : this.holdWorkShops){
+            if (i.getManagment().id == id)
+                holdWorkShops.add(i);
+        }
+        return holdWorkShops;
+    }
+
+    public boolean deletRequesOf(int requestID) {
+        RequestStudent  requestStudent = null;
+        RequestGreater  requestGreater = null;
+        for(Requests i : requests){
+            if(i.getClass().equals(RequestStudent.class)){
+                requestStudent = (RequestStudent) i;
+                if(requestStudent.getId() == requestID) {
+                    this.requests.remove(i);
+                    return true;
+                }
+            }
+            else if(i.getClass().equals(RequestGreater.class)){
+                requestGreater = (RequestGreater) i;
+                if(requestGreater.getId() == requestID) {
+                    this.requests.remove(i);
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
+
+    public boolean AddToRequestListINDataBase(RequestStudent newRequestStudent) {
+        RequestStudent requestStudent = new RequestStudent();
+         for (Requests i : requests){
+             if(Request.class.equals(RequestStudent.class)){
+                requestStudent = (RequestStudent) i;
+                if (requestStudent.student.id == requestStudent.getStudent().getId() && requestStudent.getHoldWorkShop().getId() == newRequestStudent.getHoldWorkShop().getId())
+                    return false;
+             }
+
+         }
+         requests.add(newRequestStudent);
+         return true;
+    }
+
+    public boolean AddToRequestListINDataBase(RequestGreater newRequestGreater) {
+        RequestGreater requestGreater = new RequestGreater();
+        for (Requests i : requests){
+            if(Request.class.equals(RequestGreater.class)){
+                requestGreater = (RequestGreater) i;
+                if (requestGreater.getGreater().getId() == newRequestGreater.getGreater().getId() && newRequestGreater.getHoldWorkShop().getId() == requestGreater.getHoldWorkShop().getId())
+                    return false;
+            }
+
+        }
+        requests.add(newRequestGreater);
+        return true;
+    }
+
+
 }

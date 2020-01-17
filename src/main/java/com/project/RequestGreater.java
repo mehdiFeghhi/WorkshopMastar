@@ -26,6 +26,14 @@ public class RequestGreater extends Requests {
         return type;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setType(Type_Request type) {
         this.type = type;
     }
