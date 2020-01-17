@@ -1,5 +1,6 @@
 package com.project;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vertx.core.AbstractVerticle;
 
@@ -98,7 +99,13 @@ public class VertxHttpServer extends AbstractVerticle {
             HttpServerResponse response = rc.response();
             response.putHeader("content-type", "application/json");
             if (mapLogin.containsKey(token)) {
-                String jason = objectMapper.readValues(mapLogin.get(token),Person.class);
+                String jason = null;
+                try {
+                    jason = objectMapper.writeValueAsString(mapLogin.get(token));
+                } catch (JsonProcessingException e) {
+                    System.out.println("make mistack");
+                    e.printStackTrace();
+                }
                 response.end("{\"status\":1,\"person\":"+jason+"}");
             }
             else {
