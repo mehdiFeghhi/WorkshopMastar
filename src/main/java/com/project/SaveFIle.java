@@ -23,7 +23,7 @@ public class SaveFIle {
         ArrayList<String> namesList = new ArrayList<String>();
 
         try {
-            FileInputStream fis = new FileInputStream("listData");
+            FileInputStream fis = new FileInputStream(directory);
             ObjectInputStream ois = new ObjectInputStream(fis);
 
             namesList = (ArrayList) ois.readObject();
@@ -58,7 +58,7 @@ public class SaveFIle {
         HashMap<Integer, String> map = null;
         try
         {
-            FileInputStream fis = new FileInputStream("directory");
+            FileInputStream fis = new FileInputStream(directory);
             ObjectInputStream ois = new ObjectInputStream(fis);
             map = (HashMap) ois.readObject();
             ois.close();

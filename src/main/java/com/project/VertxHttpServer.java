@@ -40,10 +40,16 @@ public class VertxHttpServer extends AbstractVerticle {
 //            .put("password","3339539")
 //            .put("db_name","Workshopes");
     Map<String,Person> mapLogin = new HashMap<String,Person>();
-
     Map<Integer,ValidationProperty> mapValidtionCode = new HashMap<>();
+    public VertxHttpServer (){
+        if (SaveFIle.loadHashMap("maplagin123") != null)
+            this.mapLogin = SaveFIle.loadHashMap("maplagin123") ;
+        if (SaveFIle.loadHashMap("mapValiditionCode") != null)
+            this.mapValidtionCode = SaveFIle.loadHashMap("mapValiditionCode");
+    }
     @Override
     public void start() throws Exception {
+
         dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
 
         Vertx vertx = Vertx.vertx() ;
