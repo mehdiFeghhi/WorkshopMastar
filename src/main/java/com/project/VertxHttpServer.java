@@ -39,8 +39,8 @@ public class VertxHttpServer extends AbstractVerticle {
 //            .put("username","mehdi")
 //            .put("password","3339539")
 //            .put("db_name","Workshopes");
-    ArrayList<Person> persons  = new ArrayList<Person>();
     Map<String,Person> mapLogin = new HashMap<String,Person>();
+
     Map<Integer,ValidationProperty> mapValidtionCode = new HashMap<>();
     @Override
     public void start() throws Exception {
@@ -101,12 +101,11 @@ public class VertxHttpServer extends AbstractVerticle {
             if (mapLogin.containsKey(token)) {
                 String jason = null;
                 try {
-                    Person myperson = new Person();
-                    myperson = mapLogin.get(token);
-                    myperson.setPass("it's for me");
-                    jason = objectMapper.writeValueAsString(myperson);
+                    Person myperson4 = mapLogin.get(token).clone();
+                    jason = objectMapper.writeValueAsString(myperson4);
                 } catch (JsonProcessingException e) {
                     System.out.println("make mistack");
+                    response.end("{\"status\":2}");
                     e.printStackTrace();
                 }
                 response.end("{\"status\":1,\"person\":"+jason+"}");

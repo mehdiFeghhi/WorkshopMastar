@@ -15,6 +15,32 @@ public class DataSave implements Serializable {
     private ArrayList<Requests> requests = new ArrayList<Requests>();
     private ArrayList<Requirments> requirments = new ArrayList<Requirments>();
     private ArrayList<GroupStatus> groupStatuses = new ArrayList<GroupStatus>();
+    public DataSave(){
+        if (SaveFIle.loadFromFileArrayList("personsArrayList") != null)
+            persons = SaveFIle.loadFromFileArrayList("personsArrayList");
+        if(SaveFIle.loadFromFileArrayList("workshopsArrayList") != null)
+            workshops = SaveFIle.loadFromFileArrayList("workshopsArrayList");
+        if (SaveFIle.loadFromFileArrayList("holdWorkShopsArrayList") != null)
+            holdWorkShops = SaveFIle.loadFromFileArrayList("holdWorkShopsArrayList");
+        if (SaveFIle.loadFromFileArrayList("groupsArrayList") != null)
+            groups = SaveFIle.loadFromFileArrayList("groupsArrayList");
+        if(SaveFIle.loadFromFileArrayList("requestsArrayList") != null)
+            requests = SaveFIle.loadFromFileArrayList("requestsArrayList");
+        if(SaveFIle.loadFromFileArrayList("requirmentsArrayList") != null)
+            requirments = SaveFIle.loadFromFileArrayList("requirmentsArrayList") ;
+        if (SaveFIle.loadFromFileArrayList("groupStatus") != null)
+            groupStatuses = SaveFIle.loadFromFileArrayList("groupStatus");
+
+    }
+    public void saveInFile(){
+            SaveFIle.saveArrayListInFile("personsArrayList",persons);
+            SaveFIle.saveArrayListInFile("workshopsArrayList",workshops);
+            SaveFIle.saveArrayListInFile("holdWorkShopsArrayList",holdWorkShops);
+            SaveFIle.saveArrayListInFile("groupsArrayList",groups);
+            SaveFIle.saveArrayListInFile("requestsArrayList",requests);
+            SaveFIle.saveArrayListInFile("requirmentsArrayList",requirments); ;
+            SaveFIle.saveArrayListInFile("groupStatus",groupStatuses);
+    }
     public ArrayList<RequestGreater>getAllGreaterRequestThatThisPersonSend(int id){
         RequestGreater requestGreater = new RequestGreater();
         ArrayList<RequestGreater> allOfThem = new ArrayList<RequestGreater>();
@@ -256,9 +282,9 @@ public class DataSave implements Serializable {
     }
 
 
-    public Person findPersonIndataBase2(String user, String pass) {
+    public Person findPersonIndataBase2(String user, String email) {
         for(Person i : persons){
-            if(i.getUser().equals(user) && i.getEmailAddress().equals(pass)){
+            if(i.getUser().equals(user) && i.getEmailAddress().equals(email)){
                     return i;
             }
         }

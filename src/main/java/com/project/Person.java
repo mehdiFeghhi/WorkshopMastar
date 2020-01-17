@@ -38,6 +38,19 @@ public class Person  implements Serializable {
         this.is_Active = true;
     }
 
+    public Person(String name, String lastName, String date_birthday, String user,String nationalCode, String phoneNumber, String emailAddress) {
+        this.name = name;
+        this.lastName = lastName;
+        this.date_birthday = date_birthday;
+        this.user = user;
+        this.nationalCode = nationalCode;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
+        this.is_Active = true;
+    }
+    public Person clone(){
+        return new Person(this.getName(),this.getLastName(),this.date_birthday,this.getUser(),this.nationalCode,this.getPhoneNumber(),this.getEmailAddress());
+    }
     public void setRoleOfWorkShapes(ArrayList<RoleOfWorkShape> roleOfWorkShapes) {
         this.roleOfWorkShapes = roleOfWorkShapes;
     }
@@ -145,7 +158,6 @@ public class Person  implements Serializable {
     public Image getImage() {
         return image;
     }
-
     public void setImage(Image image) {
         this.image = image;
     }
