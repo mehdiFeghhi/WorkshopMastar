@@ -101,7 +101,10 @@ public class VertxHttpServer extends AbstractVerticle {
             if (mapLogin.containsKey(token)) {
                 String jason = null;
                 try {
-                    jason = objectMapper.writeValueAsString(mapLogin.get(token));
+                    Person myperson = new Person();
+                    myperson = mapLogin.get(token);
+                    myperson.setPass("it's for me");
+                    jason = objectMapper.writeValueAsString(myperson);
                 } catch (JsonProcessingException e) {
                     System.out.println("make mistack");
                     e.printStackTrace();
@@ -257,18 +260,19 @@ public class VertxHttpServer extends AbstractVerticle {
                 if ((newPerson = findPersonByUser(user)) != null){
                     response.end("{\"status\":0}");
                 }
-                codeValidation = make_Password(6);
-                OurEmail ourEmail = new OurEmail();
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(ourEmail.sendMail(email,codeValidation))
-                            mapValidtionCode.put(mapValidtionCode.size()+1,new ValidationProperty(new Date(),user,codeValidation));
+                else {
+                    codeValidation = make_Password(6);
+                    OurEmail ourEmail = new OurEmail();
+                    Thread t = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (ourEmail.sendMail(email, codeValidation))
+                                mapValidtionCode.put(mapValidtionCode.size() + 1, new ValidationProperty(new Date(), user, codeValidation));
 
-                    }
-                });
-                response.end("{\"status\": 1 }");
-
+                        }
+                    });
+                    response.end("{\"status\": 1 }");
+                }
             }
         });
         router.route().handler(BodyHandler.create());
