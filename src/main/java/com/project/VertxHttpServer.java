@@ -88,8 +88,11 @@ public class VertxHttpServer extends AbstractVerticle {
                 if(newPerson.is_this_role_in_our_person(Addmin.class)){
                     response.end("{\"status\": 100 ,\"validation\": "+token+"}");//this person is Admin
                 }
-                else
-                    response.end("{\"status\": 1 ,\"validation\": "+token+"}");
+                else {
+                    SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
+                    SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
+                    response.end("{\"status\": 1 ,\"validation\": " + token + "}");
+                }
             }
             else
                 response.end("{\"status\":0}");
@@ -133,6 +136,8 @@ public class VertxHttpServer extends AbstractVerticle {
             if (mapLogin.containsKey(token)) {
                 updateInPersonINdataBase(mapLogin.get(token));
                 mapLogin.remove(token);
+                SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
+                SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
                 response.end("{\"status\":1}");
             }
             else {
@@ -256,6 +261,8 @@ public class VertxHttpServer extends AbstractVerticle {
                         }
                     });
                     t.start();
+                    SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
+                    SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
                     response.end("{\"status\": 1 }");
                 } else
 
@@ -276,10 +283,32 @@ public class VertxHttpServer extends AbstractVerticle {
 
                         }
                     });
+                    SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
+                    SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
                     response.end("{\"status\": 1 }");
                 }
             }
         });
+
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/requestStudentCancelFromStudent").handler(rc -> {
+            JsonObject json = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            response.putHeader("content-type", "application/json");
+            ObjectMapper objectMapper = new ObjectMapper();
+            String token = json.getString("token");
+            int requestID = json.getInteger("WorkShopID");
+            if (mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(deletRequestOf(requestID))
+                response.end("{\"status\":1}");
+            else
+                response.end("{\"status\":0}");
+        });
+
+
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.GET, "/afterFiveHundred").handler(rc -> {
             JsonObject json = rc.getBodyAsJson();
@@ -290,20 +319,47 @@ public class VertxHttpServer extends AbstractVerticle {
                 if((mapValidtionCode.get(i).date.getTime()-date.getTime()) > 500000)
                     mapValidtionCode.remove(i);
             }
-                response.end("{\"status\":1}");
+            SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
+            SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
+            response.end("{\"status\":1}");
         });
 
 
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/PersonStatusInHoldWorkShop").handler(rc -> {
+            JsonObject json = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            response.putHeader("content-type", "application/json");
+            ObjectMapper objectMapper = new ObjectMapper();
+            String token = json.getString("token");
+            String username1 = json.getString("user");
+            int workShopID = json.getInteger("WorkShopID");
+            if (mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            String number = situationInThisHoldWorkshop(workShopID,username1);
+            response.end("{\"status\":"+number+"}");
+        });
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/seeAllHistoryOfThisGreater").handler(rc ->{
+            JsonObject json = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token = json.getString("token");
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Managment.class)){
+                response.end("{\"status\":0}");
+            }
+            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            if (!isthisMangmentOfTHisWorkShop(managment.id,json.getInteger("IdWorkShop")))
+                response.end("{\"status\":3}");//permissionDenaid
 
-
-
-
-
-
-
-
-
-
+            JsonObject HistoryOfHim = findHistoryOfGreater(json.getInteger("idGreater"));
+            response.end("{\"status\":1\"information\":"+HistoryOfHim+"}");
+        });
 
 
 
@@ -311,7 +367,7 @@ public class VertxHttpServer extends AbstractVerticle {
         router.route(HttpMethod.GET,"/seeAllRecentWorkShop").handler(rc ->{
             JsonObject json = seeAllRecentWorkShop();
             HttpServerResponse response = rc.response();
-            response.end("{\"status\":1"+json+"}");
+            response.end("{\"status\":1,\"seeAllRecent\":"+json+"}");
         });
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/CheckValidationCode").handler(rc -> {
@@ -330,6 +386,8 @@ public class VertxHttpServer extends AbstractVerticle {
 
                     String token = provider.generateToken(new JsonObject().put("userName", user));
                     mapLogin.put(token, new Person());
+                    SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
+                    SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
                     response.end("{\"status\":1 ,\"token\":" + token + "}");
                 }
             }
@@ -803,11 +861,23 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             response.end("{\"status\":Ok}");
         });
+
         httpServer
                 .requestHandler(router::accept)
                 .listen(5000);
 
         }
+
+    private String situationInThisHoldWorkshop(int workShopID, String username1) {
+        HoldWorkShop holdWorkShop = findThisHoldWorkShop(workShopID);
+        Person person = findPersonByUser(username1);
+        Managment managment = null;
+        if (person.is_this_role_in_our_person(Managment.class))
+            managment = (Managment) person.findOurType(Managment.class);
+            if (holdWorkShop.getManagment().id == managment.id)
+                return "managment";
+        dataSave.seeAllRequestArrayList(workShopID);
+    }
 
     private boolean AddNewGroupTodatabase(Group group) {
         return  dataSave.AddNewGroupTOdatabase(group);
@@ -968,6 +1038,7 @@ public class VertxHttpServer extends AbstractVerticle {
                             .put("Money",i.getMoney())
                             .put("IsInstallment",i.getIs_installment())
                             .put("Title",i.getWorkshop().getTitle())
+                            .put("id",i.getId())
                             .put("Description",i.getWorkshop().getDescription());
                 jsonObject.put(String.valueOf(d),jsonObject1);
                 d++;

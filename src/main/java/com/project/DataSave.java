@@ -490,4 +490,15 @@ public class DataSave implements Serializable {
     }
 
 
+    public ArrayList<Requests> seeAllRequestArrayList(int workShopID) {
+        ArrayList<Requests> requests = new ArrayList<Requests>();
+        for(Requests i : this.requests){
+           // if (i.){
+
+
+            //}
+
+        }
+        return new ArrayList<>();
+     }
 }
