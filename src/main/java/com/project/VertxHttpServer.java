@@ -19,6 +19,8 @@ import io.vertx.ext.web.handler.BodyHandler;
 import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -49,9 +51,14 @@ public class VertxHttpServer extends AbstractVerticle {
     }
     @Override
     public void start() throws Exception {
-
+        String string = "January 2, 2022";
+        DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+        String string2 = "February 12, 2022";
+        DateFormat format1 = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+        LocalTime time = LocalTime.of(10,45,00);
+        LocalTime time2 = LocalTime.of(12,30,00);
         dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
-
+        dataSave.getHoldWorkShops().add(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,null,false, (long) 10000000));
         Vertx vertx = Vertx.vertx() ;
        // MongoClient client = MongoClient.createShared(vertx,jsonMongo) ;
        // MongoDb MyDataBase = new MongoDb(client);
@@ -872,12 +879,33 @@ public class VertxHttpServer extends AbstractVerticle {
         HoldWorkShop holdWorkShop = findThisHoldWorkShop(workShopID);
         Person person = findPersonByUser(username1);
         Managment managment = null;
+        Greater greater = null;
+        Student student = null;
+        RequestGreater requestGreater = null;
+        RequestStudent requestStudent = null;
+        greater = (Greater) person.findOurType(Greater.class);
+        student = (Student) person.findOurType(Student.class);
         if (person.is_this_role_in_our_person(Managment.class))
             managment = (Managment) person.findOurType(Managment.class);
             if (holdWorkShop.getManagment().id == managment.id)
                 return "managment";
-        dataSave.seeAllRequestArrayList(workShopID);
-        return "sdfsafd";
+        ArrayList<Requests>  allRequestArrayList = dataSave.seeAllRequestArrayList(workShopID);
+        for(Requests i : allRequestArrayList){
+            if(i.getClass().equals(Student.class)){
+                requestStudent = (RequestStudent) i;
+                if (requestStudent.getId() == student.id) {
+                    if(requestStudent.getAccetply().equals(Accetply.Accept))
+                        return "sdaf"
+                }
+            }
+            if (i.getClass().equals(Greater.class)){
+                requestGreater = (RequestGreater) i;
+                if (requestGreater.getId() == greater.getId()){
+                    return "greater";
+                }
+            }
+        }
+        return "haveNoActivity";
     }
 
     private boolean AddNewGroupTodatabase(Group group) {

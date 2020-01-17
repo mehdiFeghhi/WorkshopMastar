@@ -491,14 +491,15 @@ public class DataSave implements Serializable {
 
 
     public ArrayList<Requests> seeAllRequestArrayList(int workShopID) {
-        ArrayList<Requests> requests = new ArrayList<Requests>();
+        ArrayList<Requests> requestment = new ArrayList<Requests>();
+
+
         for(Requests i : this.requests){
-           // if (i.){
-
-
-            //}
+            if (i.getHoldWorkShop().getId() == workShopID){
+                requestment.add(i);
+            }
 
         }
-        return new ArrayList<>();
+        return requestment;
      }
 }
