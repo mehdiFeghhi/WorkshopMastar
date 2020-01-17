@@ -1,5 +1,7 @@
 package com.project;
 
-public enum AdminType {
+import java.io.Serializable;
+
+public enum AdminType implements Serializable {
     General, Soldier;
 }

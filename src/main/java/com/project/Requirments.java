@@ -1,6 +1,8 @@
 package com.project;
 
-public class Requirments {
+import java.io.Serializable;
+
+public class Requirments implements Serializable {
     Workshop workShopNeed;
     Workshop mainWorkshop;
     Relation relation;

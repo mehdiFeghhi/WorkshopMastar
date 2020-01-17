@@ -1,6 +1,8 @@
 package com.project;
 
-public class RequestStudent extends Requests {
+import java.io.Serializable;
+
+public class RequestStudent extends Requests implements Serializable {
     int id;
     Student student;
     Type_Request type_request = Type_Request.BeInvolve;

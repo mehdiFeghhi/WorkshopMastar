@@ -1,6 +1,8 @@
 package com.project;
 
-public class Installment extends Pay {
+import java.io.Serializable;
+
+public class Installment extends Pay implements Serializable {
     private int how_much_installment_must_pay;
     public Installment(long moneyMustPayment,int how_much_installment_must_pay) {
         super(moneyMustPayment,true);

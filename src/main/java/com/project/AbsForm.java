@@ -1,5 +1,7 @@
 package com.project;
 
-public class AbsForm {
+import java.io.Serializable;
+
+public class AbsForm implements Serializable {
     int number;
 }

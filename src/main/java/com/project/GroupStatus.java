@@ -1,8 +1,9 @@
 package com.project;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GroupStatus {
+public class GroupStatus implements Serializable {
     private int id;
     private Group group;
     private RoleOfWorkShape roleOfWorkShape;

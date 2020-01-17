@@ -1,6 +1,8 @@
 package com.project;
 
-public class Group {
+import java.io.Serializable;
+
+public class Group implements Serializable {
     private int number;
     private String name;
     private String Head;

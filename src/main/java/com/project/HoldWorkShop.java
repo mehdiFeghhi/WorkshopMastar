@@ -1,10 +1,11 @@
 package com.project;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class HoldWorkShop {
+public class HoldWorkShop implements Serializable {
     private Date Start;
     private Date End;
     private LocalTime hourStart;

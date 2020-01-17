@@ -1,6 +1,8 @@
 package com.project;
 
-public class QuestionRelation {
+import java.io.Serializable;
+
+public class QuestionRelation implements Serializable {
             int id_question;
             String question;
             AbsForm absForm;

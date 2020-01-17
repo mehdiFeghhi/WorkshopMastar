@@ -4,9 +4,10 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.omg.CORBA.Request;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DataSave {
+public class DataSave implements Serializable {
     private ArrayList<Person> persons = new ArrayList<Person>();
     private ArrayList<Workshop> workshops = new ArrayList<Workshop>();
     private ArrayList<HoldWorkShop> holdWorkShops = new ArrayList<HoldWorkShop>();

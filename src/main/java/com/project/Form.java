@@ -1,6 +1,8 @@
 package com.project;
 
-public class Form {
+import java.io.Serializable;
+
+public class Form implements Serializable {
     AbsForm absForm;
     HoldWorkShop holdWorkShop;
 

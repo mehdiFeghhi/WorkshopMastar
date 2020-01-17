@@ -1,8 +1,9 @@
 package com.project;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Qualifition {
+public class Qualifition implements Serializable {
     ArrayList<String> answer;
     RoleOfWorkShape roleTiler;
     RoleOfWorkShape roleTarget;

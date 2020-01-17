@@ -1,5 +1,7 @@
 package com.project;
 
-public interface RoleOfWorkShape {
+import java.io.Serializable;
+
+public interface RoleOfWorkShape extends Serializable {
 
 }

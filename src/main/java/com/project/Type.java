@@ -1,5 +1,7 @@
 package com.project;
 
-public enum Type {
+import java.io.Serializable;
+
+public enum Type implements Serializable {
     Greater,Student,Admin, management;
 }

@@ -1,7 +1,9 @@
 package com.project;
 
 
-public class RequestGreater extends Requests {
+import java.io.Serializable;
+
+public class RequestGreater extends Requests implements Serializable {
     private int id;
     private Greater greater;
     private Type_Request type = Type_Request.BeGreater;

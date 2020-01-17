@@ -1,6 +1,8 @@
 package com.project;
 
-public class Pay {
+import java.io.Serializable;
+
+public class Pay implements Serializable {
     int Id;
     private long moneyMustPay;
     private boolean payComplite = false;

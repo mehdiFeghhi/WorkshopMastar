@@ -1,6 +1,6 @@
 package com.project;
 
-public class Greater implements RoleOfWorkShape{
+public class Greater implements RoleOfWorkShape {
    private int id;
    public Greater(){
    }

@@ -1,5 +1,7 @@
 package com.project;
 
-public enum Relation {
+import java.io.Serializable;
+
+public enum Relation implements Serializable {
     Prerequisite,TheNeed;
 }

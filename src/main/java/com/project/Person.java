@@ -1,11 +1,12 @@
 package com.project;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 enum Gender {
         male,female;
         }
-public class Person  {
+public class Person  implements Serializable {
     int id;
     Gender gender ;
     private String name ;

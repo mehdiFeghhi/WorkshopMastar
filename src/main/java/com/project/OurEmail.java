@@ -28,7 +28,7 @@ class OurEmail {
         //Establishing a session with required user details
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("raminRowshan1234@gmail.com", "1234ramin");
+                return new PasswordAuthentication("raminrowshan1234@gmail.com", "1234ramin");
             }
         });
         try {

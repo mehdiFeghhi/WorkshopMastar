@@ -1,5 +1,7 @@
 package com.project;
 
+import java.io.Serializable;
+
 enum Type_Request{
     BeGreater,BeInvolve;
 }
@@ -8,7 +10,7 @@ enum Accetply{
 }
 
 
-abstract public class Requests {
+abstract public class Requests implements Serializable {
     private String massage;
     private Accetply accetply = Accetply.Pending;
     private HoldWorkShop holdWorkShop;
