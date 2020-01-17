@@ -91,13 +91,15 @@ public class VertxHttpServer extends AbstractVerticle {
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST, "/person").handler(rc -> {
             JsonObject json = rc.getBodyAsJson();
+            ObjectMapper objectMapper = new ObjectMapper();
 
             String token = json.getString("token");
             System.out.println(json.toString());
             HttpServerResponse response = rc.response();
             response.putHeader("content-type", "application/json");
             if (mapLogin.containsKey(token)) {
-                response.end("{\"status\":1,\"person\""+mapLogin.get(token)+"}");
+                String jason = objectMapper.readValues(mapLogin.get(token),Person.class);
+                response.end("{\"status\":1,\"person\":"+jason+"}");
             }
             else {
                 response.end("{\"status\":0}");
