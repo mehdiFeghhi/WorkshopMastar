@@ -33,13 +33,13 @@ public class DataSave implements Serializable {
 
     }
     public void saveInFile(){
-            SaveFIle.saveArrayListInFile("personsArrayList",persons);
-            SaveFIle.saveArrayListInFile("workshopsArrayList",workshops);
-            SaveFIle.saveArrayListInFile("holdWorkShopsArrayList",holdWorkShops);
-            SaveFIle.saveArrayListInFile("groupsArrayList",groups);
-            SaveFIle.saveArrayListInFile("requestsArrayList",requests);
-            SaveFIle.saveArrayListInFile("requirmentsArrayList",requirments); ;
-            SaveFIle.saveArrayListInFile("groupStatus",groupStatuses);
+            SaveFIle.saveArrayListInFile("personsArrayList.ser",persons);
+            SaveFIle.saveArrayListInFile("workshopsArrayList.ser",workshops);
+            SaveFIle.saveArrayListInFile("holdWorkShopsArrayList.ser",holdWorkShops);
+            SaveFIle.saveArrayListInFile("groupsArrayList.ser",groups);
+            SaveFIle.saveArrayListInFile("requestsArrayList.ser",requests);
+            SaveFIle.saveArrayListInFile("requirmentsArrayList.ser",requirments); ;
+            SaveFIle.saveArrayListInFile("groupStatus.ser",groupStatuses);
     }
     public ArrayList<RequestGreater>getAllGreaterRequestThatThisPersonSend(int id){
         RequestGreater requestGreater = new RequestGreater();
