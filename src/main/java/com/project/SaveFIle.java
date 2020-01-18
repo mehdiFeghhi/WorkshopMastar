@@ -27,7 +27,6 @@ public class SaveFIle {
             ObjectInputStream ois = new ObjectInputStream(fis);
 
             namesList = (ArrayList) ois.readObject();
-
             ois.close();
             fis.close();
             return namesList;

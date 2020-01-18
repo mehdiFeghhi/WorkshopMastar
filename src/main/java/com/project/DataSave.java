@@ -16,20 +16,20 @@ public class DataSave implements Serializable {
     private ArrayList<Requirments> requirments = new ArrayList<Requirments>();
     private ArrayList<GroupStatus> groupStatuses = new ArrayList<GroupStatus>();
     public DataSave(){
-        if (SaveFIle.loadFromFileArrayList("personsArrayList") != null)
-            persons = SaveFIle.loadFromFileArrayList("personsArrayList");
-        if(SaveFIle.loadFromFileArrayList("workshopsArrayList") != null)
-            workshops = SaveFIle.loadFromFileArrayList("workshopsArrayList");
-        if (SaveFIle.loadFromFileArrayList("holdWorkShopsArrayList") != null)
-            holdWorkShops = SaveFIle.loadFromFileArrayList("holdWorkShopsArrayList");
-        if (SaveFIle.loadFromFileArrayList("groupsArrayList") != null)
-            groups = SaveFIle.loadFromFileArrayList("groupsArrayList");
-        if(SaveFIle.loadFromFileArrayList("requestsArrayList") != null)
-            requests = SaveFIle.loadFromFileArrayList("requestsArrayList");
-        if(SaveFIle.loadFromFileArrayList("requirmentsArrayList") != null)
-            requirments = SaveFIle.loadFromFileArrayList("requirmentsArrayList") ;
-        if (SaveFIle.loadFromFileArrayList("groupStatus") != null)
-            groupStatuses = SaveFIle.loadFromFileArrayList("groupStatus");
+        if (SaveFIle.loadFromFileArrayList("personsArrayList.ser") != null)
+            persons = SaveFIle.loadFromFileArrayList("personsArrayList.ser");
+        if(SaveFIle.loadFromFileArrayList("workshopsArrayList.ser") != null)
+            workshops = SaveFIle.loadFromFileArrayList("workshopsArrayList.ser");
+        if (SaveFIle.loadFromFileArrayList("holdWorkShopsArrayList.ser") != null)
+            holdWorkShops = SaveFIle.loadFromFileArrayList("holdWorkShopsArrayList.ser");
+        if (SaveFIle.loadFromFileArrayList("groupsArrayList.ser") != null)
+            groups = SaveFIle.loadFromFileArrayList("groupsArrayList.ser");
+        if(SaveFIle.loadFromFileArrayList("requestsArrayList.ser") != null)
+            requests = SaveFIle.loadFromFileArrayList("requestsArrayList.ser");
+        if(SaveFIle.loadFromFileArrayList("requirmentsArrayList.ser") != null)
+            requirments = SaveFIle.loadFromFileArrayList("requirmentsArrayList.ser") ;
+        if (SaveFIle.loadFromFileArrayList("groupStatus.ser") != null)
+            groupStatuses = SaveFIle.loadFromFileArrayList("groupStatus.ser");
 
     }
     public void saveInFile(){
@@ -502,4 +502,13 @@ public class DataSave implements Serializable {
         }
         return requestment;
      }
+
+    public ArrayList<GroupStatus> getALLGroupStatuseINdataBaseOfThisWorkShope(int workShopId) {
+        ArrayList<GroupStatus> groupStatuses = new ArrayList<GroupStatus>();
+        for(GroupStatus i : this.groupStatuses){
+            if (i.getGroup().getHoldWorkShop().getId() == workShopId)
+                groupStatuses.add(i);
+        }
+        return groupStatuses;
+    }
 }

@@ -5,13 +5,22 @@ import java.util.ArrayList;
 
 public class GroupStatus implements Serializable {
     private int id;
+    private double statues;
     private Group group;
     private RoleOfWorkShape roleOfWorkShape;
     private ArrayList<Boolean> attendance ;
-
     public GroupStatus(Group group, RoleOfWorkShape roleOfWorkShape) {
         this.group = group;
         this.roleOfWorkShape = roleOfWorkShape;
+        this.statues = -1;
+    }
+
+    public double getStatues() {
+        return statues;
+    }
+
+    public void setStatues(double statues) {
+        this.statues = statues;
     }
 
     public int getId() {

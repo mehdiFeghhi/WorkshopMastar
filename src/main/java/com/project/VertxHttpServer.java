@@ -44,21 +44,30 @@ public class VertxHttpServer extends AbstractVerticle {
     Map<String,Person> mapLogin = new HashMap<String,Person>();
     Map<Integer,ValidationProperty> mapValidtionCode = new HashMap<>();
     public VertxHttpServer (){
-        if (SaveFIle.loadHashMap("maplagin123") != null)
-            this.mapLogin = SaveFIle.loadHashMap("maplagin123") ;
-        if (SaveFIle.loadHashMap("mapValiditionCode") != null)
-            this.mapValidtionCode = SaveFIle.loadHashMap("mapValiditionCode");
+        if (SaveFIle.loadHashMap("mapLogin123.ser") != null)
+            this.mapLogin = SaveFIle.loadHashMap("mapLogin123.ser") ;
+        if (SaveFIle.loadHashMap("mapValiditionCode.ser") != null)
+            this.mapValidtionCode = SaveFIle.loadHashMap("mapValiditionCode.ser");
     }
     @Override
     public void start() throws Exception {
-        String string = "January 2, 2022";
-        DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-        String string2 = "February 12, 2022";
-        DateFormat format1 = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-        LocalTime time = LocalTime.of(10,45,00);
-        LocalTime time2 = LocalTime.of(12,30,00);
-        dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
-        dataSave.getHoldWorkShops().add(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,null,false, (long) 10000000));
+//        SaveFIle.saveHashMap("mapLogin123.ser",null);
+//        SaveFIle.saveHashMap("mapValiditionCode.ser",null);
+//        SaveFIle.saveArrayListInFile("workshopsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("holdWorkShopsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("groupsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("requestsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("requirmentsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("personsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("groupStatus.ser",null);
+//        String string = "January 2, 2022";
+//        DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+//        String string2 = "February 12, 2022";
+//        DateFormat format1 = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+//        LocalTime time = LocalTime.of(10,45,00);
+//        LocalTime time2 = LocalTime.of(12,30,00);
+//        dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
+//        dataSave.getHoldWorkShops().add(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,null,false, (long) 10000000));
         Vertx vertx = Vertx.vertx() ;
        // MongoClient client = MongoClient.createShared(vertx,jsonMongo) ;
        // MongoDb MyDataBase = new MongoDb(client);
@@ -881,31 +890,64 @@ public class VertxHttpServer extends AbstractVerticle {
         Managment managment = null;
         Greater greater = null;
         Student student = null;
+        Greater greater1 = new Greater();
+        Student student1 = new Student();
         RequestGreater requestGreater = null;
         RequestStudent requestStudent = null;
         greater = (Greater) person.findOurType(Greater.class);
         student = (Student) person.findOurType(Student.class);
+
         if (person.is_this_role_in_our_person(Managment.class))
             managment = (Managment) person.findOurType(Managment.class);
             if (holdWorkShop.getManagment().id == managment.id)
                 return "managment";
         ArrayList<Requests>  allRequestArrayList = dataSave.seeAllRequestArrayList(workShopID);
+        ArrayList<GroupStatus> groupStatusArrayListr = getALLGroupStatuseINdataBaseOfThisWorkShope(workShopID);
         for(Requests i : allRequestArrayList){
             if(i.getClass().equals(Student.class)){
                 requestStudent = (RequestStudent) i;
                 if (requestStudent.getId() == student.id) {
-                    if(requestStudent.getAccetply().equals(Accetply.Accept))
-                        return "";
+                    if(requestStudent.getAccetply().equals(Accetply.Accept)){
+                        for(GroupStatus s : groupStatusArrayListr){
+                            if(s.getRoleOfWorkShape().equals(Student.class)) {
+                                student1 = (Student) s.getRoleOfWorkShape();
+                                if (student1.id == student.getId()){
+                                    if(s.getStatues()>10)
+                                        return "PsssStudent";
+                                    else if(s.getStatues()<10)
+                                        return "FailStudent";
+                                    else if (s.getStatues() == -1)
+                                        return "AcceptStudent_PandingMark";
+                                }
+                            }
+                        }
+                        return "weHaveMistack";
+                    }
+                    if (requestStudent.getAccetply().equals(Accetply.Reject)){
+                        return "rejectStudent";
+                    }
+                    else if (requestStudent.getAccetply().equals(Accetply.Pending)){
+                        return "PendingRequest";
+                    }
                 }
             }
             if (i.getClass().equals(Greater.class)){
                 requestGreater = (RequestGreater) i;
                 if (requestGreater.getId() == greater.getId()){
-                    return "greater";
+                    if (requestGreater.getAccetply().equals(Accetply.Accept))
+                        return "AcceptGreater";
+                    if (requestGreater.getAccetply().equals(Accetply.Reject))
+                        return "RejectGreater";
+                    if (requestGreater.getAccetply().equals(Accetply.Pending))
+                        return "PendingGreater";
                 }
             }
         }
         return "haveNoActivity";
+    }
+
+    private ArrayList<GroupStatus> getALLGroupStatuseINdataBaseOfThisWorkShope(int WorkShopId) {
+        return dataSave.getALLGroupStatuseINdataBaseOfThisWorkShope(WorkShopId);
     }
 
     private boolean AddNewGroupTodatabase(Group group) {
