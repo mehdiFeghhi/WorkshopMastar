@@ -48,6 +48,12 @@ public class Person  implements Serializable {
         this.emailAddress = emailAddress;
         this.is_Active = true;
     }
+
+    public Person(String user, String email) {
+        this.user = user;
+        this.emailAddress = email;
+    }
+
     public Person clone(){
         return new Person(this.getName(),this.getLastName(),this.date_birthday,this.getUser(),this.nationalCode,this.getPhoneNumber(),this.getEmailAddress());
     }

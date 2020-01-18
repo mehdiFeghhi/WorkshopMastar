@@ -107,8 +107,8 @@ public class VertxHttpServer extends AbstractVerticle {
                     response.end("{\"status\": 100 ,\"validation\": "+token+"}");//this person is Admin
                 }
                 else {
-                    SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
-                    SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
+                    SaveFIle.saveHashMap("mapLogin123.ser", (HashMap) this.mapLogin);
+                    SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);
                     response.end("{\"status\": 1 ,\"validation\": " + token + "}");
                 }
             }
@@ -154,8 +154,8 @@ public class VertxHttpServer extends AbstractVerticle {
             if (mapLogin.containsKey(token)) {
                 updateInPersonINdataBase(mapLogin.get(token));
                 mapLogin.remove(token);
-                SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
-                SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
+                SaveFIle.saveHashMap("mapLogin123.ser", (HashMap) this.mapLogin);
+                SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);
                 response.end("{\"status\":1}");
             }
             else {
@@ -437,7 +437,7 @@ public class VertxHttpServer extends AbstractVerticle {
                                     .setSymmetric(true)));
 
                     String token = provider.generateToken(new JsonObject().put("userName", user));
-                    mapLogin.put(token, new Person());
+                    mapLogin.put(token, new Person(user,email));
                     SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
                     SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
                     response.end("{\"status\":1 ,\"token\":" + token + "}");
@@ -492,12 +492,13 @@ public class VertxHttpServer extends AbstractVerticle {
             response.putHeader("content-type", "application/json");
             ObjectMapper objectMapper = new ObjectMapper();
 
-            if (json.containsKey("token") && mapLogin.containsKey(json.containsKey("token"))){
+            if (json.containsKey("token") && mapLogin.containsKey(json.getString("token"))){
                 newPerson = mapLogin.get(json.getString("token"));
                 try {
                     newPerson = objectMapper.readValue(json.getJsonObject("person").toString(),Person.class);
                     mapLogin.put(json.getString("token"),newPerson);
                     AddPersonTodataBase(newPerson);
+                    dataSave.saveInFile();
                     response.end("{\"status\":1}");
 
                 } catch (IOException e) {
