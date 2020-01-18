@@ -267,7 +267,7 @@ public class VertxHttpServer extends AbstractVerticle {
             final String codeValidation;
             if (json.getString("IN").equals("1")) {                 //have account or have not;
 
-                if ((newPerson = findInDataBase2(user, email)) != null) {
+                if ((newPerson = findPersonByUser(user)) != null) {
                     codeValidation = make_Password(6);
                     OurEmail ourEmail = new OurEmail();
                     new Thread(new Runnable() {
@@ -287,7 +287,7 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             else {
                 if ((newPerson = findPersonByUser(user)) != null){
-                    response.end("{\"status\":0}");
+                    response.end("{\"status\":1}");
                 }
                 else {
                     codeValidation = make_Password(6);
@@ -304,7 +304,7 @@ public class VertxHttpServer extends AbstractVerticle {
                     t.start();
                     SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
                     SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
-                    response.end("{\"status\": 1 }");
+                    response.end("{\"status\": 0 }");
                 }
             }
         });
