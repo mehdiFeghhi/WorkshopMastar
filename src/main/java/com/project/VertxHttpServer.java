@@ -37,7 +37,7 @@ public class VertxHttpServer extends AbstractVerticle {
     HoldWorkShop newHoldWorkShop = null;
     RequestStudent newRequestStudent = null;
     RequestGreater newRequestGreater = null;
-    DataSave dataSave = new DataSave();
+    DataSave dataSave = null;
 //    JsonObject jsonMongo = new JsonObject().put("host","127.0.0.1")
 //            .put("port","27017")
 //            .put("username","mehdi")
@@ -50,6 +50,7 @@ public class VertxHttpServer extends AbstractVerticle {
             this.mapLogin = SaveFIle.loadHashMap("mapLogin123.ser") ;
         if (SaveFIle.loadHashMap("mapValiditionCode.ser") != null)
             this.mapValidtionCode = SaveFIle.loadHashMap("mapValiditionCode.ser");
+        dataSave = new DataSave();
     }
     @Override
     public void start() throws Exception {
@@ -68,8 +69,13 @@ public class VertxHttpServer extends AbstractVerticle {
 //        DateFormat format1 = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
 //        LocalTime time = LocalTime.of(10,45,00);
 //        LocalTime time2 = LocalTime.of(12,30,00);
+//        Person mehdi = new Person("mehdi","feghhi","1378-12-16","mf1378mf","1850427933","1850427933","0937837990","mf1378mf@yahoo.com");
+//        Addmin addmin = new Addmin(AdminType.General);
+//        addmin.setId(0);
+//        dataSave.getPersons().add(mehdi);
 //        dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
 //        dataSave.getHoldWorkShops().add(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,null,false, (long) 10000000));
+//        dataSave.saveInFile();
         Vertx vertx = Vertx.vertx() ;
        // MongoClient client = MongoClient.createShared(vertx,jsonMongo) ;
        // MongoDb MyDataBase = new MongoDb(client);
@@ -282,8 +288,8 @@ public class VertxHttpServer extends AbstractVerticle {
                                 mapValidtionCode.put(mapValidtionCode.size()+1,new ValidationProperty(new Date(),user,codeValidation));
                         }
                     }).start();
-                    SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
-                    SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
+                    SaveFIle.saveHashMap("mapLogin123.ser", (HashMap) this.mapLogin);
+                    SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);
                     response.end("{\"status\": 1 }");
                 } else
 
@@ -306,8 +312,8 @@ public class VertxHttpServer extends AbstractVerticle {
                         }
                     });
                     t.start();
-                    SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
-                    SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
+                    SaveFIle.saveHashMap("mapLogin123.ser", (HashMap) this.mapLogin);
+                    SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);
                     response.end("{\"status\": 1 }");
                 }
             }
@@ -878,9 +884,9 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             ArrayList<Person> persons = allPersonIndataBase();
             int dd = 0;
-            Addmin addmin = (Addmin)newPerson.findOurType(Addmin.class);
+            Addmin addmin3 = (Addmin)newPerson.findOurType(Addmin.class);
             for(Person i : persons){
-                if(!i.is_this_role_in_our_person(Addmin.class)|| (addmin.getAdminType() == AdminType.General)) {
+                if(!i.is_this_role_in_our_person(Addmin.class)|| (addmin3.getAdminType() == AdminType.General)) {
                     JsonObject jsonObject1 = new JsonObject().put("setId", i.getId())
                             .put("setGender", i.getGender())
                             .put("setUser", i.getUser())
@@ -908,11 +914,11 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Addmin.class)){
                 response.end("{\"status\":0}");
             }
-            Addmin addmin = (Addmin)newPerson.findOurType(Addmin.class);
+            Addmin addmin2 = (Addmin)newPerson.findOurType(Addmin.class);
             Person person = findPersonIndataBase(json.getString("user"),json.getString("nationCode"));
             if(person == null)
                 response.end("{\"status\":0}");
-            if(!person.is_this_role_in_our_person(Addmin.class) || addmin.getAdminType() == AdminType.General){
+            if(!person.is_this_role_in_our_person(Addmin.class) || addmin2.getAdminType() == AdminType.General){
                 boolean activity = json.getBoolean("activity");
                 person.setIs_Active(activity);
                 response.end("{\"status\":1}");
@@ -932,11 +938,11 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Addmin.class)){
                 response.end("{\"status\":0}");
             }
-            Addmin addmin = (Addmin)newPerson.findOurType(Addmin.class);
+            Addmin addmin4 = (Addmin)newPerson.findOurType(Addmin.class);
             String Level = jsonObject.getString("Level");
             List keys = new ArrayList(mapLogin.keySet());
             if(Level.equals("AllPerson")){
-                if (addmin.getAdminType() == AdminType.General) {
+                if (addmin4.getAdminType() == AdminType.General) {
                     mapLogin.clear();
                     mapLogin.put(jsonObject.getString("token"), newPerson);
                 }
