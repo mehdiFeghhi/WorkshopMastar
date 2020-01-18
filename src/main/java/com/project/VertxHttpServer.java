@@ -257,6 +257,10 @@ public class VertxHttpServer extends AbstractVerticle {
             }
 
         });
+
+        ///////////////////////////////////////sendEmail
+
+
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST, "/sendEmail").handler(rc -> {
             JsonObject json = rc.getBodyAsJson();
@@ -309,6 +313,9 @@ public class VertxHttpServer extends AbstractVerticle {
             }
         });
 
+        //////////////////request Student cancel from student
+
+
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/requestStudentCancelFromStudent").handler(rc -> {
             JsonObject json = rc.getBodyAsJson();
@@ -326,6 +333,9 @@ public class VertxHttpServer extends AbstractVerticle {
             else
                 response.end("{\"status\":0}");
         });
+////////////////////////////////////////////////////
+
+
 
 
         router.route().handler(BodyHandler.create());
@@ -342,6 +352,12 @@ public class VertxHttpServer extends AbstractVerticle {
             SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
             response.end("{\"status\":1}");
         });
+
+
+        ////////////////////////////////////////////////////////////////////////////////
+        ///person stutus in hold workshop
+
+
 
 
         router.route().handler(BodyHandler.create());
@@ -380,7 +396,13 @@ public class VertxHttpServer extends AbstractVerticle {
             response.end("{\"status\":1\"information\":"+HistoryOfHim+"}");
         });
 
+/////////////////////////////////////////////////////////////////////////////////
 
+
+
+
+
+        //////////////////////////////////////////////////////see all recent work shop
 
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.GET,"/seeAllRecentWorkShop").handler(rc ->{
@@ -388,6 +410,17 @@ public class VertxHttpServer extends AbstractVerticle {
             HttpServerResponse response = rc.response();
             response.end("{\"status\":1,\"seeAllRecent\":"+json+"}");
         });
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+        //////////////////////////////////////////////////////////////////check validation code
+
+
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/CheckValidationCode").handler(rc -> {
             JsonObject json = rc.getBodyAsJson();
@@ -412,7 +445,14 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             response.end("{\"status\":0}");
         });
+        //////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
+
+
+        //////////////////////////////////////////////////////////////////////////////forgeetPass
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/forgetPass").handler(rc -> {
             JsonObject json = rc.getBodyAsJson();
@@ -436,8 +476,17 @@ public class VertxHttpServer extends AbstractVerticle {
             else
                 response.end("{\"status\":0}");
         });
+
+
+
+
+        ///////////////////////////////////////////////////
+        //signUp
+
+
+
         router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.POST,"/singUp").handler(rc -> {
+        router.route(HttpMethod.POST,"/signUp").handler(rc -> {
             JsonObject json = rc.getBodyAsJson();
             HttpServerResponse response = rc.response();
             response.putHeader("content-type", "application/json");
@@ -496,7 +545,16 @@ public class VertxHttpServer extends AbstractVerticle {
             JsonObject HistoryOfHim = findHistoryOfGreater(json.getInteger("idGreater"));
             response.end("{\"status\":1\"information\":"+HistoryOfHim+"}");
         });
+        ///////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
+
+
+
+
+        /////////////////////////////////////////////////see all greater request one work shop
 
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/seeAllGreaterRequestOneWorkShop").handler(rc ->{
@@ -518,6 +576,12 @@ public class VertxHttpServer extends AbstractVerticle {
             JsonObject AllGreaterRequest = seeAllRequestGreater(jsonObject.getInteger("WorkShopId"));
 
             response.end("{\"status\":1\"information\":"+AllGreaterRequest.toString()+"}");
+
+            /////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 
         });
         router.route().handler(BodyHandler.create());
