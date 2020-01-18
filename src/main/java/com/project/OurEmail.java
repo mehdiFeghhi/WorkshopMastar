@@ -18,6 +18,7 @@ class OurEmail {
     @Asynchronous
     @Lock(LockType.READ)
     public boolean sendMail(String eml, String massage) {
+        System.out.println("helloword");
         //Setting up configurations for the email connection to the Google SMTP server using TLS
         Properties props = new Properties();
         props.put("mail.smtp.host", "true");
@@ -28,10 +29,11 @@ class OurEmail {
         //Establishing a session with required user details
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("raminrowshan1234@gmail.com", "1234ramin");
+                return new PasswordAuthentication("feghhi1378me@gmail.com", "1850427933");
             }
         });
         try {
+            System.out.println("hello");
             //Creating a Message object to set the email content
             MimeMessage msg = new MimeMessage(session);
             //Storing the comma seperated values to email addresses

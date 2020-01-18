@@ -15,6 +15,8 @@ import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.auth.jwt.JWTAuthOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
+import org.bson.io.BsonOutput;
+import org.w3c.dom.ls.LSOutput;
 
 import javax.xml.crypto.Data;
 import java.io.IOException;
@@ -268,15 +270,14 @@ public class VertxHttpServer extends AbstractVerticle {
                 if ((newPerson = findInDataBase2(user, email)) != null) {
                     codeValidation = make_Password(6);
                     OurEmail ourEmail = new OurEmail();
-                    Thread t = new Thread(new Runnable() {
+                    new Thread(new Runnable() {
                         @Override
                         public void run() {
-
+                            System.out.println("akdjvxnskjdvn");
                             if (ourEmail.sendMail(email, codeValidation)) //if email send succesful we add to our list of valicationCods string validation
                                 mapValidtionCode.put(mapValidtionCode.size()+1,new ValidationProperty(new Date(),user,codeValidation));
                         }
-                    });
-                    t.start();
+                    }).start();
                     SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
                     SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
                     response.end("{\"status\": 1 }");
@@ -292,6 +293,7 @@ public class VertxHttpServer extends AbstractVerticle {
                     codeValidation = make_Password(6);
                     OurEmail ourEmail = new OurEmail();
                     Thread t = new Thread(new Runnable() {
+
                         @Override
                         public void run() {
                             if (ourEmail.sendMail(email, codeValidation))
@@ -299,6 +301,7 @@ public class VertxHttpServer extends AbstractVerticle {
 
                         }
                     });
+                    t.start();
                     SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
                     SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
                     response.end("{\"status\": 1 }");
