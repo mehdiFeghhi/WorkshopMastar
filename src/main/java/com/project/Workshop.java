@@ -10,7 +10,6 @@ public class Workshop implements Serializable {
     private int id;
     private String Title;
     private String description;
-
     public Workshop(String title, String description) {
         Title = title;
         this.description = description;
@@ -25,10 +24,14 @@ public class Workshop implements Serializable {
     }
 
     public String getTitle() {
+        if (Title == null)
+            return "unkown";
         return Title;
     }
 
     public String getDescription() {
+        if (description == null)
+            return "unkwon";
         return description;
     }
 

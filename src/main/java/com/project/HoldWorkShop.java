@@ -116,6 +116,8 @@ public class HoldWorkShop implements Serializable {
     }
 
     public String getName() {
+        if (Name == null)
+            return "unKown";
         return Name;
     }
 
