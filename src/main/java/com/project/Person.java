@@ -172,13 +172,13 @@ public class Person  implements Serializable {
         for (RoleOfWorkShape i : roleOfWorkShapes) {
             // if (i.getClass().equals(object.getClass()))
             //     return i;
-            if (object.getClass().equals(Student.class) && i.getClass().equals(Student.class))
+            if (object.getClass().equals(Student.class.getClass()) && i.getClass().equals(Student.class.getClass()))
                 return (Student) i;
-            else if (object.getClass().equals(Greater.class) && i.getClass().equals(Greater.class))
+            else if (object.getClass().equals(Greater.class.getClass()) && i.getClass().equals(Greater.class.getClass()))
                 return (Greater) i;
-            else if (object.getClass().equals(Managment.class) && i.getClass().equals(Managment.class))
+            else if (object.getClass().equals(Managment.class.getClass()) && i.getClass().equals(Managment.class.getClass()))
                 return (Managment) i;
-            else if (object.getClass().equals(Addmin.class) && i.getClass().equals(Addmin.class))
+            else if (object.getClass().equals(Addmin.class.getClass()) && i.getClass().equals(Addmin.class.getClass()))
                 return (Addmin) i;
         }
         if (Student.class .equals(object.getClass())){
@@ -189,13 +189,13 @@ public class Person  implements Serializable {
             return student;
 
         }
-        else if (object.getClass().equals(Greater.class)){
+        else if (object.getClass().equals(Greater.class.getClass())){
             Greater greater = new Greater();
             greater.setId(this.id);
             this.roleOfWorkShapes.add(greater);
             return greater;
         }
-        else if (object.getClass().equals(Managment.class)){
+        else if (object.getClass().equals(Managment.class.getClass())){
             Managment whoMakeWorkShape = new Managment();
             this.roleOfWorkShapes.add(whoMakeWorkShape);
             whoMakeWorkShape.setId(this.id);
