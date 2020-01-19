@@ -1129,11 +1129,12 @@ public class VertxHttpServer extends AbstractVerticle {
                 newPerson = mapLogin.get(token);
             else
                 response.end("{\"status\":0}");
-            if(!newPerson.is_this_role_in_our_person(Addmin.class)){
+            Addmin addmin = new Addmin();
+            if(!newPerson.is_this_role_in_our_person(addmin)){
                 response.end("{\"status\":0}");
             }
             ObjectMapper objectMapper = new ObjectMapper();
-            Person person = findPersonIndataBase(jsonObject.getString("user"),jsonObject.getString("NationCode"));
+            Person person = findPersonByUser(jsonObject.getString("user"));
             if(person == null)
                 response.end("{\"status\":4}");//can't find this person in dataBase
             HoldWorkShop holdWorkShop = null;
