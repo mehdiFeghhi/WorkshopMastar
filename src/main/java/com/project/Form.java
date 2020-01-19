@@ -1,14 +1,16 @@
 package com.project;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Form implements Serializable {
     AbsForm absForm;
     HoldWorkShop holdWorkShop;
-
-    public Form(AbsForm absForm, HoldWorkShop holdWorkShop) {
+    ArrayList<String> Questions = new ArrayList<String>();
+    public Form(AbsForm absForm, HoldWorkShop holdWorkShop,ArrayList<String> Questions) {
         this.absForm = absForm;
         this.holdWorkShop = holdWorkShop;
+        this.Questions = Questions;
     }
 
     public AbsForm getAbsForm() {

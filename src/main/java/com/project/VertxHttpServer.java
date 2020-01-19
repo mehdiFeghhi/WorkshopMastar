@@ -507,7 +507,7 @@ public class VertxHttpServer extends AbstractVerticle {
                     newPerson = objectMapper.readValue(json.getJsonObject("person").toString(),Person.class);
                     mapLogin.put(json.getString("token"),newPerson);
                     AddPersonTodataBase(newPerson);
-                    AddPersonTodataBase(newPerson);
+                    dataSave.getPersons().add(newPerson);
                     dataSave.saveInFile();
                     response.end("{\"status\":1}");
 
@@ -1274,20 +1274,37 @@ public class VertxHttpServer extends AbstractVerticle {
         Date date = new Date();
         JsonObject jsonObject = new JsonObject();
         for(HoldWorkShop i : holdWorkShop){
-            if(i.getStart().after(date)){
+            if(i.getStart().after(date)) {
                 JsonObject jsonObject1 = new JsonObject();
-                Person person = findPersonOfThisManagment(i.getManagment().id);
-                jsonObject1.put("NameWorkShop",i.getName())
-                            .put("Management",person.getName()+"  "+person.getLastName())
-                            .put("DateStart",i.getStart())
-                            .put("DateEnd",i.getEnd())
-                            .put("Money",i.getMoney())
-                            .put("IsInstallment",i.getIs_installment())
-                            .put("Title",i.getWorkshop().getTitle())
-                            .put("id",i.getId())
-                            .put("Description",i.getWorkshop().getDescription());
-                jsonObject.put(String.valueOf(d),jsonObject1);
+                if (i.getManagment() != null) {
+                    Person person = findPersonOfThisManagment(i.getManagment().id);
+                    jsonObject1.put("NameWorkShop", i.getName())
+                            .put("Management", person.getName() + "  " + person.getLastName())
+                            .put("DateStart", i.getStart())
+                            .put("DateEnd", i.getEnd())
+                            .put("Money", i.getMoney())
+                            .put("IsInstallment", i.getIs_installment())
+                            .put("Title", i.getWorkshop().getTitle())
+                            .put("id", i.getId())
+                            .put("Description", i.getWorkshop().getDescription());
+                    jsonObject.put(String.valueOf(d), jsonObject1);
+                    d++;
+                }
+            }
+            else{
+                JsonObject jsonObject1 = new JsonObject();
+                jsonObject1.put("NameWorkShop", i.getName())
+                        .put("Management", "Unknown")
+                        .put("DateStart", i.getStart())
+                        .put("DateEnd", i.getEnd())
+                        .put("Money", i.getMoney())
+                        .put("IsInstallment", i.getIs_installment())
+                        .put("Title", i.getWorkshop().getTitle())
+                        .put("id", i.getId())
+                        .put("Description", i.getWorkshop().getDescription());
+                jsonObject.put(String.valueOf(d), jsonObject1);
                 d++;
+
             }
         }
         return jsonObject;
