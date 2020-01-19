@@ -1464,7 +1464,7 @@ public class VertxHttpServer extends AbstractVerticle {
         Date date = new Date();
         JsonObject jsonObject = new JsonObject();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        DateFormat dateFormat2 = new SimpleDateFormat("hh.mm aa");
+
         for(HoldWorkShop i : holdWorkShop){
             if(i.getStart().after(date)) {
                 JsonObject jsonObject1 = new JsonObject();
@@ -1474,8 +1474,8 @@ public class VertxHttpServer extends AbstractVerticle {
                             .put("Management", person.getName() + "  " + person.getLastName())
                             .put("DateStart", dateFormat.format(i.getStart()).toString())
                             .put("DateEnd", dateFormat.format(i.getEnd()).toString())
-                            .put("HourStart",dateFormat2.format(i.getHourStart()).toString())
-                            .put("HourEnd",dateFormat2.format(i.getHourEnd()).toString())
+                            .put("HourStart",i.getHourStart().toString())
+                            .put("HourEnd",i.getHourEnd().toString())
                             .put("Money", i.getMoney())
                             .put("IsInstallment", i.getIs_installment())
                             .put("Title", i.getWorkshop().getTitle())
@@ -1488,8 +1488,8 @@ public class VertxHttpServer extends AbstractVerticle {
                             .put("Management", "Unknown")
                             .put("DateStart", dateFormat.format(i.getStart()).toString())
                             .put("DateEnd", dateFormat.format(i.getEnd()).toString())
-                            .put("HourStart",dateFormat2.format(i.getHourStart()).toString())
-                            .put("HourEnd",dateFormat2.format(i.getHourEnd()).toString())
+                            .put("HourStart",i.getHourStart().toString())
+                            .put("HourEnd",i.getHourEnd().toString())
                             .put("Money", i.getMoney())
                             .put("IsInstallment", i.getIs_installment())
                             .put("Title", i.getWorkshop().getTitle())
