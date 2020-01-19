@@ -1289,22 +1289,20 @@ public class VertxHttpServer extends AbstractVerticle {
                             .put("Description", i.getWorkshop().getDescription());
                     jsonObject.put(String.valueOf(d), jsonObject1);
                     d++;
-                }
-            }
-            else{
-                JsonObject jsonObject1 = new JsonObject();
-                jsonObject1.put("NameWorkShop", i.getName())
-                        .put("Management", "Unknown")
-                        .put("DateStart", i.getStart())
-                        .put("DateEnd", i.getEnd())
-                        .put("Money", i.getMoney())
-                        .put("IsInstallment", i.getIs_installment())
-                        .put("Title", i.getWorkshop().getTitle())
-                        .put("id", i.getId())
-                        .put("Description", i.getWorkshop().getDescription());
-                jsonObject.put(String.valueOf(d), jsonObject1);
-                d++;
+                } else {
+                    jsonObject1.put("NameWorkShop", i.getName())
+                            .put("Management", "Unknown")
+                            .put("DateStart", i.getStart())
+                            .put("DateEnd", i.getEnd())
+                            .put("Money", i.getMoney())
+                            .put("IsInstallment", i.getIs_installment())
+                            .put("Title", i.getWorkshop().getTitle())
+                            .put("id", i.getId())
+                            .put("Description", i.getWorkshop().getDescription());
+                    jsonObject.put(String.valueOf(d), jsonObject1);
+                    d++;
 
+                }
             }
         }
         return jsonObject;
