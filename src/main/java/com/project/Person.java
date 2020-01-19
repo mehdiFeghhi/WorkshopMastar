@@ -181,7 +181,7 @@ public class Person  implements Serializable {
             else if (object.getClass().equals(Addmin.class.getClass()) && i.getClass().equals(Addmin.class.getClass()))
                 return (Addmin) i;
         }
-        if (Student.class .equals(object.getClass())){
+        if (Student.class.getClass().equals(object.getClass())){
             Student student = new Student();
             student.setId(this.id);
             this.roleOfWorkShapes.add(student);
