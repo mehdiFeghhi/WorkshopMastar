@@ -54,30 +54,30 @@ public class VertxHttpServer extends AbstractVerticle {
     }
     @Override
     public void start() throws Exception {
-//        SaveFIle.saveHashMap("mapLogin123.ser",null);
-//        SaveFIle.saveHashMap("mapValiditionCode.ser",null);
-//        SaveFIle.saveArrayListInFile("workshopsArrayList.ser",null);
-//        SaveFIle.saveArrayListInFile("holdWorkShopsArrayList.ser",null);
-//        SaveFIle.saveArrayListInFile("groupsArrayList.ser",null);
-//        SaveFIle.saveArrayListInFile("requestsArrayList.ser",null);
-//        SaveFIle.saveArrayListInFile("requirmentsArrayList.ser",null);
-//        SaveFIle.saveArrayListInFile("personsArrayList.ser",null);
-//        SaveFIle.saveArrayListInFile("groupStatus.ser",null);
-//        String string = "January 2, 2022";
-//        DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-//        String string2 = "February 12, 2022";
-//        DateFormat format1 = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-//        LocalTime time = LocalTime.of(10,45,00);
-//        LocalTime time2 = LocalTime.of(12,30,00);
-//        Person mehdi = new Person("mehdi","feghhi","1378-12-16","mf1378mf","1850427933","1850427933","0937837990","mf1378mf@yahoo.com");
-//        Addmin addmin = new Addmin(AdminType.General);
-//        addmin.setId(0);
-//          Workshop workshopOfs = new Workshop("Math","ArrahehMishaved");
-//          workshopOfs.setId(0);
-//        dataSave.getPersons().add(mehdi);
-//        dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
-//        dataSave.getHoldWorkShops().add(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,workshopOfs,true, (long) 10000000));
-//        dataSave.saveInFile();
+        SaveFIle.saveHashMap("mapLogin123.ser",null);
+        SaveFIle.saveHashMap("mapValiditionCode.ser",null);
+        SaveFIle.saveArrayListInFile("workshopsArrayList.ser",null);
+        SaveFIle.saveArrayListInFile("holdWorkShopsArrayList.ser",null);
+        SaveFIle.saveArrayListInFile("groupsArrayList.ser",null);
+        SaveFIle.saveArrayListInFile("requestsArrayList.ser",null);
+        SaveFIle.saveArrayListInFile("requirmentsArrayList.ser",null);
+        SaveFIle.saveArrayListInFile("personsArrayList.ser",null);
+        SaveFIle.saveArrayListInFile("groupStatus.ser",null);
+        String string = "January 2, 2022";
+        DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+        String string2 = "February 12, 2022";
+        DateFormat format1 = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+        LocalTime time = LocalTime.of(10,45,00);
+        LocalTime time2 = LocalTime.of(12,30,00);
+        Person mehdi = new Person("mehdi","feghhi","1378-12-16","mf1378mf","1850427933","1850427933","0937837990","mf1378mf@yahoo.com");
+        Addmin addmin = new Addmin(AdminType.General);
+        mehdi.addToArrayListOfRole(addmin);
+        Workshop workshopOfs = new Workshop("Math","ArrahehMishaved");
+        workshopOfs.setId(0);
+        dataSave.getPersons().add(mehdi);
+        dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
+        dataSave.getHoldWorkShops().add(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,workshopOfs,true, (long) 10000000));
+        dataSave.saveInFile();
         Vertx vertx = Vertx.vertx() ;
        // MongoClient client = MongoClient.createShared(vertx,jsonMongo) ;
        // MongoDb MyDataBase = new MongoDb(client);
@@ -113,6 +113,8 @@ public class VertxHttpServer extends AbstractVerticle {
                 if(!newPerson.getIs_Active())
                     response.end("{\"status\":13");//this person Can't activity
                 if(newPerson.is_this_role_in_our_person(admin3)){
+                    SaveFIle.saveHashMap("mapLogin123.ser", (HashMap) this.mapLogin);
+                    SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);
                     response.end("{\"status\": 100 ,\"validation\": "+token+"}");//this person is Admin
                 }
                 else {
@@ -1103,6 +1105,7 @@ public class VertxHttpServer extends AbstractVerticle {
             for (Workshop i: workshopsNeed){
                 AddNewReqirmentsToDataBase(new Requirments(i,workshop,Relation.TheNeed));
             }
+            dataSave.saveInFile();
             response.end("{\"status\":1}");
         });
 
@@ -1129,7 +1132,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 newPerson = mapLogin.get(token);
             else
                 response.end("{\"status\":0}");
-            Addmin addmin = new Addmin();
+            Addmin addmin3 = new Addmin();
             if(!newPerson.is_this_role_in_our_person(addmin)){
                 response.end("{\"status\":0}");
             }
@@ -1145,8 +1148,10 @@ public class VertxHttpServer extends AbstractVerticle {
                 response.end("{\"status\":0}");
             }
             holdWorkShop.setManagment((Managment) person.findOurType("3"));
-            if(!addNewHoldWorkShop(holdWorkShop))
+            if(!addNewHoldWorkShop(holdWorkShop)) {
                 response.end("{\"status\":0}");
+            }
+            dataSave.saveInFile();
             response.end("{\"status\":1}");
         });
         router.route().handler(BodyHandler.create());
