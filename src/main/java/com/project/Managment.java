@@ -7,10 +7,6 @@ public class Managment implements RoleOfWorkShape {
     public Managment(){
     }
 
-    public Managment(int id) {
-        this.id = id;
-    }
-
     public void setId(int id) {
         this.id = id;
     }

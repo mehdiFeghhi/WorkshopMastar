@@ -8,7 +8,7 @@ public class Addmin implements RoleOfWorkShape {
     }
 
     public Addmin() {
-
+        this.adminType = AdminType.Soldier;
     }
 
     public int getId() {
