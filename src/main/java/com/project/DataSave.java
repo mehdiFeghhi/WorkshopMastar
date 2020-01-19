@@ -377,6 +377,7 @@ public class DataSave implements Serializable {
             }
             newPerson.setId(persons.size()+1);
             newPerson.setIs_Active(true);
+            persons.add(newPerson);
             return true;
     }
 
