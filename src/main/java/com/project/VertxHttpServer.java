@@ -1280,8 +1280,8 @@ public class VertxHttpServer extends AbstractVerticle {
                     Person person = findPersonOfThisManagment(i.getManagment().id);
                     jsonObject1.put("NameWorkShop", i.getName())
                             .put("Management", person.getName() + "  " + person.getLastName())
-                            .put("DateStart", i.getStart())
-                            .put("DateEnd", i.getEnd())
+                            .put("DateStart", i.getStart().toString())
+                            .put("DateEnd", i.getEnd().toString())
                             .put("Money", i.getMoney())
                             .put("IsInstallment", i.getIs_installment())
                             .put("Title", i.getWorkshop().getTitle())
