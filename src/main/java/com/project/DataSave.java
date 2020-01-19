@@ -408,7 +408,7 @@ public class DataSave implements Serializable {
         Greater greater = null;
         for(Person i : persons){
             if(i.is_this_role_in_our_person(Greater.class)){
-                greater = (Greater) i.findOurType(Greater.class);
+                greater = (Greater) i.findOurType("2");
                 if(greater.getId() == id)
                     return i;
             }
