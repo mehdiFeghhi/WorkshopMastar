@@ -1463,6 +1463,8 @@ public class VertxHttpServer extends AbstractVerticle {
         int d = 0;
         Date date = new Date();
         JsonObject jsonObject = new JsonObject();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat dateFormat2 = new SimpleDateFormat("hh.mm aa");
         for(HoldWorkShop i : holdWorkShop){
             if(i.getStart().after(date)) {
                 JsonObject jsonObject1 = new JsonObject();
@@ -1470,8 +1472,10 @@ public class VertxHttpServer extends AbstractVerticle {
                     Person person = findPersonOfThisManagment(i.getManagment().id);
                     jsonObject1.put("NameWorkShop", i.getName())
                             .put("Management", person.getName() + "  " + person.getLastName())
-                            .put("DateStart", i.getStart().toString())
-                            .put("DateEnd", i.getEnd().toString())
+                            .put("DateStart", dateFormat.format(i.getStart()).toString())
+                            .put("DateEnd", dateFormat.format(i.getEnd()).toString())
+                            .put("HourStart",dateFormat2.format(i.getHourStart()).toString())
+                            .put("HourEnd",dateFormat2.format(i.getHourEnd()).toString())
                             .put("Money", i.getMoney())
                             .put("IsInstallment", i.getIs_installment())
                             .put("Title", i.getWorkshop().getTitle())
@@ -1482,8 +1486,10 @@ public class VertxHttpServer extends AbstractVerticle {
                 } else {
                     jsonObject1.put("NameWorkShop", i.getName())
                             .put("Management", "Unknown")
-                            .put("DateStart", i.getStart())
-                            .put("DateEnd", i.getEnd())
+                            .put("DateStart", dateFormat.format(i.getStart()).toString())
+                            .put("DateEnd", dateFormat.format(i.getEnd()).toString())
+                            .put("HourStart",dateFormat2.format(i.getHourStart()).toString())
+                            .put("HourEnd",dateFormat2.format(i.getHourEnd()).toString())
                             .put("Money", i.getMoney())
                             .put("IsInstallment", i.getIs_installment())
                             .put("Title", i.getWorkshop().getTitle())
