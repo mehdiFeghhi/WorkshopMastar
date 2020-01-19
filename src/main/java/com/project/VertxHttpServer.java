@@ -1326,11 +1326,13 @@ public class VertxHttpServer extends AbstractVerticle {
         RequestStudent requestStudent = null;
         greater = (Greater) person.findOurType("2");
         student = (Student) person.findOurType("1");
-
-        if (person.is_this_role_in_our_person(Managment.class)) {
+        Managment managment2 = new Managment();
+        if (person.is_this_role_in_our_person(managment2)) {
             managment = (Managment) person.findOurType("3");
-            if (holdWorkShop.getManagment().id == managment.id)
-                return "managment";
+            if (holdWorkShop.getManagment() != null) {
+                if (holdWorkShop.getManagment().id == managment.id)
+                    return "managment";
+            }
         }
         ArrayList<Requests>  allRequestArrayList = dataSave.seeAllRequestArrayList(workShopID);
         ArrayList<GroupStatus> groupStatusArrayListr = getALLGroupStatuseINdataBaseOfThisWorkShope(workShopID);
