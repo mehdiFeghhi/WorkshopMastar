@@ -169,24 +169,36 @@ public class Person  implements Serializable {
     }
     public RoleOfWorkShape findOurType(Object object){
 
-        for (RoleOfWorkShape i : roleOfWorkShapes){
-            if (i.getClass().equals(object.getClass()))
-                return i;
+        for (RoleOfWorkShape i : roleOfWorkShapes) {
+            // if (i.getClass().equals(object.getClass()))
+            //     return i;
+            if (object.getClass().equals(Student.class) && i.getClass().equals(Student.class))
+                return (Student) i;
+            else if (object.getClass().equals(Greater.class) && i.getClass().equals(Greater.class))
+                return (Greater) i;
+            else if (object.getClass().equals(Managment.class) && i.getClass().equals(Managment.class))
+                return (Managment) i;
+            else if (object.getClass().equals(Addmin.class) && i.getClass().equals(Addmin.class))
+                return (Addmin) i;
         }
         if (Student.class .equals(object.getClass())){
             Student student = new Student();
+            student.setId(this.id);
             this.roleOfWorkShapes.add(student);
+
             return student;
 
         }
         else if (object.getClass().equals(Greater.class)){
             Greater greater = new Greater();
+            greater.setId(this.id);
             this.roleOfWorkShapes.add(greater);
             return greater;
         }
         else if (object.getClass().equals(Managment.class)){
             Managment whoMakeWorkShape = new Managment();
             this.roleOfWorkShapes.add(whoMakeWorkShape);
+            whoMakeWorkShape.setId(this.id);
             return whoMakeWorkShape;
         }
         else

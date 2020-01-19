@@ -213,6 +213,7 @@ public class VertxHttpServer extends AbstractVerticle {
             else {
                 boolean canSendRequest = true;
                 Student student = (Student) newPerson.findOurType(Student.class);
+                dataSave.saveInFile();
                 ArrayList<Workshop> workshopPrerequisites = findALLworkShopThatPrerequisiteWithThisWorkshop(newHoldWorkShop.getWorkshop().getId());
                 JsonObject jsonObject = new JsonObject();
                 ArrayList<String>titleMain = null;
@@ -926,11 +927,25 @@ public class VertxHttpServer extends AbstractVerticle {
             String EachForm = jsonObject.getString("EachForm");
             String user = jsonObject.getString("user_Form_TO");
             int IdFormfullItQuestion = jsonObject.getInteger("Id_Form_full_It_Question");
+
             Form form = findFromInDataBaseBYID(IdFormfullItQuestion);
-            Qualifition qualifition ;
+            JsonArray answ = jsonObject.getJsonArray("answer");
+            ArrayList<String> stringArrayList = new ArrayList<String>();
+            for (int i = 0 ; i < answ.size();i++){
+                stringArrayList.add(answ.getString(i));
+            }
             Greater greater;
+            Greater greater3;
             Student student;
+            Student student3;
             Managment managment;
+            GroupStatus groupStatus1;
+            GroupStatus groupStatus3;
+            Group group1 = null;
+            Group group2;
+            boolean firstCondition = false;
+            boolean secendCondition = false;
+            boolean thirdCondition  = false;
             Person person2 = findPersonByUser(user);
             ArrayList<GroupStatus> groupStatus2 = getALLGroupStatuseINdataBaseOfThisWorkShope(form.holdWorkShop.getId());
             if (EachForm.equals("1")){//greater for student
@@ -938,8 +953,34 @@ public class VertxHttpServer extends AbstractVerticle {
                     greater = (Greater) newPerson.findOurType(Greater.class);
                     if(person2.is_this_role_in_our_person(Student.class)){
                         student = (Student) person2.findOurType(Student.class);
-
-
+                        for(GroupStatus g : groupStatus2){
+                            if(g.getRoleOfWorkShape().equals(Student.class)){
+                                student3 = (Student) g.getRoleOfWorkShape();
+                                if (student.getId() == student3.getId()){
+                                    firstCondition = true;
+                                    group1 = g.getGroup();
+                                }
+                            }
+                            if (g.getRoleOfWorkShape().equals(GroupStatus.class)){
+                                greater3 = (Greater) g.getRoleOfWorkShape();
+                                if (greater3.getId() == greater.getId()) {
+                                    secendCondition = true;
+                                    group2 = g.getGroup();
+                                    if (group1 != null) {
+                                        if (group1.getId() == group2.getId())
+                                            thirdCondition = true;
+                                    }
+                                }
+                            }
+                        }
+                        if (firstCondition && secendCondition && thirdCondition) {
+                            Qualifition qualifition = new Qualifition(stringArrayList,greater,student,form);
+                            if (addQualififtionTodataBase(qualifition))
+                                response.end("{\"status\":1}");
+                            else
+                                response.end(("{\"status\":0}"));
+                        }
+;
 
                     }
                     else {
@@ -1234,6 +1275,10 @@ public class VertxHttpServer extends AbstractVerticle {
                 .listen(5000);
 
         }
+
+    private boolean addQualififtionTodataBase(Qualifition qualifition) {
+        return true ;
+    }
 
     private Form findFromInDataBaseBYID(int idFormfullItQuestion) {
         return null;

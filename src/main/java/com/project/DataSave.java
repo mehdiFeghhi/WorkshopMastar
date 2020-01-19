@@ -19,6 +19,7 @@ public class DataSave implements Serializable {
     private ArrayList<GroupStatus> groupStatuses = new ArrayList<GroupStatus>();
     private ArrayList<Form> forms = new ArrayList<Form>();
     private ArrayList<AbsForm> absForms = new ArrayList<AbsForm>();
+    private ArrayList<Qualifition> qualifitionArrayList = new ArrayList<Qualifition>();
     public DataSave(){
         if (SaveFIle.loadFromFileArrayList("personsArrayList.ser") != null)
             persons = SaveFIle.loadFromFileArrayList("personsArrayList.ser");
@@ -34,6 +35,12 @@ public class DataSave implements Serializable {
             requirments = SaveFIle.loadFromFileArrayList("requirmentsArrayList.ser") ;
         if (SaveFIle.loadFromFileArrayList("groupStatus.ser") != null)
             groupStatuses = SaveFIle.loadFromFileArrayList("groupStatus.ser");
+        if (SaveFIle.loadFromFileArrayList("qualifitionArrayList.ser") != null)
+            qualifitionArrayList = SaveFIle.loadFromFileArrayList("qualifitionArrayList.ser");
+        if (SaveFIle.loadFromFileArrayList("Form.ser") != null)
+            forms = SaveFIle.loadFromFileArrayList("Form.ser");
+        if (SaveFIle.loadFromFileArrayList("absForms.ser") != null)
+            absForms = SaveFIle.loadFromFileArrayList("absForms.ser");
 
     }
     public void saveInFile(){
@@ -44,6 +51,10 @@ public class DataSave implements Serializable {
             SaveFIle.saveArrayListInFile("requestsArrayList.ser",requests);
             SaveFIle.saveArrayListInFile("requirmentsArrayList.ser",requirments); ;
             SaveFIle.saveArrayListInFile("groupStatus.ser",groupStatuses);
+            SaveFIle.saveArrayListInFile("qualifitionArrayList.ser",qualifitionArrayList);
+            SaveFIle.saveArrayListInFile("Form.ser",forms);
+            SaveFIle.saveArrayListInFile("absForms.ser",absForms);
+
     }
     public ArrayList<RequestGreater>getAllGreaterRequestThatThisPersonSend(int id){
         RequestGreater requestGreater = new RequestGreater();
