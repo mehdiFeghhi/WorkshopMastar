@@ -189,13 +189,13 @@ public class Person  implements Serializable {
             return student;
 
         }
-        else if (object.getClass().equals("2")){
+        else if (object.equals("2")){
             Greater greater = new Greater();
             greater.setId(this.id);
             this.roleOfWorkShapes.add(greater);
             return greater;
         }
-        else if (object.getClass().equals("3")){
+        else if (object.equals("3")){
             Managment whoMakeWorkShape = new Managment();
             this.roleOfWorkShapes.add(whoMakeWorkShape);
             whoMakeWorkShape.setId(this.id);
