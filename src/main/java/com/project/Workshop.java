@@ -11,6 +11,12 @@ public class Workshop implements Serializable {
         this.description = description;
     }
 
+    public Workshop(String title) {
+        this.title = title;
+    }
+    public Workshop(){
+    }
+
     public int getId() {
         return id;
     }
