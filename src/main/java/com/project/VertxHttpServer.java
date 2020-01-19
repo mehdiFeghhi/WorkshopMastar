@@ -1133,7 +1133,7 @@ public class VertxHttpServer extends AbstractVerticle {
             ObjectMapper objectMapper = new ObjectMapper();
             Workshop workshop = null;
             try {
-                workshop = objectMapper.readValue(jsonObject.getJsonObject("WorkShop"),Workshop.class);
+                workshop = objectMapper.readValue(jsonObject.getJsonObject("WorkShop").toString(),Workshop.class);
             } catch (IOException e) {
                 e.printStackTrace();
                 response.end("{\"status\":0}");
