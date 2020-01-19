@@ -60,7 +60,7 @@ public class DataSave implements Serializable {
         RequestGreater requestGreater = new RequestGreater();
         ArrayList<RequestGreater> allOfThem = new ArrayList<RequestGreater>();
         for (Requests i : this.requests){
-            if(i.getClass().equals(RequestGreater.class) ){
+            if(i instanceof RequestGreater){
                 requestGreater = (RequestGreater) i;
                 if (requestGreater.getGreater().getId() == id)
                     allOfThem.add(requestGreater);
@@ -123,7 +123,7 @@ public class DataSave implements Serializable {
         RequestStudent requestStudent = new RequestStudent();
         ArrayList<RequestStudent> allOfThem = new ArrayList<RequestStudent>();
         for (Requests i : this.requests){
-            if(i.getClass().equals(RequestStudent.class) ){
+            if(i instanceof RequestStudent){
                 requestStudent = (RequestStudent) i;
                 if (requestStudent.getStudent().getId() == id)
                     allOfThem.add(requestStudent);
@@ -176,7 +176,7 @@ public class DataSave implements Serializable {
         int n = 0;
         RequestStudent requestStudent = new RequestStudent();
         for(Requests i : this.requests){
-            if (i.getClass().equals(RequestStudent.class)){
+            if (i instanceof RequestStudent){
                 requestStudent  = (RequestStudent)i;
                 if(requestStudent.getHoldWorkShop().getId() == workShopId)
                     person = findPersonOfThisStudent(requestStudent.getStudent().getId());
@@ -201,7 +201,7 @@ public class DataSave implements Serializable {
         Greater greater = null;
         for (Person i : persons){
             for(RoleOfWorkShape s : i.getRoleOfWorkShapes()){
-                if(s.getClass().equals(Greater.class)){
+                if(s instanceof Greater){
                     greater = (Greater) s;
                     if(greater.getId() == id)
                         return i;
@@ -216,7 +216,7 @@ public class DataSave implements Serializable {
         Student student = null;
         for (Person i : persons){
             for(RoleOfWorkShape s : i.getRoleOfWorkShapes()){
-                if(s.getClass().equals(Student.class)){
+                if(s instanceof Student){
                     student = (Student) s;
                     if(student.getId() == id)
                         return i;
@@ -374,7 +374,7 @@ public class DataSave implements Serializable {
     public RequestGreater getOneRequestGreater(Integer requestGreaterId) {
         RequestGreater requestGreater = null;
         for(Requests i : this.requests){
-            if(i.getClass().equals(RequestGreater.class)){
+            if(i instanceof RequestGreater){
                 requestGreater = (RequestGreater) i;
                 if(requestGreater.getId() == requestGreaterId)
                     return requestGreater;
@@ -420,7 +420,7 @@ public class DataSave implements Serializable {
         ArrayList<RequestGreater> requestGreaters = new ArrayList<RequestGreater>();
         RequestGreater requestGreater = new RequestGreater();
         for(Requests i : requests){
-            if(i.getClass().equals(RequestGreater.class)){
+            if(i instanceof RequestGreater){
                     requestGreater = (RequestGreater) i;
                     if(requestGreater.getId() == id)
                         requestGreaters.add(requestGreater);
@@ -433,7 +433,7 @@ public class DataSave implements Serializable {
         ArrayList<RequestStudent> requestStudents = new ArrayList<RequestStudent>();
         RequestStudent requestStudent = new RequestStudent();
         for(Requests i : requests){
-            if(i.getClass().equals(RequestStudent.class)){
+            if(i instanceof RequestStudent){
                 requestStudent = (RequestStudent) i;
                 if(requestStudent.getId() == id)
                     requestStudents.add(requestStudent);
@@ -457,7 +457,7 @@ public class DataSave implements Serializable {
         RequestStudent  requestStudent = null;
         RequestGreater  requestGreater = null;
         for(Requests i : requests){
-            if(i.getClass().equals(RequestStudent.class)){
+            if(i instanceof RequestStudent){
                 requestStudent = (RequestStudent) i;
                 if(requestStudent.getId() == requestID) {
                     this.requests.remove(i);
@@ -480,7 +480,7 @@ public class DataSave implements Serializable {
     public boolean AddToRequestListINDataBase(RequestStudent newRequestStudent) {
         RequestStudent requestStudent = new RequestStudent();
          for (Requests i : requests){
-             if(Request.class.equals(RequestStudent.class)){
+             if(i instanceof RequestStudent){
                 requestStudent = (RequestStudent) i;
                 if (requestStudent.student.id == requestStudent.getStudent().getId() && requestStudent.getHoldWorkShop().getId() == newRequestStudent.getHoldWorkShop().getId())
                     return false;
@@ -494,7 +494,7 @@ public class DataSave implements Serializable {
     public boolean AddToRequestListINDataBase(RequestGreater newRequestGreater) {
         RequestGreater requestGreater = new RequestGreater();
         for (Requests i : requests){
-            if(Request.class.equals(RequestGreater.class)){
+            if(i instanceof RequestGreater){
                 requestGreater = (RequestGreater) i;
                 if (requestGreater.getGreater().getId() == newRequestGreater.getGreater().getId() && newRequestGreater.getHoldWorkShop().getId() == requestGreater.getHoldWorkShop().getId())
                     return false;
