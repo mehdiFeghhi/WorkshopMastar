@@ -51,5 +51,8 @@ public class RequestStudent extends Requests implements Serializable {
     public void setPay(Pay pay) {
         this.pay = pay;
     }
+    public String getMyClass(){
+        return "1";
+    }
 
 }

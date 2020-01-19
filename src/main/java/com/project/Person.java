@@ -167,21 +167,21 @@ public class Person  implements Serializable {
     public void setImage(Image image) {
         this.image = image;
     }
-    public RoleOfWorkShape findOurType(Object object){
+    public RoleOfWorkShape findOurType(String object){
 
         for (RoleOfWorkShape i : roleOfWorkShapes) {
             // if (i.getClass().equals(object.getClass()))
             //     return i;
-            if (object.getClass().equals(Student.class.getClass()) && i.getClass().equals(Student.class.getClass()))
+            if (object.equals("1") && i.getClass().equals("1"))
                 return i;
-            else if (object.getClass().equals(Greater.class.getClass()) && i.getClass().equals(Greater.class.getClass()))
+            else if (object.equals("2") && i.equals("2"))
                 return i;
-            else if (object.getClass().equals(Managment.class.getClass()) && i.getClass().equals(Managment.class.getClass()))
+            else if (object.equals("3") && i.equals("3"))
                 return  i;
-            else if (object.getClass().equals(Addmin.class.getClass()) && i.getClass().equals(Addmin.class.getClass()))
+            else if (object.equals("0") && i.getClass().equals("0"))
                 return i;
         }
-        if (Student.class.getClass().equals(object.getClass())){
+        if (object.equals("1")){
             Student student = new Student();
             student.setId(this.id);
             this.roleOfWorkShapes.add(student);
@@ -189,13 +189,13 @@ public class Person  implements Serializable {
             return student;
 
         }
-        else if (object.getClass().equals(Greater.class.getClass())){
+        else if (object.getClass().equals("2")){
             Greater greater = new Greater();
             greater.setId(this.id);
             this.roleOfWorkShapes.add(greater);
             return greater;
         }
-        else if (object.getClass().equals(Managment.class.getClass())){
+        else if (object.getClass().equals("3")){
             Managment whoMakeWorkShape = new Managment();
             this.roleOfWorkShapes.add(whoMakeWorkShape);
             whoMakeWorkShape.setId(this.id);
@@ -206,7 +206,7 @@ public class Person  implements Serializable {
     }
     public boolean is_this_role_in_our_person(Object object){
         for (RoleOfWorkShape i : roleOfWorkShapes)
-            if (i.getClass().equals(object.getClass()))
+            if (i instanceof Object)
                 return true;
         return false;
     }

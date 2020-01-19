@@ -14,4 +14,9 @@ public class Managment implements RoleOfWorkShape {
     public void setId(int id) {
         this.id = id;
     }
+
+    @Override
+    public String getMyClass() {
+        return "3";
+    }
 }

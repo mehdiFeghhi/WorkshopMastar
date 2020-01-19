@@ -45,4 +45,5 @@ abstract public class Requests implements Serializable {
     public void setAccetply(Accetply accetply) {
         this.accetply = accetply;
     }
+
 }

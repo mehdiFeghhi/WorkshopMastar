@@ -212,7 +212,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 response.end("{\"status\":0}");
             else {
                 boolean canSendRequest = true;
-                Student student = (Student) newPerson.findOurType(Student.class);
+                Student student = (Student) newPerson.findOurType("1");
                 dataSave.saveInFile();
                 ArrayList<Workshop> workshopPrerequisites = findALLworkShopThatPrerequisiteWithThisWorkshop(newHoldWorkShop.getWorkshop().getId());
                 JsonObject jsonObject = new JsonObject();
@@ -251,10 +251,10 @@ public class VertxHttpServer extends AbstractVerticle {
                     }
                     if (pay.equals("2")) {
                         Installment payment = new Installment(newHoldWorkShop.getMoney(), newHoldWorkShop.getPayMoneyInHowTimes());
-                        newRequestStudent = new RequestStudent(massage, newHoldWorkShop, (Student) newPerson.findOurType(new Student()), payment);
+                        newRequestStudent = new RequestStudent(massage, newHoldWorkShop, (Student) newPerson.findOurType("1"), payment);
                     } else {
                         Pay payment = new Pay(newHoldWorkShop.getMoney(), newHoldWorkShop.getIs_installment());
-                        newRequestStudent = new RequestStudent(massage, newHoldWorkShop, (Student) newPerson.findOurType(new Student()), payment);
+                        newRequestStudent = new RequestStudent(massage, newHoldWorkShop, (Student) newPerson.findOurType("1"), payment);
                     }
                     // bayad tozihat ye chiz ezafeh konam
                     if (AddToRequestListINDataBase(newRequestStudent)) {
@@ -400,7 +400,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
-            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            Managment managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,json.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenaid
 
@@ -557,7 +557,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
-            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            Managment managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,json.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenaid
 
@@ -588,7 +588,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
-            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            Managment managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenaid
 
@@ -616,7 +616,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
-            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            Managment managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenaid
 
@@ -639,7 +639,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
-            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            Managment managment = (Managment) newPerson.findOurType("3");
             JsonObject allWorkShopOfThisManagment = null;
             int dd = 0;
             ArrayList<HoldWorkShop>Thathave  = findWorkShophaveThisManager(managment.id);
@@ -671,7 +671,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
-            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            Managment managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenaid
             if (requestStudent.getPay().getClass().equals(Installment.class)){
@@ -700,7 +700,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
-            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            Managment managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenaid
             if (requestStudent.getPay().getClass().equals(Installment.class)){
@@ -728,7 +728,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
-            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            Managment managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenaid
             int numberGroup = jsonObject.getInteger("GroupNumber");
@@ -763,7 +763,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
-            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            Managment managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenaid
             RequestStudent requestStudent;
@@ -801,7 +801,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
-            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            Managment managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenaid
             try {
@@ -869,7 +869,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Managment.class)){
                 response.end("{\"status\":0}");
             }
-            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            Managment managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenai
             AbsForm absFormOfMe = findAbcFormFromDataBaseById(id_number_AbcForm);
@@ -950,9 +950,9 @@ public class VertxHttpServer extends AbstractVerticle {
             ArrayList<GroupStatus> groupStatus2 = getALLGroupStatuseINdataBaseOfThisWorkShope(form.holdWorkShop.getId());
             if (EachForm.equals("1")){//greater for student
                 if (newPerson.is_this_role_in_our_person(Greater.class)){
-                    greater = (Greater) newPerson.findOurType(Greater.class);
+                    greater = (Greater) newPerson.findOurType("2");
                     if(person2.is_this_role_in_our_person(Student.class)){
-                        student = (Student) person2.findOurType(Student.class);
+                        student = (Student) person2.findOurType("1");
                         for(GroupStatus g : groupStatus2){
                             if(g.getRoleOfWorkShape().equals(Student.class)){
                                 student3 = (Student) g.getRoleOfWorkShape();
@@ -1104,7 +1104,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 e.printStackTrace();
                 response.end("{\"status\":0}");
             }
-            holdWorkShop.setManagment((Managment) person.findOurType(Managment.class));
+            holdWorkShop.setManagment((Managment) person.findOurType("3"));
             if(!addNewHoldWorkShop(holdWorkShop))
                 response.end("{\"status\":0}");
             response.end("{\"status\":1}");
@@ -1124,7 +1124,7 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             ArrayList<Person> persons = allPersonIndataBase();
             int dd = 0;
-            Addmin addmin3 = (Addmin)newPerson.findOurType(Addmin.class);
+            Addmin addmin3 = (Addmin)newPerson.findOurType("0");
             for(Person i : persons){
                 if(!i.is_this_role_in_our_person(Addmin.class)|| (addmin3.getAdminType() == AdminType.General)) {
                     JsonObject jsonObject1 = new JsonObject().put("setId", i.getId())
@@ -1179,7 +1179,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 for (GroupStatus s : groupStatusArrayList) {
                     if (s.getRoleOfWorkShape().equals(Student.class)) {
                         student = (Student) s.getRoleOfWorkShape();
-                        student1 = (Student) i.findOurType(Student.class);
+                        student1 = (Student) i.findOurType("1");
                         if (student1.getId() == student.getId()) {
                             JsonObject jsonObject1 = new JsonObject().put("setId", i.getId())
                                     .put("setGender", i.getGender())
@@ -1227,7 +1227,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Addmin.class)){
                 response.end("{\"status\":0}");
             }
-            Addmin addmin2 = (Addmin)newPerson.findOurType(Addmin.class);
+            Addmin addmin2 = (Addmin)newPerson.findOurType("0");
             Person person = findPersonIndataBase(json.getString("user"),json.getString("nationCode"));
             if(person == null)
                 response.end("{\"status\":0}");
@@ -1251,7 +1251,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if(!newPerson.is_this_role_in_our_person(Addmin.class)){
                 response.end("{\"status\":0}");
             }
-            Addmin addmin4 = (Addmin)newPerson.findOurType(Addmin.class);
+            Addmin addmin4 = (Addmin)newPerson.findOurType("0");
             String Level = jsonObject.getString("Level");
             List keys = new ArrayList(mapLogin.keySet());
             if(Level.equals("AllPerson")){
@@ -1324,23 +1324,23 @@ public class VertxHttpServer extends AbstractVerticle {
         Student student1 = new Student();
         RequestGreater requestGreater = null;
         RequestStudent requestStudent = null;
-        greater = (Greater) person.findOurType(Greater.class);
-        student = (Student) person.findOurType(Student.class);
+        greater = (Greater) person.findOurType("2");
+        student = (Student) person.findOurType("1");
 
         if (person.is_this_role_in_our_person(Managment.class)) {
-            managment = (Managment) person.findOurType(Managment.class);
+            managment = (Managment) person.findOurType("3");
             if (holdWorkShop.getManagment().id == managment.id)
                 return "managment";
         }
         ArrayList<Requests>  allRequestArrayList = dataSave.seeAllRequestArrayList(workShopID);
         ArrayList<GroupStatus> groupStatusArrayListr = getALLGroupStatuseINdataBaseOfThisWorkShope(workShopID);
         for(Requests i : allRequestArrayList){
-            if(i.getClass().equals(Student.class)){
+            if(i instanceof RequestStudent){
                 requestStudent = (RequestStudent) i;
                 if (requestStudent.getId() == student.id) {
                     if(requestStudent.getAccetply().equals(Accetply.Accept)){
                         for(GroupStatus s : groupStatusArrayListr){
-                            if(s.getRoleOfWorkShape().equals(Student.class)) {
+                            if(s.getRoleOfWorkShape() instanceof Student) {
                                 student1 = (Student) s.getRoleOfWorkShape();
                                 if (student1.id == student.getId()){
                                     if(s.getStatues()>10)
@@ -1420,8 +1420,8 @@ public class VertxHttpServer extends AbstractVerticle {
     }
 
     private JsonObject PersonHoldWorkShopThatHaveInThisTime(Person newPerson, Date start, Date end, LocalTime hourStart, LocalTime hourEnd) {
-            Student student = (Student)newPerson.findOurType(Student.class);
-            Greater greater = (Greater)newPerson.findOurType(Greater.class);
+            Student student = (Student)newPerson.findOurType("1");
+            Greater greater = (Greater)newPerson.findOurType("2");
             ArrayList<RequestStudent>  requestStudents= getALLStudentRequestThatThisPersonSend(student.getId());
             ArrayList<RequestGreater> requestGreaters = getALLGreaterRequestThatThisPersonSend(greater.getId());
             JsonObject jsonObjectMain = new JsonObject();

@@ -12,4 +12,9 @@ public class Greater implements RoleOfWorkShape {
     public void setId(int id) {
         this.id = id;
     }
+
+    @Override
+    public String getMyClass() {
+        return "2";
+    }
 }

@@ -18,4 +18,9 @@ public class Addmin implements RoleOfWorkShape {
     public AdminType getAdminType() {
         return adminType;
     }
+
+    @Override
+    public String getMyClass() {
+        return "0";
+    }
 }

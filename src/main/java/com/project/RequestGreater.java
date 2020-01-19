@@ -46,4 +46,7 @@ public class RequestGreater extends Requests implements Serializable {
     public HoldWorkShop getHoldWorkShop(){
         return super.getHoldWorkShop();
     }
+    public String getMyClass(){
+        return  "2";
+    }
 }
