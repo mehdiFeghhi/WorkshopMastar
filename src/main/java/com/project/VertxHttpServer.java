@@ -319,7 +319,7 @@ public class VertxHttpServer extends AbstractVerticle {
             }
         });
 
-        //////////////////request Student cancel from student
+  ////////////////////////////////////////////////////////      //////////////////request Student cancel from student
 
 
         router.route().handler(BodyHandler.create());
@@ -382,6 +382,9 @@ public class VertxHttpServer extends AbstractVerticle {
             String number = situationInThisHoldWorkshop(workShopID,username1);
             response.end("{\"status\":"+number+"}");
         });
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/seeAllHistoryOfThisGreater").handler(rc ->{
             JsonObject json = rc.getBodyAsJson();
@@ -444,8 +447,8 @@ public class VertxHttpServer extends AbstractVerticle {
 
                     String token = provider.generateToken(new JsonObject().put("userName", user));
                     mapLogin.put(token, new Person(user,email));
-                    SaveFIle.saveHashMap("maplagin123", (HashMap) this.mapLogin);
-                    SaveFIle.saveHashMap("mapValiditionCode", (HashMap) this.mapValidtionCode);
+                    SaveFIle.saveHashMap("maplagin123.ser", (HashMap) this.mapLogin);
+                    SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);
                     response.end("{\"status\":1 ,\"token\":" + token + "}");
                 }
             }
@@ -899,8 +902,81 @@ public class VertxHttpServer extends AbstractVerticle {
                     dd++;
                 }
             }
-            response.end("{\"status\":1\"information\":"+json+"}");
+            response.end("{\"status\":1,\"information\":"+json+"}");
         });
+
+        ////////////////////////////////////////////////////////////////////////////////
+
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/studentOfOneGroupByUSerGreater").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            int idHoldWorkShope = jsonObject.getInteger("IdWorkShop");
+            ArrayList<GroupStatus>groupStatusArrayList = getALLGroupStatuseINdataBaseOfThisWorkShope(idHoldWorkShope);
+            JsonObject json = null;
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else {
+                System.out.println("we have'nt this person in mplogin ");
+                response.end("{\"status\":0}");
+            }
+            if(!newPerson.is_this_role_in_our_person(Greater.class)){
+                System.out.println("this person have'nt any greateries");
+                response.end("{\"status\":0}");
+            }
+            Group group = null;
+            for (GroupStatus i : groupStatusArrayList){
+                if (i.getGroup().getHead().equals(newPerson.getUser()))
+                        group = i.getGroup();
+            }
+            if (group == null){
+                System.out.println("this person can't see person of each of group");
+                response.end("{\"status\":0}");
+            }
+            int dd = 0;
+            Student student = null;
+            Student student1 = null;
+            ArrayList<Person>persons = findAllPersonOfThisHOldWorkShop(idHoldWorkShope);
+            for(Person i : persons) {
+                for (GroupStatus s : groupStatusArrayList) {
+                    if (s.getRoleOfWorkShape().equals(Student.class)) {
+                        student = (Student) s.getRoleOfWorkShape();
+                        student1 = (Student) i.findOurType(Student.class);
+                        if (student1.getId() == student.getId()) {
+                            JsonObject jsonObject1 = new JsonObject().put("setId", i.getId())
+                                    .put("setGender", i.getGender())
+                                    .put("setUser", i.getUser())
+                                    .put("setName", i.getName())
+                                    .put("setNationalCode", i.getNationalCode())
+                                    .put("setLastName", i.getLastName())
+                                    .put("setDate_birthday", i.getDate_birthday())
+                                    .put("setActivity", i.getIs_Active());
+                            json.put(String.valueOf(dd), jsonObject1);
+                            dd++;
+                        }
+                    }
+                }
+            }
+            response.end("{\"status\":1,\"information\":"+json+"}");
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////////////Admin change person activity
+
+
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/AdminChangePersonActivity").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
@@ -963,6 +1039,20 @@ public class VertxHttpServer extends AbstractVerticle {
 
         }
 
+    private ArrayList<Person> findAllPersonOfThisHOldWorkShop(int idHoldWorkShope) {
+        ArrayList<GroupStatus> groupStatusArrayList = getALLGroupStatuseINdataBaseOfThisWorkShope(idHoldWorkShope);
+        Student student = null;
+        ArrayList<Person> personArrayList = new ArrayList<Person>();
+        Person person = null;
+        for (GroupStatus i : groupStatusArrayList){
+            if (i.getRoleOfWorkShape().getClass().equals(Student.class)){
+                student = (Student) i.getRoleOfWorkShape();
+                person = findPersonOfThisStudent(student.getId());
+                personArrayList.add(person);
+            }
+        }
+        return  personArrayList;
+    }
     private String situationInThisHoldWorkshop(int workShopID, String username1) {
         HoldWorkShop holdWorkShop = findThisHoldWorkShop(workShopID);
         Person person = findPersonByUser(username1);
@@ -1013,8 +1103,13 @@ public class VertxHttpServer extends AbstractVerticle {
             if (i.getClass().equals(Greater.class)){
                 requestGreater = (RequestGreater) i;
                 if (requestGreater.getId() == greater.getId()){
-                    if (requestGreater.getAccetply().equals(Accetply.Accept))
+                    if (requestGreater.getAccetply().equals(Accetply.Accept)) {
+                        for (GroupStatus s : groupStatusArrayListr) {
+                            if (s.getGroup().getHead().equals(person.getUser()))
+                                return "AcceptHeedGreater";
+                        }
                         return "AcceptGreater";
+                    }
                     if (requestGreater.getAccetply().equals(Accetply.Reject))
                         return "RejectGreater";
                     if (requestGreater.getAccetply().equals(Accetply.Pending))
@@ -1334,5 +1429,5 @@ public class VertxHttpServer extends AbstractVerticle {
         }
         return new String(password);
     }
-    
+
 }

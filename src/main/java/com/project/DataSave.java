@@ -15,6 +15,8 @@ public class DataSave implements Serializable {
     private ArrayList<Requests> requests = new ArrayList<Requests>();
     private ArrayList<Requirments> requirments = new ArrayList<Requirments>();
     private ArrayList<GroupStatus> groupStatuses = new ArrayList<GroupStatus>();
+    private ArrayList<Form> forms = new ArrayList<Form>();
+
     public DataSave(){
         if (SaveFIle.loadFromFileArrayList("personsArrayList.ser") != null)
             persons = SaveFIle.loadFromFileArrayList("personsArrayList.ser");
