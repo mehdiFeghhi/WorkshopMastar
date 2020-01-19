@@ -924,11 +924,33 @@ public class VertxHttpServer extends AbstractVerticle {
             else
                 response.end("{\"status\":0}");
             String EachForm = jsonObject.getString("EachForm");
-            int IdPersonFormFullForIt = jsonObject.getInteger("idPersonFormFullForIt");
-            int IdFormfullItQuestion = jsonObject.getInteger("IdFormfullItQuestion");
-            if (EachForm.equals("1")){//Greater for student
-
-
+            String user = jsonObject.getString("user_Form_TO");
+            int IdFormfullItQuestion = jsonObject.getInteger("Id_Form_full_It_Question");
+            Form form = findFromInDataBaseBYID(IdFormfullItQuestion);
+            Qualifition qualifition ;
+            Greater greater;
+            Student student;
+            Managment managment;
+            Person person2 = findPersonByUser(user);
+            ArrayList<GroupStatus> groupStatus2 = getALLGroupStatuseINdataBaseOfThisWorkShope(form.holdWorkShop.getId());
+            if (EachForm.equals("1")){//greater for student
+                if (newPerson.is_this_role_in_our_person(Greater.class)){
+                    greater = (Greater) newPerson.findOurType(Greater.class);
+                    if(person2.is_this_role_in_our_person(Student.class)){
+                        student = (Student) person2.findOurType(Student.class);
+//                        if (){
+//
+//                        }
+                    }
+                    else {
+                        System.out.println("This Person Havent this Role for give massage");
+                        response.end("{\"status\":0}");
+                    }
+                }
+                else{
+                    System.out.println("THIS PERSON HAVENT THIS ROLE");
+                    response.end("{\"status\":0}");
+                }
             }
             if (EachForm.equals("2")){// Student for greater
 
@@ -1212,6 +1234,10 @@ public class VertxHttpServer extends AbstractVerticle {
                 .listen(5000);
 
         }
+
+    private Form findFromInDataBaseBYID(int idFormfullItQuestion) {
+        return null;
+    }
 
     private JsonObject seeAllABCformInDataBase() throws JsonProcessingException {
         return dataSave.seeAllABCformInDataBase();
