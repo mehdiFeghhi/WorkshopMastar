@@ -1,5 +1,7 @@
 package com.project;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.omg.CORBA.Request;
@@ -16,7 +18,7 @@ public class DataSave implements Serializable {
     private ArrayList<Requirments> requirments = new ArrayList<Requirments>();
     private ArrayList<GroupStatus> groupStatuses = new ArrayList<GroupStatus>();
     private ArrayList<Form> forms = new ArrayList<Form>();
-
+    private ArrayList<AbsForm> absForms = new ArrayList<AbsForm>();
     public DataSave(){
         if (SaveFIle.loadFromFileArrayList("personsArrayList.ser") != null)
             persons = SaveFIle.loadFromFileArrayList("personsArrayList.ser");
@@ -513,5 +515,34 @@ public class DataSave implements Serializable {
                 groupStatuses.add(i);
         }
         return groupStatuses;
+    }
+
+    public boolean AddNewAbCForm(AbsForm absFormOfMe) {
+        absFormOfMe.setNumber(this.absForms.size());
+        this.absForms.add(absFormOfMe);
+        return true;
+    }
+
+    public AbsForm findAbcFormFromDataBaseById(int id_number_abcForm) {
+        for (AbsForm i : this.absForms){
+            if(i.getNumber() == id_number_abcForm)
+                return i;
+        }
+        return null;
+    }
+
+    public boolean SaveFormInDataBase(Form form1) {
+        this.forms.add(form1);
+        return true;
+    }
+
+    public JsonObject seeAllABCformInDataBase() throws JsonProcessingException {
+        JsonObject jsonObject = new JsonObject();
+        ObjectMapper objectMapper = new ObjectMapper();
+        int dd = 0;
+        for(AbsForm i : this.absForms){
+            jsonObject.put(String.valueOf(0),objectMapper.writeValueAsString(i));
+        }
+        return jsonObject;
     }
 }

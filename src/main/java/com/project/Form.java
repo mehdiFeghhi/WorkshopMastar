@@ -6,11 +6,9 @@ import java.util.ArrayList;
 public class Form implements Serializable {
     AbsForm absForm;
     HoldWorkShop holdWorkShop;
-    ArrayList<String> Questions = new ArrayList<String>();
-    public Form(AbsForm absForm, HoldWorkShop holdWorkShop,ArrayList<String> Questions) {
+    public Form(AbsForm absForm, HoldWorkShop holdWorkShop) {
         this.absForm = absForm;
         this.holdWorkShop = holdWorkShop;
-        this.Questions = Questions;
     }
 
     public AbsForm getAbsForm() {

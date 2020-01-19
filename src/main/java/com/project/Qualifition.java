@@ -7,10 +7,20 @@ public class Qualifition implements Serializable {
     ArrayList<String> answer;
     RoleOfWorkShape roleTiler;
     RoleOfWorkShape roleTarget;
-    public Qualifition(ArrayList<String> answer, RoleOfWorkShape roleTiler, RoleOfWorkShape roleTarget) {
+    Form form;
+    public Qualifition(ArrayList<String> answer, RoleOfWorkShape roleTiler, RoleOfWorkShape roleTarget,Form form) {
         this.answer = answer;
         this.roleTiler = roleTiler;
         this.roleTarget = roleTarget;
+        this.form = form;
+    }
+
+    public Form getForm() {
+        return form;
+    }
+
+    public void setForm(Form form) {
+        this.form = form;
     }
 
     public ArrayList<String> getAnswer() {

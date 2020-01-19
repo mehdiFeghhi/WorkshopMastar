@@ -198,27 +198,13 @@ public class Person  implements Serializable {
                 return true;
         return false;
     }
-    public boolean addRoleOfWorkShop(Object object){
-        for(RoleOfWorkShape i : roleOfWorkShapes)
-            if(i.getClass().equals(object.getClass()))
-                return false;
-        if(object.getClass().equals(Student.class))
-            this.roleOfWorkShapes.add(new Student());
-        else if (object.getClass().equals(Managment.class))
-            this.roleOfWorkShapes.add(new Managment());
-        else if (object.getClass().equals(Greater.class))
-            this.roleOfWorkShapes.add(new Greater());
-        else if(object.getClass().equals(Addmin.class))
-            this.roleOfWorkShapes.add(new Addmin(AdminType.Soldier));
-        else
-            return false;
-        return true;
-    }
+
     public boolean addToArrayListOfRole(RoleOfWorkShape roleOfWorkShape){
         for (RoleOfWorkShape i : this.roleOfWorkShapes)
             if (i.getClass().equals(roleOfWorkShape.getClass()))
                 return false;
         this.roleOfWorkShapes.add(roleOfWorkShape);
+
         return true;
     }
     @Override

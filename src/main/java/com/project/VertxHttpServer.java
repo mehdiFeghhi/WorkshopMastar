@@ -811,10 +811,166 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             HoldWorkShop holdWorkShop = findThisHoldWorkShop(jsonObject.getInteger("IdWorkShop"));
             group.setHoldWorkShop(holdWorkShop);
-            if(AddNewGroupTodatabase(group))
+            if(AddNewGroupTodatabase(group)) {
+                response.end("{\"status\":1}");
+            }
+            response.end("{\"status\":0}");
+        });
+
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////AbC form
+
+
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/MakeNewABCForm").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Managment.class)){
+                response.end("{\"status\":0}");
+            }
+            JsonArray qustionABC = jsonObject.getJsonArray("question");
+            ArrayList<String> stringArrayList = new ArrayList<String>();
+            for (int i = 0 ; i < qustionABC.size();i++){
+                stringArrayList.add(qustionABC.getString(i));
+            }
+            AbsForm absFormOfMe = new AbsForm(stringArrayList);
+            if(AddNewAbCForm(absFormOfMe))
+                response.end("{\"status\":1,\"id_number\":"+absFormOfMe.getNumber()+"}");
+            response.end("{\"status\":0}");
+        });
+
+
+
+
+
+        ////////////////////////////////////////////////////////////
+
+
+        ////////////////////////////////////////////////////////makeNewForm
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/MakeNewForm").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            int id_number_AbcForm = jsonObject.getInteger("id_number");
+            int id_HoldWorkShop = jsonObject.getInteger("idHoldWorkShop");
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            if(!newPerson.is_this_role_in_our_person(Managment.class)){
+                response.end("{\"status\":0}");
+            }
+            Managment managment = (Managment) newPerson.findOurType(Managment.class);
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+                response.end("{\"status\":3}");//permissionDenai
+            AbsForm absFormOfMe = findAbcFormFromDataBaseById(id_number_AbcForm);
+            if (absFormOfMe == null){
+                response.end("{\"status\":0}");
+            }
+            HoldWorkShop holdWorkShop = findThisHoldWorkShop(id_HoldWorkShop);
+            Form form1 = new Form(absFormOfMe,holdWorkShop);
+            if(SaveFormInDataBase(form1))
                 response.end("{\"status\":1}");
             response.end("{\"status\":0}");
         });
+
+
+        //////////////////////////////////////////////////////////////
+
+
+
+
+
+        /////////////////////////////////////////////////////see all abc form
+
+
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.GET,"/seeAllabcform").handler(rc ->{
+            JsonObject json = null;
+            HttpServerResponse response = rc.response();
+            try {
+                json = seeAllABCformInDataBase();
+            } catch (JsonProcessingException e) {
+                response.end("{\"status\":0}");
+                e.printStackTrace();
+            }
+
+            response.end("{\"status\":1,\"seeAllRecent\":"+json+"}");
+        });
+
+
+
+
+        //////////////////////////////////////////////////////////////////////
+
+
+        ///////////////////////////////////////////////////Answer to Question
+
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/AnswerToQuestion").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else
+                response.end("{\"status\":0}");
+            String EachForm = jsonObject.getString("EachForm");
+            int IdPersonFormFullForIt = jsonObject.getInteger("idPersonFormFullForIt");
+            int IdFormfullItQuestion = jsonObject.getInteger("IdFormfullItQuestion");
+            if (EachForm.equals("1")){//Greater for student
+
+
+            }
+            if (EachForm.equals("2")){// Student for greater
+
+
+            }
+            if (EachForm.equals("3")){// student for managment
+
+            }
+            if (EachForm.equals("4")){// Managment for Greater
+
+            }
+            if (EachForm.equals("5")){// greater for managment
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////////see answer of each person to their formes
+
+
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/MakeNewWorkShop").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
@@ -847,6 +1003,21 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             response.end("{\"status\":1}");
         });
+
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////Make form
+
+
+
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/MakeNewHoldWorkShop").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
@@ -1042,6 +1213,22 @@ public class VertxHttpServer extends AbstractVerticle {
 
         }
 
+    private JsonObject seeAllABCformInDataBase() throws JsonProcessingException {
+        return dataSave.seeAllABCformInDataBase();
+    }
+
+    private boolean SaveFormInDataBase(Form form1) {
+        return dataSave.SaveFormInDataBase(form1);
+    }
+
+    private AbsForm findAbcFormFromDataBaseById(int id_number_abcForm) {
+        return dataSave.findAbcFormFromDataBaseById(id_number_abcForm);
+    }
+
+    private boolean AddNewAbCForm(AbsForm absFormOfMe) {
+        return  dataSave.AddNewAbCForm(absFormOfMe);
+    }
+
     private ArrayList<Person> findAllPersonOfThisHOldWorkShop(int idHoldWorkShope) {
         ArrayList<GroupStatus> groupStatusArrayList = getALLGroupStatuseINdataBaseOfThisWorkShope(idHoldWorkShope);
         Student student = null;
@@ -1069,10 +1256,11 @@ public class VertxHttpServer extends AbstractVerticle {
         greater = (Greater) person.findOurType(Greater.class);
         student = (Student) person.findOurType(Student.class);
 
-        if (person.is_this_role_in_our_person(Managment.class))
+        if (person.is_this_role_in_our_person(Managment.class)) {
             managment = (Managment) person.findOurType(Managment.class);
             if (holdWorkShop.getManagment().id == managment.id)
                 return "managment";
+        }
         ArrayList<Requests>  allRequestArrayList = dataSave.seeAllRequestArrayList(workShopID);
         ArrayList<GroupStatus> groupStatusArrayListr = getALLGroupStatuseINdataBaseOfThisWorkShope(workShopID);
         for(Requests i : allRequestArrayList){
