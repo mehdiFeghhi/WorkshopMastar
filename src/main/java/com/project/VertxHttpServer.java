@@ -1362,7 +1362,7 @@ public class VertxHttpServer extends AbstractVerticle {
                     }
                 }
             }
-            if (i.getClass().equals(Greater.class)){
+            if (i instanceof RequestGreater){
                 requestGreater = (RequestGreater) i;
                 if (requestGreater.getId() == greater.getId()){
                     if (requestGreater.getAccetply().equals(Accetply.Accept)) {
@@ -1563,7 +1563,7 @@ public class VertxHttpServer extends AbstractVerticle {
                             .put("HourEnd",i.getHourEnd().toString())
                             .put("Money", i.getMoney())
                             .put("IsInstallment", i.getIs_installment())
-                            .put("Title", i.getWorkshop().getTitle())
+                            .put("Title",i.getWorkshop().getTitle())
                             .put("id", i.getId())
                             .put("Description", i.getWorkshop().getDescription());
                     jsonObject.put(String.valueOf(d), jsonObject1);
