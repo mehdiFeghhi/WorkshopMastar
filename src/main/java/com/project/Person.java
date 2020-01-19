@@ -173,13 +173,13 @@ public class Person  implements Serializable {
             // if (i.getClass().equals(object.getClass()))
             //     return i;
             if (object.getClass().equals(Student.class.getClass()) && i.getClass().equals(Student.class.getClass()))
-                return (Student) i;
+                return i;
             else if (object.getClass().equals(Greater.class.getClass()) && i.getClass().equals(Greater.class.getClass()))
-                return (Greater) i;
+                return i;
             else if (object.getClass().equals(Managment.class.getClass()) && i.getClass().equals(Managment.class.getClass()))
-                return (Managment) i;
+                return  i;
             else if (object.getClass().equals(Addmin.class.getClass()) && i.getClass().equals(Addmin.class.getClass()))
-                return (Addmin) i;
+                return i;
         }
         if (Student.class.getClass().equals(object.getClass())){
             Student student = new Student();
