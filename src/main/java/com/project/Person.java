@@ -172,13 +172,13 @@ public class Person  implements Serializable {
         for (RoleOfWorkShape i : roleOfWorkShapes) {
             // if (i.getClass().equals(object.getClass()))
             //     return i;
-            if (object.equals("1") && i.getClass().equals("1"))
+            if (object.equals("1") && i.getMyClass().equals("1"))
                 return i;
-            else if (object.equals("2") && i.equals("2"))
+            else if (object.equals("2") && i.getMyClass().equals("2"))
                 return i;
-            else if (object.equals("3") && i.equals("3"))
+            else if (object.equals("3") && i.getMyClass().equals("3"))
                 return  i;
-            else if (object.equals("0") && i.getClass().equals("0"))
+            else if (object.equals("0") && i.getMyClass().equals("0"))
                 return i;
         }
         if (object.equals("1")){
