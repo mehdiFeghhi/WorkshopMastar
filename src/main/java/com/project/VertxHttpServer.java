@@ -54,30 +54,30 @@ public class VertxHttpServer extends AbstractVerticle {
     }
     @Override
     public void start() throws Exception {
-        SaveFIle.saveHashMap("mapLogin123.ser",null);
-        SaveFIle.saveHashMap("mapValiditionCode.ser",null);
-        SaveFIle.saveArrayListInFile("workshopsArrayList.ser",null);
-        SaveFIle.saveArrayListInFile("holdWorkShopsArrayList.ser",null);
-        SaveFIle.saveArrayListInFile("groupsArrayList.ser",null);
-        SaveFIle.saveArrayListInFile("requestsArrayList.ser",null);
-        SaveFIle.saveArrayListInFile("requirmentsArrayList.ser",null);
-        SaveFIle.saveArrayListInFile("personsArrayList.ser",null);
-        SaveFIle.saveArrayListInFile("groupStatus.ser",null);
-        String string = "January 2, 2022";
-        DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-        String string2 = "February 12, 2022";
-        DateFormat format1 = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-        LocalTime time = LocalTime.of(10,45,00);
-        LocalTime time2 = LocalTime.of(12,30,00);
-        Person mehdi = new Person("mehdi","feghhi","1378-12-16","mf1378mf","1850427933","1850427933","0937837990","mf1378mf@yahoo.com");
-        Addmin addmin = new Addmin(AdminType.General);
-        addmin.setId(0);
-          Workshop workshopOfs = new Workshop("Math","ArrahehMishaved");
-          workshopOfs.setId(0);
-        dataSave.getPersons().add(mehdi);
-        dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
-        dataSave.getHoldWorkShops().add(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,workshopOfs,false, (long) 10000000));
-        dataSave.saveInFile();
+//        SaveFIle.saveHashMap("mapLogin123.ser",null);
+//        SaveFIle.saveHashMap("mapValiditionCode.ser",null);
+//        SaveFIle.saveArrayListInFile("workshopsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("holdWorkShopsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("groupsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("requestsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("requirmentsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("personsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("groupStatus.ser",null);
+//        String string = "January 2, 2022";
+//        DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+//        String string2 = "February 12, 2022";
+//        DateFormat format1 = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+//        LocalTime time = LocalTime.of(10,45,00);
+//        LocalTime time2 = LocalTime.of(12,30,00);
+//        Person mehdi = new Person("mehdi","feghhi","1378-12-16","mf1378mf","1850427933","1850427933","0937837990","mf1378mf@yahoo.com");
+//        Addmin addmin = new Addmin(AdminType.General);
+//        addmin.setId(0);
+//          Workshop workshopOfs = new Workshop("Math","ArrahehMishaved");
+//          workshopOfs.setId(0);
+//        dataSave.getPersons().add(mehdi);
+//        dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
+//        dataSave.getHoldWorkShops().add(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,workshopOfs,true, (long) 10000000));
+//        dataSave.saveInFile();
         Vertx vertx = Vertx.vertx() ;
        // MongoClient client = MongoClient.createShared(vertx,jsonMongo) ;
        // MongoDb MyDataBase = new MongoDb(client);
@@ -430,6 +430,23 @@ public class VertxHttpServer extends AbstractVerticle {
 
 
 
+
+
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.GET,"/seeAllWorkShop").handler(rc ->{
+            JsonObject json = seeAllWorkShop();
+            HttpServerResponse response = rc.response();
+            response.end("{\"status\":1,\"seeAllRecent\":"+json+"}");
+        });
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.GET,"/seeAllHolderWorkShop").handler(rc ->{
+            JsonObject json = seeAllHolderWorkShop();
+            HttpServerResponse response = rc.response();
+            response.end("{\"status\":1,\"seeAllRecent\":"+json+"}");
+        });
 
 
 
@@ -850,9 +867,11 @@ public class VertxHttpServer extends AbstractVerticle {
             String token =  jsonObject.getString("token");
             if(mapLogin.containsKey(token))
                 newPerson = mapLogin.get(token);
-            else
+            else {
                 response.end("{\"status\":0}");
-            if(!newPerson.is_this_role_in_our_person(Managment.class)){
+            }
+            Managment managment = new Managment();
+            if(!newPerson.is_this_role_in_our_person(managment)){
                 response.end("{\"status\":0}");
             }
             JsonArray qustionABC = jsonObject.getJsonArray("question");
@@ -885,10 +904,11 @@ public class VertxHttpServer extends AbstractVerticle {
                 newPerson = mapLogin.get(token);
             else
                 response.end("{\"status\":0}");
-            if(!newPerson.is_this_role_in_our_person(Managment.class)){
+            Managment managment = new Managment();
+            if(!newPerson.is_this_role_in_our_person(managment)){
                 response.end("{\"status\":0}");
             }
-            Managment managment = (Managment) newPerson.findOurType("3");
+            managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenai
             AbsForm absFormOfMe = findAbcFormFromDataBaseById(id_number_AbcForm);
@@ -953,9 +973,9 @@ public class VertxHttpServer extends AbstractVerticle {
             for (int i = 0 ; i < answ.size();i++){
                 stringArrayList.add(answ.getString(i));
             }
-            Greater greater;
+            Greater greater = new Greater();
             Greater greater3;
-            Student student;
+            Student student = new Student();
             Student student3;
             Managment managment;
             GroupStatus groupStatus1;
@@ -968,19 +988,19 @@ public class VertxHttpServer extends AbstractVerticle {
             Person person2 = findPersonByUser(user);
             ArrayList<GroupStatus> groupStatus2 = getALLGroupStatuseINdataBaseOfThisWorkShope(form.holdWorkShop.getId());
             if (EachForm.equals("1")){//greater for student
-                if (newPerson.is_this_role_in_our_person(Greater.class)){
+                if (newPerson.is_this_role_in_our_person(greater)){
                     greater = (Greater) newPerson.findOurType("2");
-                    if(person2.is_this_role_in_our_person(Student.class)){
+                    if(person2.is_this_role_in_our_person(student)){
                         student = (Student) person2.findOurType("1");
                         for(GroupStatus g : groupStatus2){
-                            if(g.getRoleOfWorkShape().equals(Student.class)){
+                            if(g.getRoleOfWorkShape() instanceof Student){
                                 student3 = (Student) g.getRoleOfWorkShape();
                                 if (student.getId() == student3.getId()){
                                     firstCondition = true;
                                     group1 = g.getGroup();
                                 }
                             }
-                            if (g.getRoleOfWorkShape().equals(GroupStatus.class)){
+                            if (g.getRoleOfWorkShape() instanceof GroupStatus){
                                 greater3 = (Greater) g.getRoleOfWorkShape();
                                 if (greater3.getId() == greater.getId()) {
                                     secendCondition = true;
@@ -1294,6 +1314,69 @@ public class VertxHttpServer extends AbstractVerticle {
                 .listen(5000);
 
         }
+
+    private JsonObject seeAllHolderWorkShop() {
+        ArrayList<HoldWorkShop> holdWorkShop = getALLHoldWorkShop();
+        int d = 0;
+        Date date = new Date();
+        JsonObject jsonObject = new JsonObject();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+        for(HoldWorkShop i : holdWorkShop){
+                JsonObject jsonObject1 = new JsonObject();
+                if (i.getManagment() != null) {
+                    Person person = findPersonOfThisManagment(i.getManagment().id);
+                    jsonObject1.put("NameWorkShop", i.getName())
+                            .put("Management", person.getName() + "  " + person.getLastName())
+                            .put("DateStart", dateFormat.format(i.getStart()).toString())
+                            .put("DateEnd", dateFormat.format(i.getEnd()).toString())
+                            .put("HourStart",i.getHourStart().toString())
+                            .put("HourEnd",i.getHourEnd().toString())
+                            .put("Money", i.getMoney())
+                            .put("IsInstallment", i.getIs_installment())
+                            .put("Title", i.getWorkshop().getTitle())
+                            .put("id", i.getId())
+                            .put("Description", i.getWorkshop().getDescription());
+                    jsonObject.put(String.valueOf(d), jsonObject1);
+                    d++;
+                } else {
+                    jsonObject1.put("NameWorkShop", i.getName())
+                            .put("Management", "Unknown")
+                            .put("DateStart", dateFormat.format(i.getStart()).toString())
+                            .put("DateEnd", dateFormat.format(i.getEnd()).toString())
+                            .put("HourStart",i.getHourStart().toString())
+                            .put("HourEnd",i.getHourEnd().toString())
+                            .put("Money", i.getMoney())
+                            .put("IsInstallment", i.getIs_installment())
+                            .put("Title",i.getWorkshop().getTitle())
+                            .put("id", i.getId())
+                            .put("Description", i.getWorkshop().getDescription());
+                    jsonObject.put(String.valueOf(d), jsonObject1);
+                    d++;
+
+                }
+            }
+        return jsonObject;
+    }
+
+
+    private JsonObject seeAllWorkShop() {
+        ArrayList<Workshop> workshopArrayList = dataSave.getWorkshops();
+        int d = 0;
+        Date date = new Date();
+        JsonObject jsonObject = new JsonObject();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+        for(Workshop i : workshopArrayList){
+            JsonObject jsonObject1 = new JsonObject();
+                jsonObject1.put("Title", i.getTitle())
+                        .put("id", i.getId())
+                        .put("Description", i.getDescription());
+                jsonObject.put(String.valueOf(d), jsonObject1);
+                d++;
+        }
+        return jsonObject;
+    }
 
     private boolean addQualififtionTodataBase(Qualifition qualifition) {
         return true ;
