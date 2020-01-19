@@ -54,31 +54,31 @@ public class VertxHttpServer extends AbstractVerticle {
     }
     @Override
     public void start() throws Exception {
-        SaveFIle.saveHashMap("mapLogin123.ser",null);
-        SaveFIle.saveHashMap("mapValiditionCode.ser",null);
-        SaveFIle.saveArrayListInFile("workshopsArrayList.ser",null);
-        SaveFIle.saveArrayListInFile("holdWorkShopsArrayList.ser",null);
-        SaveFIle.saveArrayListInFile("groupsArrayList.ser",null);
-        SaveFIle.saveArrayListInFile("requestsArrayList.ser",null);
-        SaveFIle.saveArrayListInFile("requirmentsArrayList.ser",null);
-        SaveFIle.saveArrayListInFile("personsArrayList.ser",null);
-        SaveFIle.saveArrayListInFile("groupStatus.ser",null);
-        String string = "January 2, 2022";
-        DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-        String string2 = "February 12, 2022";
-        DateFormat format1 = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-        LocalTime time = LocalTime.of(10,45,00);
-        LocalTime time2 = LocalTime.of(12,30,00);
-        Person mehdi = new Person("mehdi","feghhi","1378-12-16","mf1378mf","1850427933","1850427933","0937837990","mf1378mf@yahoo.com");
-        Addmin addmin = new Addmin(AdminType.General);
-        mehdi.addToArrayListOfRole(addmin);
-        Workshop workshopOfs = new Workshop("Math","ArrahehMishaved");
-        workshopOfs.setId(0);
-        dataSave.getWorkshops().add(workshopOfs);
-        dataSave.getPersons().add(mehdi);
-        dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
-        dataSave.getHoldWorkShops().add(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,workshopOfs,true, (long) 10000000));
-        dataSave.saveInFile();
+//        SaveFIle.saveHashMap("mapLogin123.ser",null);
+//        SaveFIle.saveHashMap("mapValiditionCode.ser",null);
+//        SaveFIle.saveArrayListInFile("workshopsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("holdWorkShopsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("groupsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("requestsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("requirmentsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("personsArrayList.ser",null);
+//        SaveFIle.saveArrayListInFile("groupStatus.ser",null);
+//        String string = "January 2, 2022";
+//        DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+//        String string2 = "February 12, 2022";
+//        DateFormat format1 = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+//        LocalTime time = LocalTime.of(10,45,00);
+//        LocalTime time2 = LocalTime.of(12,30,00);
+//        Person mehdi = new Person("mehdi","feghhi","1378-12-16","mf1378mf","1850427933","1850427933","0937837990","mf1378mf@yahoo.com");
+//        Addmin addmin = new Addmin(AdminType.General);
+//        mehdi.addToArrayListOfRole(addmin);
+//        Workshop workshopOfs = new Workshop("Math","ArrahehMishaved");
+//        workshopOfs.setId(0);
+//        dataSave.getWorkshops().add(workshopOfs);
+//        dataSave.getPersons().add(mehdi);
+//        dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
+//        dataSave.getHoldWorkShops().add(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,workshopOfs,true, (long) 10000000));
+//        dataSave.saveInFile();
         Vertx vertx = Vertx.vertx() ;
        // MongoClient client = MongoClient.createShared(vertx,jsonMongo) ;
        // MongoDb MyDataBase = new MongoDb(client);
@@ -1003,7 +1003,7 @@ public class VertxHttpServer extends AbstractVerticle {
                                     group1 = g.getGroup();
                                 }
                             }
-                            if (g.getRoleOfWorkShape() instanceof GroupStatus){
+                            if (g.getRoleOfWorkShape() instanceof Greater){
                                 greater3 = (Greater) g.getRoleOfWorkShape();
                                 if (greater3.getId() == greater.getId()) {
                                     secendCondition = true;
@@ -1035,9 +1035,51 @@ public class VertxHttpServer extends AbstractVerticle {
                     response.end("{\"status\":0}");
                 }
             }
-            if (EachForm.equals("2")){// Student for greater
-
-
+            if (EachForm.equals("2")) {// Student for greater
+                if (newPerson.is_this_role_in_our_person(student)) {
+                    student = (Student) newPerson.findOurType("1");
+                    if (person2.is_this_role_in_our_person(greater)) {
+                        for (GroupStatus s : groupStatus2) {
+                            if (s.getRoleOfWorkShape() instanceof Greater) {
+                                greater = (Greater) s.getRoleOfWorkShape();
+                                for (GroupStatus g : groupStatus2) {
+                                    if (g.getRoleOfWorkShape() instanceof Greater) {
+                                        greater3 = (Greater) g.getRoleOfWorkShape();
+                                        if (greater3.getId() == greater.getId()) {
+                                            firstCondition = true;
+                                            group1 = g.getGroup();
+                                        }
+                                    }
+                                    if (g.getRoleOfWorkShape() instanceof Student) {
+                                        student3 = (Student) g.getRoleOfWorkShape();
+                                        if (student3.getId() == greater.getId()) {
+                                            secendCondition = true;
+                                            group2 = g.getGroup();
+                                            if (group1 != null) {
+                                                if (group1.getId() == group2.getId()) {
+                                                    thirdCondition = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                if (firstCondition && secendCondition && thirdCondition) {
+                                    Qualifition qualifition = new Qualifition(stringArrayList, greater, student, form);
+                                    if (addQualififtionTodataBase(qualifition))
+                                        response.end("{\"status\":1}");
+                                    else
+                                        response.end(("{\"status\":0}"));
+                                }
+                            }
+                        }
+                    } else {
+                        System.out.println("THIS PERSON HAVENT THIS ROLE");
+                        response.end("{\"status\":0}");
+                    }
+                } else {
+                    System.out.println("THIS PERSON HAVENT THIS ROLE");
+                    response.end("{\"status\":0}");
+                }
             }
             if (EachForm.equals("3")){// student for managment
 

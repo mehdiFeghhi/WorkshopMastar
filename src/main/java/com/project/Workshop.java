@@ -1,17 +1,13 @@
 package com.project;
 
-import org.omg.CORBA.Request;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class Workshop implements Serializable {
     private int id;
-    private String Title;
+    private String title;
     private String description;
     public Workshop(String title, String description) {
-        Title = title;
+        this.title = title;
         this.description = description;
     }
 
@@ -24,9 +20,9 @@ public class Workshop implements Serializable {
     }
 
     public String getTitle() {
-        if (Title == null)
+        if (title == null)
             return "unkown";
-        return Title;
+        return title;
     }
 
     public String getDescription() {
@@ -36,7 +32,7 @@ public class Workshop implements Serializable {
     }
 
     public void setTitle(String title) {
-        Title = title;
+        this.title = title;
     }
 
     public void setDescription(String description) {
