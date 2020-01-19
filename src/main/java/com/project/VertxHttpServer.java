@@ -938,9 +938,9 @@ public class VertxHttpServer extends AbstractVerticle {
                     greater = (Greater) newPerson.findOurType(Greater.class);
                     if(person2.is_this_role_in_our_person(Student.class)){
                         student = (Student) person2.findOurType(Student.class);
-//                        if (){
-//
-//                        }
+
+
+
                     }
                     else {
                         System.out.println("This Person Havent this Role for give massage");
@@ -1489,7 +1489,7 @@ public class VertxHttpServer extends AbstractVerticle {
         int d = 0;
         Date date = new Date();
         JsonObject jsonObject = new JsonObject();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
         for(HoldWorkShop i : holdWorkShop){
             if(i.getStart().after(date)) {
