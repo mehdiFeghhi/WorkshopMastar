@@ -100,6 +100,7 @@ public class VertxHttpServer extends AbstractVerticle {
 //                }
 //            });
         newPerson = findPersonIndatabase(this.user,this.pass);
+        Addmin admin3 = new Addmin();
         if (newPerson != null){
                 JWTAuth provider = JWTAuth.create(vertx, new JWTAuthOptions()
                         .addPubSecKey(new PubSecKeyOptions()
@@ -111,7 +112,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 mapLogin.put(token,newPerson);
                 if(!newPerson.getIs_Active())
                     response.end("{\"status\":13");//this person Can't activity
-                if(newPerson.is_this_role_in_our_person(Addmin.class)){
+                if(newPerson.is_this_role_in_our_person(admin3)){
                     response.end("{\"status\": 100 ,\"validation\": "+token+"}");//this person is Admin
                 }
                 else {
@@ -201,12 +202,13 @@ public class VertxHttpServer extends AbstractVerticle {
             ObjectMapper objectMapper = new ObjectMapper();
             String token = json.getString("token");
             String massage = json.getString("massage");
+            String pay = json.getString("pay");
+            int id = json.getInteger("workShopHandler");
             if (mapLogin.containsKey(token))
                  newPerson = mapLogin.get(token);
             else
                 response.end("{\"status\":0}");
-            String pay = json.getString("pay");
-            int id = json.getInteger("workShopHandler");
+
             newHoldWorkShop = findThisHoldWorkShop(id);
             if (newHoldWorkShop == null)
                 response.end("{\"status\":0}");

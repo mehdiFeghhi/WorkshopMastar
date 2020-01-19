@@ -7,6 +7,10 @@ public class Addmin implements RoleOfWorkShape {
         this.adminType = addmin;
     }
 
+    public Addmin() {
+
+    }
+
     public int getId() {
         return Id;
     }
