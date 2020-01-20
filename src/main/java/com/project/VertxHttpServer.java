@@ -1244,7 +1244,7 @@ public class VertxHttpServer extends AbstractVerticle {
             int dd = 0;
             Addmin addmin3 = (Addmin)newPerson.findOurType("0");
             for(Person i : persons){
-                if(!i.is_this_role_in_our_person(addmin)|| (addmin3.getAdminType() == AdminType.General)) {
+                if(!i.is_this_role_in_our_person(addmin4)|| (addmin3.getAdminType() == AdminType.General)) {
                     JsonObject jsonObject1 = new JsonObject().put("setId", i.getId())
                             .put("setGender", i.getGender())
                             .put("setUser", i.getUser())
