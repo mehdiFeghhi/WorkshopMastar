@@ -225,13 +225,30 @@ public class Person  implements Serializable {
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
-    public boolean is_this_role_in_our_person(Object object){
+    public boolean is_this_role_in_our_person(Grader grader){
         for (RoleOfWorkShape i : roleOfWorkShapes)
-            if (i instanceof Object)
+            if (i instanceof Grader)
                 return true;
         return false;
     }
-
+    public boolean is_this_role_in_our_person(Student student){
+        for (RoleOfWorkShape i : roleOfWorkShapes)
+            if (i instanceof Student)
+                return true;
+        return false;
+    }
+    public boolean is_this_role_in_our_person(Addmin addmin){
+        for (RoleOfWorkShape i : roleOfWorkShapes)
+            if (i instanceof Addmin)
+                return true;
+        return false;
+    }
+    public boolean is_this_role_in_our_person(Managment managment){
+        for (RoleOfWorkShape i : roleOfWorkShapes)
+            if (i instanceof Managment)
+                return true;
+        return false;
+    }
     public boolean addToArrayListOfRole(RoleOfWorkShape roleOfWorkShape){
         for (RoleOfWorkShape i : this.roleOfWorkShapes)
             if (i.getClass().equals(roleOfWorkShape.getClass()))
