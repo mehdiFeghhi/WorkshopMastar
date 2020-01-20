@@ -1125,7 +1125,8 @@ public class VertxHttpServer extends AbstractVerticle {
                 response.end("{\"status\":0}");
                 return;
             }
-            if(!newPerson.is_this_role_in_our_person(Addmin.class)){
+            Addmin addmin2 = new Addmin();
+            if(!newPerson.is_this_role_in_our_person(addmin2)){
                 response.end("{\"status\":0}");
                 return;
             }
