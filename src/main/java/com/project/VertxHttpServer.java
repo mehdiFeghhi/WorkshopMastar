@@ -1228,18 +1228,23 @@ public class VertxHttpServer extends AbstractVerticle {
             HttpServerResponse response = rc.response();
             String token =  jsonObject.getString("token");
             JsonObject json = null;
-            if(mapLogin.containsKey(token))
+            Addmin addmin = new Addmin();
+            if(mapLogin.containsKey(token)) {
                 newPerson = mapLogin.get(token);
-            else
+            }
+            else {
                 response.end("{\"status\":0}");
-            if(!newPerson.is_this_role_in_our_person(Addmin.class)){
+                return;
+            }
+            if(!newPerson.is_this_role_in_our_person(addmin)){
                 response.end("{\"status\":0}");
+                return;
             }
             ArrayList<Person> persons = allPersonIndataBase();
             int dd = 0;
             Addmin addmin3 = (Addmin)newPerson.findOurType("0");
             for(Person i : persons){
-                if(!i.is_this_role_in_our_person(Addmin.class)|| (addmin3.getAdminType() == AdminType.General)) {
+                if(!i.is_this_role_in_our_person(addmin)|| (addmin3.getAdminType() == AdminType.General)) {
                     JsonObject jsonObject1 = new JsonObject().put("setId", i.getId())
                             .put("setGender", i.getGender())
                             .put("setUser", i.getUser())
@@ -1253,6 +1258,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 }
             }
             response.end("{\"status\":1,\"information\":"+json+"}");
+            return;
         });
 
         ////////////////////////////////////////////////////////////////////////////////
