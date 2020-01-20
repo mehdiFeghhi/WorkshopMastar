@@ -1228,7 +1228,7 @@ public class VertxHttpServer extends AbstractVerticle {
             HttpServerResponse response = rc.response();
             String token =  jsonObject.getString("token");
             JsonObject json = null;
-            Addmin addmin = new Addmin();
+            Addmin addmin4 = new Addmin();
             if(mapLogin.containsKey(token)) {
                 newPerson = mapLogin.get(token);
             }
@@ -1236,7 +1236,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 response.end("{\"status\":0}");
                 return;
             }
-            if(!newPerson.is_this_role_in_our_person(addmin)){
+            if(!newPerson.is_this_role_in_our_person(addmin4)){
                 response.end("{\"status\":0}");
                 return;
             }
