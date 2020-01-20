@@ -17,6 +17,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.*;
@@ -1189,10 +1190,20 @@ public class VertxHttpServer extends AbstractVerticle {
                 response.end("{\"status\":4}");//can't find this person in dataBase
                 return;
             }
-            HoldWorkShop holdWorkShop = null;
+            HoldWorkShop holdWorkShop = new HoldWorkShop();
             try {
-                holdWorkShop = objectMapper.readValue(jsonObject.getJsonObject("HoldWorkShop").toString(), HoldWorkShop.class);
-            } catch (IOException e) {
+                JsonObject jsonObject1 = jsonObject.getJsonObject("HoldWorkShop");
+                holdWorkShop.setPayMoneyInHowTimes(jsonObject1.getInteger("payMoneyInHowTimes"));
+                holdWorkShop.setName(jsonObject1.getString("name"));
+                holdWorkShop.setIs_installment(jsonObject1.getBoolean("is_installment"));
+                holdWorkShop.setMoney(jsonObject1.getLong("money"));
+                holdWorkShop.setPayMoneyInHowTimes(jsonObject1.getInteger("payMoneyInHowTimes"));
+                holdWorkShop.setStart(new SimpleDateFormat("dd/MM/yyyy").parse(jsonObject1.getJsonObject("start").toString()));
+                holdWorkShop.setEnd(new SimpleDateFormat("dd/MM/yyyy").parse(jsonObject1.getJsonObject("end").toString()));
+                holdWorkShop.setHourEnd(LocalTime.parse(jsonObject1.getJsonObject("hourEnd").toString()));
+                holdWorkShop.setHourStart(LocalTime.parse((jsonObject1.getJsonObject("hourStart").toString())));
+
+            } catch (ParseException e) {
                 e.printStackTrace();
                 response.end("{\"status\":0}");
                 return;

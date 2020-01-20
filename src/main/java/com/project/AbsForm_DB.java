@@ -6,7 +6,7 @@ public class AbsForm_DB
     public int number;
     public int deleted;
 
-    public AbsForm_DB(int absForm_ID, int number, int deleted) {
+    public AbsForm_DB(int admin_id, int absForm_ID, int number, int deleted) {
         AbsForm_ID = absForm_ID;
         this.number = number;
         this.deleted = deleted;

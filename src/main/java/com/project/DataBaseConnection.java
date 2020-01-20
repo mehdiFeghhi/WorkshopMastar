@@ -1,9 +1,11 @@
 package com.project;
 
+import java.security.acl.Group;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class DataBaseConnection 
 {
@@ -37,8 +39,9 @@ public class DataBaseConnection
 			System.out.println(e.toString());
 		}
 	}
-	public void Get_Group_ALL()
+	public ArrayList<Grop> Get_Group_ALL()
 	{
+		ArrayList<Grop> groupArrayList = new ArrayList<>();
 		try
 		{
 		stm = c.createStatement();
@@ -53,13 +56,16 @@ public class DataBaseConnection
 			
 			//construct new object and put it in array
 			System.out.println(gid + "    "+ name+ "   "+ head + "  " + number+ "   "+ workshopid);
+			groupArrayList.add(new Grop(gid,name,head,number,workshopid));
 		}
+		return groupArrayList;
 		}
 		catch (Exception e)
 		{
 			System.out.println("fail while getting all groups");
 			System.out.println(e.toString());
 		}
+		return groupArrayList;
 	}
 	public void Add_Group(String name, String head,int number,int heldworkshop_ID)
 	{
@@ -98,8 +104,9 @@ public class DataBaseConnection
 			System.out.println(e.toString());
 		}
 	}
-	public void Get_AbsForm_ALL()
+	public ArrayList<AbsForm_DB> Get_AbsForm_ALL()
 	{
+		ArrayList<AbsForm_DB> absForms = new ArrayList<AbsForm_DB>();
 		try
 		{
 		stm = c.createStatement();
@@ -109,16 +116,18 @@ public class DataBaseConnection
 			int Abs_id = rs.getInt("AbsformID");
 			int number = rs.getInt("number");
 			int deleted = rs.getInt("deleted");
-			
+			absForms.add(new AbsForm_DB(Abs_id, Abs_id,number,deleted));
 			//construct new object and put it in array
 			System.out.println(Abs_id + "    "+ number + "   "+ deleted );
 		}
+		return absForms;
 		}
 		catch (Exception e)
 		{
 			System.out.println("fail while getting all abs_forms");
 			System.out.println(e.toString());
 		}
+		return absForms;
 	}
 	public void Add_AbsForm(int number, int deleted)
 	{
@@ -151,28 +160,30 @@ public class DataBaseConnection
 	}
 	
 	//admin now
-	public void Get_Admin_ALL()
+	public ArrayList<AbsForm_DB> Get_Admin_ALL()
 	{
-		try
-		{
-		stm = c.createStatement();
-		ResultSet rs = stm.executeQuery("SELECT * FROM  \"Admin\"");
-		while (rs.next())
-		{
-			int Admin_id = rs.getInt("Admin_ID");
-			int Role_of_Workshop_ID = rs.getInt("Role_of_Workshop_ID");
-			int type = rs.getInt("type");
-			int deleted = rs.getInt("Deleted");
-			
-			//construct new object and put it in array
-			System.out.println(Admin_id + "    "+ Role_of_Workshop_ID + "    "+ type + "   "+ deleted );
-		}
+		ArrayList<AbsForm_DB> addminArrayList = new ArrayList<>();
+		try {
+			stm = c.createStatement();
+			ResultSet rs = stm.executeQuery("SELECT * FROM  \"Admin\"");
+			while (rs.next()) {
+				int Admin_id = rs.getInt("Admin_ID");
+				int Role_of_Workshop_ID = rs.getInt("Role_of_Workshop_ID");
+				int type = rs.getInt("type");
+				int deleted = rs.getInt("Deleted");
+				addminArrayList.add(new AbsForm_DB(Admin_id, Role_of_Workshop_ID, type, deleted));
+				//construct new object and put it in array
+				System.out.println(Admin_id + "    " + Role_of_Workshop_ID + "    " + type + "   " + deleted);
+			}
+
+			return addminArrayList;
 		}
 		catch (Exception e)
 		{
 			System.out.println("fail while getting all Admins");
 			System.out.println(e.toString());
 		}
+		return addminArrayList;
 	}
 	public Admin_DB Get_Admin(int id)
 	{
@@ -229,8 +240,9 @@ public class DataBaseConnection
 	}
 	//form
 	
-	public void Get_Form_ALL()
+	public ArrayList<Form_DB> Get_Form_ALL()
 	{
+		ArrayList<Form_DB> form_dbs = new ArrayList<Form_DB>();
 		try
 		{
 		stm = c.createStatement();
@@ -241,18 +253,20 @@ public class DataBaseConnection
 			int AbsForm_ID = rs.getInt("Absform_ID");
 			int HeldWorkshop_ID = rs.getInt("HeldWorkshop_ID");
 			int deleted = rs.getInt("Deleted");
-			
+			form_dbs.add(new Form_DB(Form_ID,AbsForm_ID,HeldWorkshop_ID,deleted));
 			//construct new object and put it in array
 			System.out.println(Form_ID + "    "+ AbsForm_ID + "   "+ HeldWorkshop_ID+ "   "+ deleted );
 		}
+		return form_dbs;
 		}
 		catch (Exception e)
 		{
 			System.out.println("fail while getting all Forms");
 			System.out.println(e.toString());
 		}
+		return form_dbs;
 	}
-	public void Get_Form(int form_ID)
+	public Form_DB Get_Form(int form_ID)
 	{
 		try
 		{
@@ -267,6 +281,7 @@ public class DataBaseConnection
 			
 			//construct new object and put it in array
 			System.out.println(Form_ID + "    "+ AbsForm_ID + "   "+ HeldWorkshop_ID+ "   "+ deleted );
+			return new Form_DB(Form_ID,AbsForm_ID,HeldWorkshop_ID,deleted);
 		}
 		}
 		catch (Exception e)
@@ -274,6 +289,7 @@ public class DataBaseConnection
 			System.out.println("fail while getting all Forms");
 			System.out.println(e.toString());
 		}
+		return null;
 	}
 	public void Add_Form(int Absform_ID, int HeldWorkshop_ID, int deleted)
 	{
@@ -305,8 +321,9 @@ public class DataBaseConnection
 		}
 	}
 	//Grader
-	public void Get_Grader_ALL()
+	public ArrayList<Grader_DB> Get_Grader_ALL()
 	{
+		ArrayList<Grader_DB> grader_dbs = new ArrayList<Grader_DB>();
 		try
 		{
 		stm = c.createStatement();
@@ -316,9 +333,10 @@ public class DataBaseConnection
 			int Grader_ID = rs.getInt("Grader_ID");
 			int Role_of_Workshop_ID = rs.getInt("Role_of_Workshop_ID");
 			int Deleted = rs.getInt("Deleted");
-			
+
 			//construct new object and put it in array
 			System.out.println(Grader_ID + "    "+ Role_of_Workshop_ID+ "    "+Deleted);
+			grader_dbs.add( new Grader_DB(Grader_ID,Role_of_Workshop_ID,Deleted));
 		}
 		}
 		catch (Exception e)
@@ -326,8 +344,9 @@ public class DataBaseConnection
 			System.out.println("fail while getting all Graders");
 			System.out.println(e.toString());
 		}
+		return grader_dbs;
 	}
-	public void Get_Grader(int Grader_ID)
+	public Grader_DB Get_Grader(int Grader_ID)
 	{
 		try
 		{
@@ -341,6 +360,7 @@ public class DataBaseConnection
 
 			//construct new object and put it in array
 			System.out.println(Grader_ID + "    "+ Role_of_Workshop_ID+ "    "+Deleted);
+			return new Grader_DB(Grader_ID,Role_of_Workshop_ID,Deleted);
 		}
 		}
 		catch (Exception e)
@@ -348,6 +368,7 @@ public class DataBaseConnection
 			System.out.println("fail while getting Grader");
 			System.out.println(e.toString());
 		}
+		return null;
 	}
 	public void Add_Grader(int Role_of_Workshop_ID,int Deleted)
 	{
@@ -379,30 +400,32 @@ public class DataBaseConnection
 		}
 	}
 	//Grader_Request
-	public void Get_Grader_Request_All()
+	public ArrayList<Grader_Request_DB> Get_Grader_Request_All()
 	{
-		try
-		{
-		stm = c.createStatement();
-		ResultSet rs = stm.executeQuery("SELECT * FROM  \"Grader_Request\"");
-		while (rs.next())
-		{
-			int Grader_Request_ID = rs.getInt("Grader_Request_ID");
-			int Grader_ID = rs.getInt("Grader_ID");
-			int Request_ID = rs.getInt("Request_ID");
-			int type =  rs.getInt("type");
-			int request =  rs.getInt("request");
-			int Deleted = rs.getInt("Deleted");
-			
-			//construct new object and put it in array
-			System.out.println(Grader_Request_ID + "    "+ Grader_ID + "    "+ Request_ID + "    "+ type + "    "+ request + "    "+ Deleted);
-		}
+		ArrayList<Grader_Request_DB> grader_request_dbs = new ArrayList<Grader_Request_DB>();
+		try {
+			stm = c.createStatement();
+			ResultSet rs = stm.executeQuery("SELECT * FROM  \"Grader_Request\"");
+			while (rs.next()) {
+				int Grader_Request_ID = rs.getInt("Grader_Request_ID");
+				int Grader_ID = rs.getInt("Grader_ID");
+				int Request_ID = rs.getInt("Request_ID");
+				int type = rs.getInt("type");
+				int request = rs.getInt("request");
+				int Deleted = rs.getInt("Deleted");
+				//construct new object and put it in array
+				System.out.println(Grader_Request_ID + "    " + Grader_ID + "    " + Request_ID + "    " + type + "    " + request + "    " + Deleted);
+				grader_request_dbs.add(new Grader_Request_DB(Grader_Request_ID, Grader_ID, Request_ID, Request_ID, type, request, Deleted));
+			}
+
+			return grader_request_dbs;
 		}
 		catch (Exception e)
 		{
 			System.out.println("fail while getting all Grader_Request");
 			System.out.println(e.toString());
 		}
+		return grader_request_dbs;
 	}
 	public void Get_Grader_Request(int Grader_Request_ID)
 	{
@@ -662,7 +685,7 @@ public class DataBaseConnection
 			System.out.println(e.toString());
 		}
 	}
-	public void Get_HeldWorkshop(int HeldWorkshop_ID)
+	public HeldWorkshop_DB Get_HeldWorkshop(int HeldWorkshop_ID)
 	{
 		try
 		{
@@ -682,7 +705,7 @@ public class DataBaseConnection
 		 	int money = rs.getInt("money");
 		 	int pay_in_howmany_times = rs.getInt("pay_in_howmany_times");
 		 	int Deleted = rs.getInt("Deleted");
-			
+			return new HeldWorkshop_DB(HeldWorkshop_ID,Management_ID,Workshop_ID,name,start,end,hourend,hourstart,is_installment,pay_in_howmany_times,Deleted);
 			//construct new object and put it in array
 			//System.out.println(Group_Status_ID + "    "+ Group_ID + "    "+ Role_of_workshop_ID +"    "+ Deleted);
 		}
@@ -692,6 +715,7 @@ public class DataBaseConnection
 			System.out.println("fail while getting HeldWorkshop");
 			System.out.println(e.toString());
 		}
+		return null;
 	}
 	public void Add_HeldWorkshop(
 			//int HeldWorkshop_ID,

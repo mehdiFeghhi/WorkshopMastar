@@ -19,7 +19,21 @@ public class HeldWorkshop_DB
     public int payMoneyInHowTimes;
     public int deleted;
 
-    public HoldWorkShop makeHoldWorkShop() throws ParseException {
+	public HeldWorkshop_DB(int heldWorkshop_id, int management_id, int workshop_id, String name, String start, String end, String hourend, String hourStart, int is_installment, int pay_in_howmany_times, int deleted) {
+		this.HeldWorkshop_id = heldWorkshop_id;
+		this.Management_Id = management_id;
+		this.Workshop_ID = workshop_id;
+		this.Name = name;
+		this.Start = start;
+		this.End = end;
+		this.is_installment = is_installment;
+		this.hourEnd = hourend;
+		this.hourEnd = hourStart;
+		this.payMoneyInHowTimes = pay_in_howmany_times;
+		this.deleted  = deleted;
+	}
+
+	public HoldWorkShop makeHoldWorkShop() throws ParseException {
     	DataBaseConnection dataBaseConnection = new DataBaseConnection();
 		SimpleDateFormat formatter5=new SimpleDateFormat("E, MMM dd yyyy HH:mm:ss");
 		HoldWorkShop holdWorkShop = new HoldWorkShop();
