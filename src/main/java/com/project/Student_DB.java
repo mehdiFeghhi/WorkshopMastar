@@ -9,5 +9,10 @@ public class Student_DB
 		this.student_ID = student_ID;
 		Rol_of_WorkShop_ID = rol_of_WorkShop_ID;
 	}
+	public Student makeStudent(){
+		Student student = new Student();
+		student.setId(this.student_ID);
+		return student;
+	}
 
 }
