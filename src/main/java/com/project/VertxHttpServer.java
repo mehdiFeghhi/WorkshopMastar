@@ -43,9 +43,9 @@ public class VertxHttpServer extends AbstractVerticle {
     Map<Integer,ValidationProperty> mapValidtionCode = new HashMap<>();
     public VertxHttpServer (){
         if (SaveFIle.loadHashMap("mapLogin123.ser") != null)
-            this.mapLogin = SaveFIle.loadHashMap("mapLogin123.ser") ;
+            this.mapLogin = SaveFIle.loadHashMap("mapLogin123.ser") ; // this property save all person be login in data base
         if (SaveFIle.loadHashMap("mapValiditionCode.ser") != null)
-            this.mapValidtionCode = SaveFIle.loadHashMap("mapValiditionCode.ser");
+            this.mapValidtionCode = SaveFIle.loadHashMap("mapValiditionCode.ser"); // this property save all token that send to person In data base
         dataSave = new DataSave();
     }
     @Override
@@ -80,168 +80,220 @@ public class VertxHttpServer extends AbstractVerticle {
        // MongoDb MyDataBase = new MongoDb(client);
         HttpServer httpServer = vertx.createHttpServer();
         Router router = Router.router(vertx);
-        router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.POST, "/login").handler(rc -> {
-            JsonObject json = rc.getBodyAsJson();
-            this.user = json.getString("user");
-            this.pass = json.getString("pass");
-            System.out.println(json.toString());
-            HttpServerResponse response = rc.response();
-            response.putHeader("content-type", "application/json");
-//            MyDataBase.findThisPerson(user,pass,res ->{
-//                try {
-//                    newPerson = makePerson(res.result());
-//                } catch (IOException e) {
-//                   response.end("{\"status\":3}");
-//                    e.printStackTrace();
-//                }
-//            });
-        newPerson = findPersonIndatabase(this.user,this.pass);
-        Addmin admin3 = new Addmin();
-        if (newPerson != null){
-                JWTAuth provider = JWTAuth.create(vertx, new JWTAuthOptions()
-                        .addPubSecKey(new PubSecKeyOptions()
-                                .setAlgorithm("HS256")
-                                .setPublicKey("keyboard cat")
-                                .setSymmetric(true)));
 
-                String token = provider.generateToken(new JsonObject().put("userName",user));
-                mapLogin.put(token,newPerson);
-                if(!newPerson.getIs_Active())
-                    response.end("{\"status\":13");//this person Can't activity
-                if(newPerson.is_this_role_in_our_person(admin3)){
-                    SaveFIle.saveHashMap("mapLogin123.ser", (HashMap) this.mapLogin);
-                    SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);
-                    response.end("{\"status\": 100 ,\"validation\": "+token+"}");//this person is Admin
-                }
-                else {
-                    SaveFIle.saveHashMap("mapLogin123.ser", (HashMap) this.mapLogin);
-                    SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);
-                    response.end("{\"status\": 1 ,\"validation\": " + token + "}");
-                }
-            }
-            else
-                response.end("{\"status\":0}");
-        });
 
-        router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.POST, "/person").handler(rc -> {
-            JsonObject json = rc.getBodyAsJson();
-            ObjectMapper objectMapper = new ObjectMapper();
 
-            String token = json.getString("token");
-            System.out.println(json.toString());
-            HttpServerResponse response = rc.response();
-            response.putHeader("content-type", "application/json");
-            if (mapLogin.containsKey(token)) {
-                String jason = null;
-                try {
-                    Person myperson4 = mapLogin.get(token).clone();
-                    jason = objectMapper.writeValueAsString(myperson4);
-                } catch (JsonProcessingException e) {
-                    System.out.println("make mistack");
-                    response.end("{\"status\":2}");
-                    e.printStackTrace();
-                }
-                response.end("{\"status\":1,\"person\":"+jason+"}");
-            }
-            else {
-                response.end("{\"status\":0}");
-            }
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        router.route().handler(BodyHandler.create());                                                 //
+        router.route(HttpMethod.POST, "/login").handler(rc -> {                                    //
+            JsonObject json = rc.getBodyAsJson();                                                     //
+            this.user = json.getString("user");                                                  //
+            this.pass = json.getString("pass");                                                  //
+            System.out.println(json.toString());                                                      //
+            HttpServerResponse response = rc.response();                                              //
+            response.putHeader("content-type", "application/json");                            //
+//            MyDataBase.findThisPerson(user,pass,res ->{                                             //
+//                try {                                                                               //
+//                    newPerson = makePerson(res.result());                                           //
+//                } catch (IOException e) {                                                           //
+//                   response.end("{\"status\":3}");                                                  // whit this code one person can login to by it's user
+//                    e.printStackTrace();                                                            // and pass and get a token to do it's work
+//                }                                                                                   //
+//            });                                                                                     //
+        newPerson = findPersonIndatabase(this.user,this.pass);                                        //
+        Addmin admin3 = new Addmin();                                                                 //
+        if (newPerson != null){                                                                       //
+                JWTAuth provider = JWTAuth.create(vertx, new JWTAuthOptions()                         //
+                        .addPubSecKey(new PubSecKeyOptions()                                          // // make new token to this person
+                                .setAlgorithm("HS256")                                                //
+                                .setPublicKey("keyboard cat")                                         //
+                                .setSymmetric(true)));                                                //
+                                                                                                      //
+                String token = provider.generateToken(new JsonObject().put("userName",user));         //
+                mapLogin.put(token,newPerson);                                                        //
+                if(!newPerson.getIs_Active())                                                         //
+                    response.end("{\"status\":13");//this person Can't activity                    //
+                if(newPerson.is_this_role_in_our_person(admin3)){                                     //
+                    SaveFIle.saveHashMap("mapLogin123.ser", (HashMap) this.mapLogin);        //
+                    SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);//
+                    response.end("{\"status\": 100 ,\"validation\": "+token+"}");                        //;//this person is Admin amd must seen new page from another person
+                }                                                                                           //
+                else {                                                                                      //
+                    SaveFIle.saveHashMap("mapLogin123.ser", (HashMap) this.mapLogin);              //
+                    SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);//
+                    response.end("{\"status\": 1 ,\"validation\": " + token + "}");                     //
+                }                                                                                          //
+            }                                                                                              //
+            else                                                                                           //
+                response.end("{\"status\":0}");                                                         //
+        });                                                                                                //
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        });
-        router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.GET, "/logOut").handler(rc -> {
-            JsonObject json = rc.getBodyAsJson();
 
-            System.out.println("ya ali");
-            String token = json.getString("token");
-            System.out.println(json.toString());
-            HttpServerResponse response = rc.response();
-            response.putHeader("content-type", "application/json");
-            if (mapLogin.containsKey(token)) {
-                updateInPersonINdataBase(mapLogin.get(token));
-                mapLogin.remove(token);
-                SaveFIle.saveHashMap("mapLogin123.ser", (HashMap) this.mapLogin);
-                SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);
-                response.end("{\"status\":1}");
-            }
-            else {
-                response.end("{\"status\":0}");
-            }
 
-        });
-        router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.POST,"/editPerson").handler(rc ->{
-            JsonObject json = rc.getBodyAsJson();
-            HttpServerResponse response = rc.response();
-            response.putHeader("content-type","application/json");
-            ObjectMapper objectMapper = new ObjectMapper();
-            if (mapLogin.containsKey(json.getString("token"))){
-                newPerson = null;
-                try {
-                    newPerson = objectMapper.readValue(json.getJsonObject("person").toString(), Person.class);
-                    if (this.searchInDataBase(newPerson.getUser())) {
-                        updateInPersonINdataBase(newPerson);
-                        response.end("{\"status\":1}");
-                    } else
-                        response.end("{\"status\":0}");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    response.end("{\"status\":0}");
-                }
-            }else
-                response.end("{\"status\":0}");
-        });
-     /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        //whit this codes I show a personlity and it's property to his or she loggine and have token just it's password
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                                    //
+        router.route().handler(BodyHandler.create());                                                               //
+        router.route(HttpMethod.POST, "/person").handler(rc -> {                                                 //
+            JsonObject json = rc.getBodyAsJson();                                                                   //
+            ObjectMapper objectMapper = new ObjectMapper();                                                         //
+                                                                                                                    //
+            String token = json.getString("token");                                                            //
+            System.out.println(json.toString());                                                                    //
+            HttpServerResponse response = rc.response();                                                            //
+            response.putHeader("content-type", "application/json");                                          //
+            if (mapLogin.containsKey(token)) {                                                                      //
+                String jason = null;                                                                                //
+                try {                                                                                               //
+                    Person myperson4 = mapLogin.get(token).clone();                                                 //
+                    jason = objectMapper.writeValueAsString(myperson4);                                             //
+                } catch (JsonProcessingException e) {                                                               //
+                    System.out.println("make mistack");                                                             //
+                    response.end("{\"status\":2}");                                                              //
+                    e.printStackTrace();                                                                            //
+                }                                                                                                   //
+                response.end("{\"status\":1,\"person\":"+jason+"}");                                             //
+            }                                                                                                       //
+            else {                                                                                                  //
+                response.end("{\"status\":0}");                                                                  //
+            }                                                                                                       //
+                                                                                                                    //
+        });                                                                                                         //
+                                                                                                                    //
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+        //with this code I Logged person in maplogin   and remove it's token in this array
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        router.route().handler(BodyHandler.create());                                                                 //
+        router.route(HttpMethod.GET, "/logOut").handler(rc -> {                                                    //
+            JsonObject json = rc.getBodyAsJson();                                                                     //
+                                                                                                                      //
+            System.out.println("ya ali");                                                                             //
+            String token = json.getString("token");                                                              //
+            System.out.println(json.toString());                                                                      //
+            HttpServerResponse response = rc.response();                                                              //
+            response.putHeader("content-type", "application/json");                                            //
+            if (mapLogin.containsKey(token)) {                                                                        //
+                updateInPersonINdataBase(mapLogin.get(token));                                                        //
+                mapLogin.remove(token);                                                                               //
+                SaveFIle.saveHashMap("mapLogin123.ser", (HashMap) this.mapLogin);                             //
+                SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);               //
+                response.end("{\"status\":1}");                                                                    //
+            }                                                                                                         //
+            else {                                                                                                    //
+                response.end("{\"status\":0}");                                                                    //
+            }                                                                                                         //
+                                                                                                                      //
+        });                                                                                                           //
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+        //with this code I edite person in my WorkShop
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        router.route().handler(BodyHandler.create());                                                                 //
+        router.route(HttpMethod.POST,"/editPerson").handler(rc ->{                                                 //
+            JsonObject json = rc.getBodyAsJson();                                                                     //
+            HttpServerResponse response = rc.response();                                                              //
+            response.putHeader("content-type","application/json");                                             //
+            ObjectMapper objectMapper = new ObjectMapper();                                                           //
+            if (mapLogin.containsKey(json.getString("token"))){                                                  //
+                newPerson = null;                                                                                     //
+                try {                                                                                                 //
+                    newPerson = objectMapper.readValue(json.getJsonObject("person").toString(), Person.class);        //
+                    if (this.searchInDataBase(newPerson.getUser())) {                                                 //
+                        updateInPersonINdataBase(newPerson);                                                          //
+                        response.end("{\"status\":1}");                                                            //
+                    } else                                                                                            //
+                        response.end("{\"status\":0}");                                                            //
+                } catch (IOException e) {                                                                             //
+                    e.printStackTrace();                                                                              //
+                    response.end("{\"status\":0}");                                                                //
+                }                                                                                                     //
+            }else                                                                                                     //
+                response.end("{\"status\":0}");                                                                    //
+        });                                                                                                           //
+     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 
      ////////////////////////////requestGreater
-        router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.POST,"/requestStudent").handler(rc -> {
-                    JsonObject json = rc.getBodyAsJson();
-                    HttpServerResponse response = rc.response();
-                    response.putHeader("content-type", "application/json");
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    String token = json.getString("token");
-                    String massage = json.getString("massage");
-                    int id = json.getInteger("workShopHandler");
-                    if (mapLogin.containsKey(token)) {
-                        newPerson = mapLogin.get(token);
-                    }
-                    else {
-                        response.end("{\"status\":0}");
-                        return;
-                    }
-                    newHoldWorkShop = findThisHoldWorkShop(id);
-                    if (newHoldWorkShop == null) {
-                        response.end("{\"status\":0}");
-                        return;
-                    }
-                    else {
-                        boolean canSendRequest = true;
-                        Grader grader = (Grader) newPerson.findOurType("2");
-                        dataSave.saveInFile();
-                        JsonObject json2 = new JsonObject();
-                        json2 = PersonHoldWorkShopThatHaveInThisTime(newPerson, newHoldWorkShop.getStart(), newHoldWorkShop.getEnd(), newHoldWorkShop.getHourStart(), newHoldWorkShop.getHourEnd());
-                        if (!json2.isEmpty()) {
-                            response.end("{\"status\":5,\"workShopMustSpend\":" + json2 + "}");//have this WorkShopInThisTime
-                            return;
-                        }
-                        // bayad tozihat ye chiz ezafeh konam
-                        if (AddToRequestListINDataBase(new Grader_Request(massage,newHoldWorkShop,(grader)))) {
-                            response.end("{\"status\":1}");
-                            return;
+
+     ////////////////////////////////////////////   ////////////////////////////////////////////////////////////////////
+        router.route().handler(BodyHandler.create());                                                                 //
+        router.route(HttpMethod.POST,"/requestGrader").handler(rc -> {                                             //
+                    JsonObject json = rc.getBodyAsJson();                                                             //
+                    HttpServerResponse response = rc.response();                                                      //
+                    response.putHeader("content-type", "application/json");                                    //
+                    ObjectMapper objectMapper = new ObjectMapper();                                                   //
+                    String token = json.getString("token");                                                      //
+                    String massage = json.getString("massage");                                                  //
+                    int id = json.getInteger("workShopHandler");                                                 //
+                    if (mapLogin.containsKey(token)) {                                                                //
+                        newPerson = mapLogin.get(token);                                                              //
+                    }                                                                                                 //
+                    else {                                                                                            //
+                        response.end("{\"status\":0}");                                                            //
+                        return;                                                                                       //
+                    }                                                                                                 //
+                    newHoldWorkShop = findThisHoldWorkShop(id);                                                       //
+                    if (newHoldWorkShop == null) {                                                                    //
+                         response.end("{\"status\":0}");                                                           //
+                        return;                                                                                       //
+                    }                                                                                                 //
+                    else {                                                                                            //
+                        boolean canSendRequest = true;                                                                //
+                        Grader grader = (Grader) newPerson.findOurType("2");                                   //
+                        dataSave.saveInFile();                                                                        //
+                        JsonObject json2 = new JsonObject();                                                          ////////////////////////////////////////////////////////////////////////////////
+                        json2 = PersonHoldWorkShopThatHaveInThisTime(newPerson, newHoldWorkShop.getStart(), newHoldWorkShop.getEnd(), newHoldWorkShop.getHourStart(), newHoldWorkShop.getHourEnd());//
+                        if (!json2.isEmpty()) {                                                                                ///////////////////////////////////////////////////////////////////////
+                            response.end("{\"status\":5,\"workShopMustSpend\":" + json2 + "}");//have this WorkShopInThisTime//
+                            return;                                                                                             //
+                        }                                                                                               //
+                        // bayad tozihat ye chiz ezafeh konam                                                           //
+                        if (AddToRequestListINDataBase(new Grader_Request(massage,newHoldWorkShop,(grader)))) {        //
+                            response.end("{\"status\":1}");                                                         //
+                            return;                                                                                    //
                         } else {
-                            response.end("{\"status\":2");// this person request before
-                            return;
-                        }
-                    }
-        });
+                            response.end("{\"status\":2");// this person request before                             //
+                            return;                                                                                    //
+                        }                                                                                              //
+                    }                                                                                                 //
+        });                                                                                                           //
+                                                                                                                      //
+                                                                                                                      //
+                                                                                                                      //
+                                                                                                                      //
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+        ///////////////////////////////////////requestStudent
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/requestStudent").handler(rc ->{
             JsonObject json = rc.getBodyAsJson();
@@ -1705,14 +1757,14 @@ public class VertxHttpServer extends AbstractVerticle {
                     if (graderRequest.getAccetply().equals(Accetply.Accept)) {
                         for (GroupStatus s : groupStatusArrayListr) {
                             if (s.getGroupG().getHead().equals(person.getUser()))
-                                return "AcceptHeedGreater";
+                                return "AcceptHeadGrader";
                         }
-                        return "AcceptGreater";
+                        return "AcceptGrader";
                     }
                     if (graderRequest.getAccetply().equals(Accetply.Reject))
-                        return "RejectGreater";
+                        return "RejectGrader";
                     if (graderRequest.getAccetply().equals(Accetply.Pending))
-                        return "PendingGreater";
+                        return "PendingGrader";
                 }
             }
         }
