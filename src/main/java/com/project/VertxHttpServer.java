@@ -1198,10 +1198,10 @@ public class VertxHttpServer extends AbstractVerticle {
                 holdWorkShop.setIs_installment(jsonObject1.getBoolean("is_installment"));
                 holdWorkShop.setMoney(jsonObject1.getLong("money"));
                 holdWorkShop.setPayMoneyInHowTimes(jsonObject1.getInteger("payMoneyInHowTimes"));
-                holdWorkShop.setStart(new SimpleDateFormat("dd/MM/yyyy").parse(jsonObject1.getJsonObject("start").toString()));
-                holdWorkShop.setEnd(new SimpleDateFormat("dd/MM/yyyy").parse(jsonObject1.getJsonObject("end").toString()));
-                holdWorkShop.setHourEnd(LocalTime.parse(jsonObject1.getJsonObject("hourEnd").toString()));
-                holdWorkShop.setHourStart(LocalTime.parse((jsonObject1.getJsonObject("hourStart").toString())));
+                holdWorkShop.setStart(new SimpleDateFormat("dd/MM/yyyy").parse(jsonObject1.getString("start")));
+                holdWorkShop.setEnd(new SimpleDateFormat("dd/MM/yyyy").parse(jsonObject1.getString("end")));
+                holdWorkShop.setHourEnd(LocalTime.parse(jsonObject1.getString("hourEnd")));
+                holdWorkShop.setHourStart(LocalTime.parse((jsonObject1.getString("hourStart"))));
 
             } catch (ParseException e) {
                 e.printStackTrace();
