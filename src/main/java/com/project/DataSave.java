@@ -263,7 +263,7 @@ public class DataSave implements Serializable {
         ArrayList<Workshop> workshops = new ArrayList<Workshop>();
         for (Object i : workShopPrerequisite){
             id = Integer.getInteger((String) i);
-            for (Workshop s : workshops){
+            for (Workshop s : this.workshops){
                 if (s.getId() == id) {
                     workshops.add(s);
                     break;
@@ -277,7 +277,7 @@ public class DataSave implements Serializable {
     public RequestStudent getOneRequestStudent(int requestStudentId) {
         RequestStudent requestStudent = new RequestStudent();
         for (Requests i : requests){
-            if (i.getClass().equals(RequestStudent.class)){
+            if (i instanceof RequestStudent){
                 requestStudent = (RequestStudent)i;
                 if (requestStudent.getId() == requestStudentId)
                     return requestStudent;
