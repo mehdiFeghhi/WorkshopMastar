@@ -235,10 +235,6 @@ public class DataSave implements Serializable {
     }
 
     public boolean addNewHoldWorkShop(HoldWorkShop holdWorkShop) {
-        for (HoldWorkShop i : holdWorkShops){
-            if(i.getId() == holdWorkShop.getId())
-                return false;
-        }
         holdWorkShop.setId(holdWorkShops.size()+1);
         holdWorkShops.add(holdWorkShop);
         return true;
