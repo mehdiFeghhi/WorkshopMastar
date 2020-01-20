@@ -246,7 +246,7 @@ public class DataSave implements Serializable {
 
     public boolean AddNewWorkShopTOdataBase(Workshop workshop) {
         for(Workshop i : workshops){
-            if (i.getId() == workshop.getId() || i.getTitle().equals(workshop.getTitle()))
+            if (i.getTitle().equals(workshop.getTitle()))
                 return false;
         }
         workshop.setId(workshops.size()+1);

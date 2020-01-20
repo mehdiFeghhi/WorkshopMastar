@@ -1120,10 +1120,13 @@ public class VertxHttpServer extends AbstractVerticle {
             String token =  jsonObject.getString("token");
             if(mapLogin.containsKey(token))
                 newPerson = mapLogin.get(token);
-            else
+            else {
                 response.end("{\"status\":0}");
+                return;
+            }
             if(!newPerson.is_this_role_in_our_person(Addmin.class)){
                 response.end("{\"status\":0}");
+                return;
             }
             ObjectMapper objectMapper = new ObjectMapper();
             Workshop workshop = null;
@@ -1132,9 +1135,12 @@ public class VertxHttpServer extends AbstractVerticle {
             } catch (IOException e) {
                 e.printStackTrace();
                 response.end("{\"status\":0}");
+                return;
             }
-            if(!AddNewWorkShopTOdataBase(workshop))
+            if(!AddNewWorkShopTOdataBase(workshop)) {
                 response.end("{\"status\":0}");
+                return;
+            }
             ArrayList<Workshop>workshopsPrerequisite = findThisWorkShop(jsonObject.getJsonArray("WorkShopPrerequisite"));
             for(Workshop i: workshopsPrerequisite){
                 AddNewReqirmentsToDataBase(new Requirments(i,workshop, Relation.Prerequisite));
