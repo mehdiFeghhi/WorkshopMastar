@@ -1227,7 +1227,7 @@ public class VertxHttpServer extends AbstractVerticle {
             JsonObject jsonObject = rc.getBodyAsJson();
             HttpServerResponse response = rc.response();
             String token =  jsonObject.getString("token");
-            JsonObject json = null;
+            JsonObject json = new JsonObject();
             Addmin addmin4 = new Addmin();
             if(mapLogin.containsKey(token)) {
                 newPerson = mapLogin.get(token);
