@@ -1198,7 +1198,12 @@ public class VertxHttpServer extends AbstractVerticle {
                 return;
             }
             Workshop workshop = findWorkShopeInDataBase(jsonObject.getInteger("idWorkShop"));
+            if (workshop == null){
+                response.end("{\"status\":0}");
+                return;
+            }
             holdWorkShop.setManagment((Managment) person.findOurType("3"));
+            holdWorkShop.setWorkshop(workshop);
             if(!addNewHoldWorkShop(holdWorkShop)) {
                 response.end("{\"status\":0}");
                 return;
