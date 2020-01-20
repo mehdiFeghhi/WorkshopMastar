@@ -199,8 +199,8 @@ public class Person  implements Serializable {
         }
         else if (object.equals("3")){
             Managment whoMakeWorkShape = new Managment();
-            this.roleOfWorkShapes.add(whoMakeWorkShape);
             whoMakeWorkShape.setId(this.id);
+            this.roleOfWorkShapes.add(whoMakeWorkShape);
             return whoMakeWorkShape;
         }
         else
