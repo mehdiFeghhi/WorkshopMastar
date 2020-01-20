@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.omg.CORBA.Request;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ public class DataSave implements Serializable {
     private ArrayList<Person> persons = new ArrayList<Person>();
     private ArrayList<Workshop> workshops = new ArrayList<Workshop>();
     private ArrayList<HoldWorkShop> holdWorkShops = new ArrayList<HoldWorkShop>();
-    private ArrayList<Group> groups = new ArrayList<Group>();
+    private ArrayList<GroupG> groupGS = new ArrayList<GroupG>();
     private ArrayList<Requests> requests = new ArrayList<Requests>();
     private ArrayList<Requirments> requirments = new ArrayList<Requirments>();
     private ArrayList<GroupStatus> groupStatuses = new ArrayList<GroupStatus>();
@@ -28,7 +27,7 @@ public class DataSave implements Serializable {
         if (SaveFIle.loadFromFileArrayList("holdWorkShopsArrayList.ser") != null)
             holdWorkShops = SaveFIle.loadFromFileArrayList("holdWorkShopsArrayList.ser");
         if (SaveFIle.loadFromFileArrayList("groupsArrayList.ser") != null)
-            groups = SaveFIle.loadFromFileArrayList("groupsArrayList.ser");
+            groupGS = SaveFIle.loadFromFileArrayList("groupsArrayList.ser");
         if(SaveFIle.loadFromFileArrayList("requestsArrayList.ser") != null)
             requests = SaveFIle.loadFromFileArrayList("requestsArrayList.ser");
         if(SaveFIle.loadFromFileArrayList("requirmentsArrayList.ser") != null)
@@ -47,7 +46,7 @@ public class DataSave implements Serializable {
             SaveFIle.saveArrayListInFile("personsArrayList.ser",persons);
             SaveFIle.saveArrayListInFile("workshopsArrayList.ser",workshops);
             SaveFIle.saveArrayListInFile("holdWorkShopsArrayList.ser",holdWorkShops);
-            SaveFIle.saveArrayListInFile("groupsArrayList.ser",groups);
+            SaveFIle.saveArrayListInFile("groupsArrayList.ser", groupGS);
             SaveFIle.saveArrayListInFile("requestsArrayList.ser",requests);
             SaveFIle.saveArrayListInFile("requirmentsArrayList.ser",requirments); ;
             SaveFIle.saveArrayListInFile("groupStatus.ser",groupStatuses);
@@ -56,14 +55,14 @@ public class DataSave implements Serializable {
             SaveFIle.saveArrayListInFile("absForms.ser",absForms);
 
     }
-    public ArrayList<RequestGreater>getAllGreaterRequestThatThisPersonSend(int id){
-        RequestGreater requestGreater = new RequestGreater();
-        ArrayList<RequestGreater> allOfThem = new ArrayList<RequestGreater>();
+    public ArrayList<Grader_Request>getAllGreaterRequestThatThisPersonSend(int id){
+        Grader_Request graderRequest = new Grader_Request();
+        ArrayList<Grader_Request> allOfThem = new ArrayList<Grader_Request>();
         for (Requests i : this.requests){
-            if(i instanceof RequestGreater){
-                requestGreater = (RequestGreater) i;
-                if (requestGreater.getGreater().getId() == id)
-                    allOfThem.add(requestGreater);
+            if(i instanceof Grader_Request){
+                graderRequest = (Grader_Request) i;
+                if (graderRequest.getGrader().getId() == id)
+                    allOfThem.add(graderRequest);
             }
 
         }
@@ -94,12 +93,12 @@ public class DataSave implements Serializable {
         this.holdWorkShops = holdWorkShops;
     }
 
-    public ArrayList<Group> getGroups() {
-        return groups;
+    public ArrayList<GroupG> getGroupGS() {
+        return groupGS;
     }
 
-    public void setGroups(ArrayList<Group> groups) {
-        this.groups = groups;
+    public void setGroupGS(ArrayList<GroupG> groupGS) {
+        this.groupGS = groupGS;
     }
 
     public ArrayList<Requests> getRequests() {
@@ -198,12 +197,12 @@ public class DataSave implements Serializable {
     }
 
     public Person findPersonOfThisManagment(int id) {
-        Greater greater = null;
+        Grader grader = null;
         for (Person i : persons){
             for(RoleOfWorkShape s : i.getRoleOfWorkShapes()){
-                if(s instanceof Greater){
-                    greater = (Greater) s;
-                    if(greater.getId() == id)
+                if(s instanceof Grader){
+                    grader = (Grader) s;
+                    if(grader.getId() == id)
                         return i;
 
                 }
@@ -290,7 +289,7 @@ public class DataSave implements Serializable {
 
     public void AddNewGroupStatusToDatabase(GroupStatus groupStatus) {
         for (GroupStatus i : groupStatuses){
-            if(i.getRoleOfWorkShape().equals(groupStatus.getRoleOfWorkShape()) && i.getGroup().equals(groupStatus.getGroup()))
+            if(i.getRoleOfWorkShape().equals(groupStatus.getRoleOfWorkShape()) && i.getGroupG().equals(groupStatus.getGroupG()))
                 return;
         }
         this.groupStatuses.add(groupStatus);
@@ -318,8 +317,8 @@ public class DataSave implements Serializable {
         return groupStatuses;
     }
 
-    public ArrayList<Group> getALLGroupINdataBase() {
-        return this.groups;
+    public ArrayList<GroupG> getALLGroupINdataBase() {
+        return this.groupGS;
     }
 
 
@@ -353,17 +352,17 @@ public class DataSave implements Serializable {
         }
     }
 
-    public boolean AddNewGroupTOdatabase(Group group) {
-        for (Group i : groups){
-            if(i.getHoldWorkShop().getId() == group.getHoldWorkShop().getId() && i.getName().equals(group.getName()))
+    public boolean AddNewGroupTOdatabase(GroupG groupG) {
+        for (GroupG i : groupGS){
+            if(i.getHoldWorkShop().getId() == groupG.getHoldWorkShop().getId() && i.getName().equals(groupG.getName()))
                 return false;
         }
-        this.groups.add(group);
+        this.groupGS.add(groupG);
         return true;
     }
 
-    public Group getOneGroupFrommDataBase(int numberGroup, String groupName, int numberIdWorkShop) {
-        for (Group i :groups){
+    public GroupG getOneGroupFrommDataBase(int numberGroup, String groupName, int numberIdWorkShop) {
+        for (GroupG i : groupGS){
             if(i.getHoldWorkShop().getId() == numberIdWorkShop  && i.getNumber() == numberGroup && i.getName().equals(groupName)){
                 return i;
             }
@@ -371,13 +370,13 @@ public class DataSave implements Serializable {
         return null;
     }
 
-    public RequestGreater getOneRequestGreater(Integer requestGreaterId) {
-        RequestGreater requestGreater = null;
+    public Grader_Request getOneRequestGreater(Integer requestGreaterId) {
+        Grader_Request graderRequest = null;
         for(Requests i : this.requests){
-            if(i instanceof RequestGreater){
-                requestGreater = (RequestGreater) i;
-                if(requestGreater.getId() == requestGreaterId)
-                    return requestGreater;
+            if(i instanceof Grader_Request){
+                graderRequest = (Grader_Request) i;
+                if(graderRequest.getId() == requestGreaterId)
+                    return graderRequest;
             }
         }
         return null;
@@ -405,29 +404,29 @@ public class DataSave implements Serializable {
 
 
     public Person findPersonOfThisGreater(int id) {
-        Greater greater = null;
+        Grader grader = null;
         for(Person i : persons){
-            if(i.is_this_role_in_our_person(Greater.class)){
-                greater = (Greater) i.findOurType("2");
-                if(greater.getId() == id)
+            if(i.is_this_role_in_our_person(Grader.class)){
+                grader = (Grader) i.findOurType("2");
+                if(grader.getId() == id)
                     return i;
             }
         }
         return null;
     }
 
-    public ArrayList<RequestGreater> findAllRequestGreater(int id) {
-        ArrayList<RequestGreater> requestGreaters = new ArrayList<RequestGreater>();
-        RequestGreater requestGreater = new RequestGreater();
+    public ArrayList<Grader_Request> findAllRequestGreater(int id) {
+        ArrayList<Grader_Request> graderRequests = new ArrayList<Grader_Request>();
+        Grader_Request graderRequest = new Grader_Request();
         for(Requests i : requests){
-            if(i instanceof RequestGreater){
-                    requestGreater = (RequestGreater) i;
-                    if(requestGreater.getId() == id)
-                        requestGreaters.add(requestGreater);
+            if(i instanceof Grader_Request){
+                    graderRequest = (Grader_Request) i;
+                    if(graderRequest.getId() == id)
+                        graderRequests.add(graderRequest);
 
             }
         }
-        return requestGreaters;
+        return graderRequests;
     }
     public ArrayList<RequestStudent> findAllRequestStudent(int id) {
         ArrayList<RequestStudent> requestStudents = new ArrayList<RequestStudent>();
@@ -455,7 +454,7 @@ public class DataSave implements Serializable {
 
     public boolean deletRequesOf(int requestID) {
         RequestStudent  requestStudent = null;
-        RequestGreater  requestGreater = null;
+        Grader_Request graderRequest = null;
         for(Requests i : requests){
             if(i instanceof RequestStudent){
                 requestStudent = (RequestStudent) i;
@@ -464,9 +463,9 @@ public class DataSave implements Serializable {
                     return true;
                 }
             }
-            else if(i.getClass().equals(RequestGreater.class)){
-                requestGreater = (RequestGreater) i;
-                if(requestGreater.getId() == requestID) {
+            else if(i.getClass().equals(Grader_Request.class)){
+                graderRequest = (Grader_Request) i;
+                if(graderRequest.getId() == requestID) {
                     this.requests.remove(i);
                     return true;
                 }
@@ -491,17 +490,17 @@ public class DataSave implements Serializable {
          return true;
     }
 
-    public boolean AddToRequestListINDataBase(RequestGreater newRequestGreater) {
-        RequestGreater requestGreater = new RequestGreater();
+    public boolean AddToRequestListINDataBase(Grader_Request newGraderRequest) {
+        Grader_Request graderRequest = new Grader_Request();
         for (Requests i : requests){
-            if(i instanceof RequestGreater){
-                requestGreater = (RequestGreater) i;
-                if (requestGreater.getGreater().getId() == newRequestGreater.getGreater().getId() && newRequestGreater.getHoldWorkShop().getId() == requestGreater.getHoldWorkShop().getId())
+            if(i instanceof Grader_Request){
+                graderRequest = (Grader_Request) i;
+                if (graderRequest.getGrader().getId() == newGraderRequest.getGrader().getId() && newGraderRequest.getHoldWorkShop().getId() == graderRequest.getHoldWorkShop().getId())
                     return false;
             }
 
         }
-        requests.add(newRequestGreater);
+        requests.add(newGraderRequest);
         return true;
     }
 
@@ -522,7 +521,7 @@ public class DataSave implements Serializable {
     public ArrayList<GroupStatus> getALLGroupStatuseINdataBaseOfThisWorkShope(int workShopId) {
         ArrayList<GroupStatus> groupStatuses = new ArrayList<GroupStatus>();
         for(GroupStatus i : this.groupStatuses){
-            if (i.getGroup().getHoldWorkShop().getId() == workShopId)
+            if (i.getGroupG().getHoldWorkShop().getId() == workShopId)
                 groupStatuses.add(i);
         }
         return groupStatuses;

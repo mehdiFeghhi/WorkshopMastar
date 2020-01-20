@@ -15,13 +15,8 @@ import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.auth.jwt.JWTAuthOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
-import org.bson.io.BsonOutput;
-import org.w3c.dom.ls.LSOutput;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.*;
@@ -36,7 +31,7 @@ public class VertxHttpServer extends AbstractVerticle {
     Workshop newWorkshop = null;
     HoldWorkShop newHoldWorkShop = null;
     RequestStudent newRequestStudent = null;
-    RequestGreater newRequestGreater = null;
+    Grader_Request newGraderRequest = null;
     DataSave dataSave = null;
 //    JsonObject jsonMongo = new JsonObject().put("host","127.0.0.1")
 //            .put("port","27017")
@@ -771,16 +766,16 @@ public class VertxHttpServer extends AbstractVerticle {
             int numberGroup = jsonObject.getInteger("GroupNumber");
             String groupName = jsonObject.getString("GroupName");
             int numberIdWorkShop = jsonObject.getInteger("IdGroup");
-            Group group ;
-            if((group = getOnGroupFromDataBase(numberGroup,groupName,numberIdWorkShop))== null)
+            GroupG groupG;
+            if((groupG = getOnGroupFromDataBase(numberGroup,groupName,numberIdWorkShop))== null)
                     response.end("{\"status\":0}");
 
-            RequestGreater requestGreater;
-            if((requestGreater = getOneRequestGreater(jsonObject.getInteger("RequestGreaterId")))== null)
+            Grader_Request graderRequest;
+            if((graderRequest = getOneRequestGreater(jsonObject.getInteger("RequestGreaterId")))== null)
                 response.end("{\"status\":0}");
-            if (newRequestGreater.getAccetply() != Accetply.Accept) {
-                newRequestGreater.setAccetply(Accetply.Accept);
-                GroupStatus groupStatus = new GroupStatus(group, requestGreater.getGreater());
+            if (newGraderRequest.getAccetply() != Accetply.Accept) {
+                newGraderRequest.setAccetply(Accetply.Accept);
+                GroupStatus groupStatus = new GroupStatus(groupG, graderRequest.getGrader());
                 AddNewGroupStatusToDatabase(groupStatus);
                 response.end("{\"status\":1}");
             }
@@ -811,12 +806,12 @@ public class VertxHttpServer extends AbstractVerticle {
                 int numberGroup = jsonObject.getInteger("GroupNumber");
                 String groupName = jsonObject.getString("GroupName");
                 int numberIdWorkShop = jsonObject.getInteger("IdGroup");
-                Group group ;
-                if((group = getOnGroupFromDataBase(numberGroup, groupName, numberIdWorkShop))== null)
+                GroupG groupG;
+                if((groupG = getOnGroupFromDataBase(numberGroup, groupName, numberIdWorkShop))== null)
                     response.end("{\"status\":0}");
                 if (requestStudent.getAccetply() != Accetply.Accept) {
                     requestStudent.setAccetply(Accetply.Accept);
-                    GroupStatus groupStatus = new GroupStatus(group, requestStudent.getStudent());
+                    GroupStatus groupStatus = new GroupStatus(groupG, requestStudent.getStudent());
                     AddNewGroupStatusToDatabase(groupStatus);
                     response.end("{\"status\":1}");
                 }
@@ -831,7 +826,7 @@ public class VertxHttpServer extends AbstractVerticle {
             HttpServerResponse response = rc.response();
             String token =  jsonObject.getString("token");
             ObjectMapper objectMapper = new ObjectMapper();
-            Group group = null;
+            GroupG groupG = null;
             if(mapLogin.containsKey(token))
                 newPerson = mapLogin.get(token);
             else
@@ -844,14 +839,14 @@ public class VertxHttpServer extends AbstractVerticle {
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenaid
             try {
-                group = objectMapper.readValue(jsonObject.getJsonObject("Group").toString(),Group.class);
+                groupG = objectMapper.readValue(jsonObject.getJsonObject("GroupG").toString(), GroupG.class);
             } catch (IOException e) {
                 e.printStackTrace();
                 response.end("{\"status\":5}");//can get json correctly
             }
             HoldWorkShop holdWorkShop = findThisHoldWorkShop(jsonObject.getInteger("IdWorkShop"));
-            group.setHoldWorkShop(holdWorkShop);
-            if(AddNewGroupTodatabase(group)) {
+            groupG.setHoldWorkShop(holdWorkShop);
+            if(AddNewGroupTodatabase(groupG)) {
                 response.end("{\"status\":1}");
             }
             response.end("{\"status\":0}");
@@ -976,23 +971,23 @@ public class VertxHttpServer extends AbstractVerticle {
             for (int i = 0 ; i < answ.size();i++){
                 stringArrayList.add(answ.getString(i));
             }
-            Greater greater = new Greater();
-            Greater greater3;
+            Grader grader = new Grader();
+            Grader grader3;
             Student student = new Student();
             Student student3;
             Managment managment;
             GroupStatus groupStatus1;
             GroupStatus groupStatus3;
-            Group group1 = null;
-            Group group2;
+            GroupG groupG1 = null;
+            GroupG groupG2;
             boolean firstCondition = false;
             boolean secendCondition = false;
             boolean thirdCondition  = false;
             Person person2 = findPersonByUser(user);
             ArrayList<GroupStatus> groupStatus2 = getALLGroupStatuseINdataBaseOfThisWorkShope(form.holdWorkShop.getId());
-            if (EachForm.equals("1")){//greater for student
-                if (newPerson.is_this_role_in_our_person(greater)){
-                    greater = (Greater) newPerson.findOurType("2");
+            if (EachForm.equals("1")){//grader for student
+                if (newPerson.is_this_role_in_our_person(grader)){
+                    grader = (Grader) newPerson.findOurType("2");
                     if(person2.is_this_role_in_our_person(student)){
                         student = (Student) person2.findOurType("1");
                         for(GroupStatus g : groupStatus2){
@@ -1000,23 +995,23 @@ public class VertxHttpServer extends AbstractVerticle {
                                 student3 = (Student) g.getRoleOfWorkShape();
                                 if (student.getId() == student3.getId()){
                                     firstCondition = true;
-                                    group1 = g.getGroup();
+                                    groupG1 = g.getGroupG();
                                 }
                             }
-                            if (g.getRoleOfWorkShape() instanceof Greater){
-                                greater3 = (Greater) g.getRoleOfWorkShape();
-                                if (greater3.getId() == greater.getId()) {
+                            if (g.getRoleOfWorkShape() instanceof Grader){
+                                grader3 = (Grader) g.getRoleOfWorkShape();
+                                if (grader3.getId() == grader.getId()) {
                                     secendCondition = true;
-                                    group2 = g.getGroup();
-                                    if (group1 != null) {
-                                        if (group1.getId() == group2.getId())
+                                    groupG2 = g.getGroupG();
+                                    if (groupG1 != null) {
+                                        if (groupG1.getId() == groupG2.getId())
                                             thirdCondition = true;
                                     }
                                 }
                             }
                         }
                         if (firstCondition && secendCondition && thirdCondition) {
-                            Qualifition qualifition = new Qualifition(stringArrayList,greater,student,form);
+                            Qualifition qualifition = new Qualifition(stringArrayList, grader,student,form);
                             if (addQualififtionTodataBase(qualifition))
                                 response.end("{\"status\":1}");
                             else
@@ -1035,28 +1030,28 @@ public class VertxHttpServer extends AbstractVerticle {
                     response.end("{\"status\":0}");
                 }
             }
-            if (EachForm.equals("2")) {// Student for greater
+            if (EachForm.equals("2")) {// Student for grader
                 if (newPerson.is_this_role_in_our_person(student)) {
                     student = (Student) newPerson.findOurType("1");
-                    if (person2.is_this_role_in_our_person(greater)) {
+                    if (person2.is_this_role_in_our_person(grader)) {
                         for (GroupStatus s : groupStatus2) {
-                            if (s.getRoleOfWorkShape() instanceof Greater) {
-                                greater = (Greater) s.getRoleOfWorkShape();
+                            if (s.getRoleOfWorkShape() instanceof Grader) {
+                                grader = (Grader) s.getRoleOfWorkShape();
                                 for (GroupStatus g : groupStatus2) {
-                                    if (g.getRoleOfWorkShape() instanceof Greater) {
-                                        greater3 = (Greater) g.getRoleOfWorkShape();
-                                        if (greater3.getId() == greater.getId()) {
+                                    if (g.getRoleOfWorkShape() instanceof Grader) {
+                                        grader3 = (Grader) g.getRoleOfWorkShape();
+                                        if (grader3.getId() == grader.getId()) {
                                             firstCondition = true;
-                                            group1 = g.getGroup();
+                                            groupG1 = g.getGroupG();
                                         }
                                     }
                                     if (g.getRoleOfWorkShape() instanceof Student) {
                                         student3 = (Student) g.getRoleOfWorkShape();
-                                        if (student3.getId() == greater.getId()) {
+                                        if (student3.getId() == grader.getId()) {
                                             secendCondition = true;
-                                            group2 = g.getGroup();
-                                            if (group1 != null) {
-                                                if (group1.getId() == group2.getId()) {
+                                            groupG2 = g.getGroupG();
+                                            if (groupG1 != null) {
+                                                if (groupG1.getId() == groupG2.getId()) {
                                                     thirdCondition = true;
                                                 }
                                             }
@@ -1064,7 +1059,7 @@ public class VertxHttpServer extends AbstractVerticle {
                                     }
                                 }
                                 if (firstCondition && secendCondition && thirdCondition) {
-                                    Qualifition qualifition = new Qualifition(stringArrayList, greater, student, form);
+                                    Qualifition qualifition = new Qualifition(stringArrayList, grader, student, form);
                                     if (addQualififtionTodataBase(qualifition))
                                         response.end("{\"status\":1}");
                                     else
@@ -1084,10 +1079,10 @@ public class VertxHttpServer extends AbstractVerticle {
             if (EachForm.equals("3")){// student for managment
 
             }
-            if (EachForm.equals("4")){// Managment for Greater
+            if (EachForm.equals("4")){// Managment for Grader
 
             }
-            if (EachForm.equals("5")){// greater for managment
+            if (EachForm.equals("5")){// grader for managment
 
             }
         });
@@ -1246,17 +1241,17 @@ public class VertxHttpServer extends AbstractVerticle {
                 System.out.println("we have'nt this person in mplogin ");
                 response.end("{\"status\":0}");
             }
-            if(!newPerson.is_this_role_in_our_person(Greater.class)){
+            if(!newPerson.is_this_role_in_our_person(Grader.class)){
                 System.out.println("this person have'nt any greateries");
                 response.end("{\"status\":0}");
             }
-            Group group = null;
+            GroupG groupG = null;
             for (GroupStatus i : groupStatusArrayList){
-                if (i.getGroup().getHead().equals(newPerson.getUser()))
-                        group = i.getGroup();
+                if (i.getGroupG().getHead().equals(newPerson.getUser()))
+                        groupG = i.getGroupG();
             }
-            if (group == null){
-                System.out.println("this person can't see person of each of group");
+            if (groupG == null){
+                System.out.println("this person can't see person of each of groupG");
                 response.end("{\"status\":0}");
             }
             int dd = 0;
@@ -1469,13 +1464,13 @@ public class VertxHttpServer extends AbstractVerticle {
         HoldWorkShop holdWorkShop = findThisHoldWorkShop(workShopID);
         Person person = findPersonByUser(username1);
         Managment managment = null;
-        Greater greater = null;
+        Grader grader = null;
         Student student = null;
-        Greater greater1 = new Greater();
+        Grader grader1 = new Grader();
         Student student1 = new Student();
-        RequestGreater requestGreater = null;
+        Grader_Request graderRequest = null;
         RequestStudent requestStudent = null;
-        greater = (Greater) person.findOurType("2");
+        grader = (Grader) person.findOurType("2");
         student = (Student) person.findOurType("1");
         Managment managment2 = new Managment();
         if (person.is_this_role_in_our_person(managment2)) {
@@ -1515,19 +1510,19 @@ public class VertxHttpServer extends AbstractVerticle {
                     }
                 }
             }
-            if (i instanceof RequestGreater){
-                requestGreater = (RequestGreater) i;
-                if (requestGreater.getId() == greater.getId()){
-                    if (requestGreater.getAccetply().equals(Accetply.Accept)) {
+            if (i instanceof Grader_Request){
+                graderRequest = (Grader_Request) i;
+                if (graderRequest.getId() == grader.getId()){
+                    if (graderRequest.getAccetply().equals(Accetply.Accept)) {
                         for (GroupStatus s : groupStatusArrayListr) {
-                            if (s.getGroup().getHead().equals(person.getUser()))
+                            if (s.getGroupG().getHead().equals(person.getUser()))
                                 return "AcceptHeedGreater";
                         }
                         return "AcceptGreater";
                     }
-                    if (requestGreater.getAccetply().equals(Accetply.Reject))
+                    if (graderRequest.getAccetply().equals(Accetply.Reject))
                         return "RejectGreater";
-                    if (requestGreater.getAccetply().equals(Accetply.Pending))
+                    if (graderRequest.getAccetply().equals(Accetply.Pending))
                         return "PendingGreater";
                 }
             }
@@ -1539,8 +1534,8 @@ public class VertxHttpServer extends AbstractVerticle {
         return dataSave.getALLGroupStatuseINdataBaseOfThisWorkShope(WorkShopId);
     }
 
-    private boolean AddNewGroupTodatabase(Group group) {
-        return  dataSave.AddNewGroupTOdatabase(group);
+    private boolean AddNewGroupTodatabase(GroupG groupG) {
+        return  dataSave.AddNewGroupTOdatabase(groupG);
     }
 
     private Person findPersonByUser(String user) {
@@ -1574,9 +1569,9 @@ public class VertxHttpServer extends AbstractVerticle {
 
     private JsonObject PersonHoldWorkShopThatHaveInThisTime(Person newPerson, Date start, Date end, LocalTime hourStart, LocalTime hourEnd) {
             Student student = (Student)newPerson.findOurType("1");
-            Greater greater = (Greater)newPerson.findOurType("2");
+            Grader grader = (Grader)newPerson.findOurType("2");
             ArrayList<RequestStudent>  requestStudents= getALLStudentRequestThatThisPersonSend(student.getId());
-            ArrayList<RequestGreater> requestGreaters = getALLGreaterRequestThatThisPersonSend(greater.getId());
+            ArrayList<Grader_Request> graderRequests = getALLGreaterRequestThatThisPersonSend(grader.getId());
             JsonObject jsonObjectMain = new JsonObject();
             JsonObject jsonObjectGreater = new JsonObject();
             JsonObject jsonObjectStudent = new JsonObject();
@@ -1588,7 +1583,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 }
             }
             dd = 0;
-            for (RequestGreater s : requestGreaters){
+            for (Grader_Request s : graderRequests){
                 if (((s.getHoldWorkShop().getStart().before(start) && s.getHoldWorkShop().getEnd().after(start))|| (s.getHoldWorkShop().getStart().after(start) && s.getHoldWorkShop().getStart().before(end))) &&((s.getHoldWorkShop().getHourStart().isAfter(hourStart) && s.getHoldWorkShop().getHourStart().isBefore(hourEnd)) || (s.getHoldWorkShop().getHourStart().isBefore(hourStart) && s.getHoldWorkShop().getHourEnd().isAfter(hourStart)))){
                     jsonObjectGreater.put(String.valueOf(dd),s.getHoldWorkShop().getName());
                     dd++;
@@ -1597,12 +1592,12 @@ public class VertxHttpServer extends AbstractVerticle {
             if (jsonObjectGreater.isEmpty() && jsonObjectStudent.isEmpty())
                 return jsonObjectMain;
             else
-                return jsonObjectMain.put("greater",jsonObjectGreater)
+                return jsonObjectMain.put("grader",jsonObjectGreater)
                         .put("student",jsonObjectStudent);
 
     }
 
-    private ArrayList<RequestGreater> getALLGreaterRequestThatThisPersonSend(int id) {
+    private ArrayList<Grader_Request> getALLGreaterRequestThatThisPersonSend(int id) {
         return dataSave.getAllGreaterRequestThatThisPersonSend(id);
     }
 
@@ -1638,11 +1633,11 @@ public class VertxHttpServer extends AbstractVerticle {
         dataSave.AddNewGroupStatusToDatabase(groupStatus);
     }
 
-    private Group getOnGroupFromDataBase(int numberGroup, String groupName, int numberIdWorkShop) {
+    private GroupG getOnGroupFromDataBase(int numberGroup, String groupName, int numberIdWorkShop) {
         return dataSave.getOneGroupFrommDataBase(numberGroup,groupName,numberIdWorkShop);
     }
 
-    private RequestGreater getOneRequestGreater(Integer requestGreaterId) {
+    private Grader_Request getOneRequestGreater(Integer requestGreaterId) {
         return dataSave.getOneRequestGreater(requestGreaterId);
     }
 
@@ -1655,12 +1650,12 @@ public class VertxHttpServer extends AbstractVerticle {
     }
 
     private JsonObject seeAllRequestGreater(int id) {
-        ArrayList<RequestGreater> requestGreaters = findAllRequestGreater(id);
+        ArrayList<Grader_Request> graderRequests = findAllRequestGreater(id);
         JsonObject jsonObject = new JsonObject();
         int d = 0;
-        for (RequestGreater i : requestGreaters){
-            JsonObject jsonObject1 = new JsonObject().put("idGreater",i.getGreater().getId());
-            Person person = findPersonOfThisGreater(i.getGreater().getId());
+        for (Grader_Request i : graderRequests){
+            JsonObject jsonObject1 = new JsonObject().put("idGreater",i.getGrader().getId());
+            Person person = findPersonOfThisGreater(i.getGrader().getId());
             jsonObject1.put("name",person.getName());
             jsonObject1.put("lastName",person.getLastName());
             jsonObject1.put("userName",person.getUser());
@@ -1674,7 +1669,7 @@ public class VertxHttpServer extends AbstractVerticle {
         return dataSave.findPersonOfThisGreater(id);
     }
 
-    private ArrayList<RequestGreater> findAllRequestGreater(int id) {
+    private ArrayList<Grader_Request> findAllRequestGreater(int id) {
         return dataSave.findAllRequestGreater(id);
     }
 
@@ -1743,8 +1738,8 @@ public class VertxHttpServer extends AbstractVerticle {
     private boolean AddToRequestListINDataBase(RequestStudent newRequest) {
         return dataSave.AddToRequestListINDataBase(newRequestStudent);
     }
-    private boolean AddToRequestListINDataBase(RequestGreater requestGreater){
-        return dataSave.AddToRequestListINDataBase(newRequestGreater);
+    private boolean AddToRequestListINDataBase(Grader_Request graderRequest){
+        return dataSave.AddToRequestListINDataBase(newGraderRequest);
     }
     private boolean isThisPersonIsInOneOfTheGroupOfThisWorkShop(HoldWorkShop newWorkshop, int id) {
         ArrayList<RequestStudent> requestStudents = findAllRequestStudent(newWorkshop.getId());
@@ -1808,14 +1803,14 @@ public class VertxHttpServer extends AbstractVerticle {
             JsonObject jsonObject = new JsonObject();
             int d = 0;
             for (GroupStatus i : AllGroupStatuse){
-                if(i.getRoleOfWorkShape().getClass() == Greater.class){
-                    Greater greater=(Greater)i.getRoleOfWorkShape();
-                    if (greater.getId() == id){
-                        Group group = i.getGroup();
+                if(i.getRoleOfWorkShape().getClass() == Grader.class){
+                    Grader grader =(Grader)i.getRoleOfWorkShape();
+                    if (grader.getId() == id){
+                        GroupG groupG = i.getGroupG();
                         JsonObject jsonObject1 = new JsonObject();
-                        jsonObject1.put("NameWorkShop",i.getGroup().getHoldWorkShop().getName());
-                        jsonObject1.put("Title",i.getGroup().getHoldWorkShop().getWorkshop().getTitle());
-                        Person person = findPersonOfThisManagment(i.getGroup().getHoldWorkShop().getId());
+                        jsonObject1.put("NameWorkShop",i.getGroupG().getHoldWorkShop().getName());
+                        jsonObject1.put("Title",i.getGroupG().getHoldWorkShop().getWorkshop().getTitle());
+                        Person person = findPersonOfThisManagment(i.getGroupG().getHoldWorkShop().getId());
                         jsonObject1.put("Teacher",person.getName()+"  "+person.getLastName());
                         jsonObject.put(String.valueOf(d),jsonObject1);
                         d++;
@@ -1830,7 +1825,7 @@ public class VertxHttpServer extends AbstractVerticle {
         return dataSave.getHoldWorkShops();
     }
 
-    private ArrayList<Group> getALLGroupINdataBase() {
+    private ArrayList<GroupG> getALLGroupINdataBase() {
         return dataSave.getALLGroupINdataBase();
     }
 

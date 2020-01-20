@@ -11,6 +11,10 @@ public class AbsForm implements Serializable {
         this.question = question;
     }
 
+    public AbsForm() {
+
+    }
+
     public int getNumber() {
         return number;
     }

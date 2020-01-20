@@ -2,13 +2,13 @@ package com.project;
 
 import java.io.Serializable;
 
-public class Group implements Serializable {
+public class GroupG implements Serializable {
     private int number;
     private String name;
     private String Head;
     private int id;
     private HoldWorkShop holdWorkShop;
-    public Group(String name, HoldWorkShop holdWorkShop, int number){
+    public GroupG(String name, HoldWorkShop holdWorkShop, int number){
         this.name = name;
         this.number = number;
         this.holdWorkShop = holdWorkShop;

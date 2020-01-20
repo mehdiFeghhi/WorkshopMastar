@@ -6,11 +6,11 @@ import java.util.ArrayList;
 public class GroupStatus implements Serializable {
     private int id;
     private double statues;
-    private Group group;
+    private GroupG groupG;
     private RoleOfWorkShape roleOfWorkShape;
     private ArrayList<Boolean> attendance ;
-    public GroupStatus(Group group, RoleOfWorkShape roleOfWorkShape) {
-        this.group = group;
+    public GroupStatus(GroupG groupG, RoleOfWorkShape roleOfWorkShape) {
+        this.groupG = groupG;
         this.roleOfWorkShape = roleOfWorkShape;
         this.statues = -1;
     }
@@ -31,8 +31,8 @@ public class GroupStatus implements Serializable {
         this.id = id;
     }
 
-    public Group getGroup() {
-        return group;
+    public GroupG getGroupG() {
+        return groupG;
     }
 
     public RoleOfWorkShape getRoleOfWorkShape() {
@@ -43,8 +43,8 @@ public class GroupStatus implements Serializable {
         return attendance;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    public void setGroupG(GroupG groupG) {
+        this.groupG = groupG;
     }
 
     public void setRoleOfWorkShape(RoleOfWorkShape roleOfWorkShape) {

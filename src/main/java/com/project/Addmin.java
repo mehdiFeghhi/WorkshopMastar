@@ -11,6 +11,10 @@ public class Addmin implements RoleOfWorkShape {
         this.adminType = AdminType.Soldier;
     }
 
+    public void setAdminType(AdminType adminType) {
+        this.adminType = adminType;
+    }
+
     public int getId() {
         return Id;
     }

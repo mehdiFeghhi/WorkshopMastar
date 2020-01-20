@@ -802,7 +802,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenaid
             try {
-                group = objectMapper.readValue(jsonObject.getJsonObject("Group").toString(),Group.class);
+                group = objectMapper.readValue(jsonObject.getJsonObject("GroupG").toString(),Group.class);
             } catch (IOException e) {
                 e.printStackTrace();
                 response.end("{\"status\":5}");//can get json correctly

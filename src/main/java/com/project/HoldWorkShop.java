@@ -43,6 +43,10 @@ public class HoldWorkShop implements Serializable {
         this.money = Money;
     }
 
+    public HoldWorkShop() {
+
+    }
+
     public LocalTime getHourStart() {
         return hourStart;
     }

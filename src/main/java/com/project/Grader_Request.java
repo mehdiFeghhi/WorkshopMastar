@@ -3,25 +3,25 @@ package com.project;
 
 import java.io.Serializable;
 
-public class RequestGreater extends Requests implements Serializable {
+public class Grader_Request extends Requests implements Serializable {
     private int id;
-    private Greater greater;
+    private Grader grader;
     private Type_Request type = Type_Request.BeGreater;
-    public RequestGreater(){
+    public Grader_Request(){
         super();
 
     }
-    public RequestGreater(String request,HoldWorkShop holdWorkShop, Greater greater) {
+    public Grader_Request(String request, HoldWorkShop holdWorkShop, Grader grader) {
         super(request,holdWorkShop);
-        this.greater = greater;
+        this.grader = grader;
     }
 
-    public Greater getGreater() {
-        return greater;
+    public Grader getGrader() {
+        return grader;
     }
 
-    public void setGreater(Greater greater) {
-        this.greater = greater;
+    public void setGrader(Grader grader) {
+        this.grader = grader;
     }
 
     public Type_Request getType() {

@@ -190,10 +190,10 @@ public class Person  implements Serializable {
 
         }
         else if (object.equals("2")){
-            Greater greater = new Greater();
-            greater.setId(this.id);
-            this.roleOfWorkShapes.add(greater);
-            return greater;
+            Grader grader = new Grader();
+            grader.setId(this.id);
+            this.roleOfWorkShapes.add(grader);
+            return grader;
         }
         else if (object.equals("3")){
             Managment whoMakeWorkShape = new Managment();
@@ -204,6 +204,25 @@ public class Person  implements Serializable {
         else
             return null;
     }
+    /////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
     public boolean is_this_role_in_our_person(Object object){
         for (RoleOfWorkShape i : roleOfWorkShapes)
             if (i instanceof Object)
