@@ -14,7 +14,7 @@ public class AbsForm_DB
 
     public AbsForm makeAbsForm_DB(){
         AbsForm absForm = new AbsForm();
-        absForm.setNumber(this.number);
+        absForm.setNumber(this.AbsForm_ID);
         return absForm;
     }
 }
