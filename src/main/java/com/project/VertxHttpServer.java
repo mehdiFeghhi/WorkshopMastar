@@ -530,7 +530,6 @@ public class VertxHttpServer extends AbstractVerticle {
                     newPerson = objectMapper.readValue(json.getJsonObject("person").toString(),Person.class);
                     mapLogin.put(json.getString("token"),newPerson);
                     AddPersonTodataBase(newPerson);
-                    dataSave.getPersons().add(newPerson);
                     dataSave.saveInFile();
                     response.end("{\"status\":1}");
 
