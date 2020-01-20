@@ -289,6 +289,7 @@ public class DataSave implements Serializable {
             if(i.getRoleOfWorkShape().equals(groupStatus.getRoleOfWorkShape()) && i.getGroupG().equals(groupStatus.getGroupG()))
                 return;
         }
+        groupStatus.setId(this.groupStatuses.size()+1);
         this.groupStatuses.add(groupStatus);
     }
 
@@ -354,6 +355,7 @@ public class DataSave implements Serializable {
             if(i.getHoldWorkShop().getId() == groupG.getHoldWorkShop().getId() && i.getName().equals(groupG.getName()))
                 return false;
         }
+        groupG.setId(this.groupGS.size()+1);
         this.groupGS.add(groupG);
         return true;
     }
@@ -484,6 +486,7 @@ public class DataSave implements Serializable {
              }
 
          }
+         newRequestStudent.setId(this.requests.size()+1);
          requests.add(newRequestStudent);
          return true;
     }

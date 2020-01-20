@@ -1417,9 +1417,9 @@ public class VertxHttpServer extends AbstractVerticle {
                 }
             }
             else{
-                Addmin addmin = new Addmin();
+                Addmin addmin5 = new Addmin();
                 for (int i = 0 ; i < keys.size();i++){
-                    if (!mapLogin.get(keys.get(i)).is_this_role_in_our_person(addmin))
+                    if (!mapLogin.get(keys.get(i)).is_this_role_in_our_person(addmin5))
                         mapLogin.remove(keys.get(i));
                 }
 
