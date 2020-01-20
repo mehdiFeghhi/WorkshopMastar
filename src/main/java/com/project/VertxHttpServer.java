@@ -193,6 +193,55 @@ public class VertxHttpServer extends AbstractVerticle {
             }else
                 response.end("{\"status\":0}");
         });
+     /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+     ////////////////////////////requestGreater
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/requestStudent").handler(rc -> {
+                    JsonObject json = rc.getBodyAsJson();
+                    HttpServerResponse response = rc.response();
+                    response.putHeader("content-type", "application/json");
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String token = json.getString("token");
+                    String massage = json.getString("massage");
+                    int id = json.getInteger("workShopHandler");
+                    if (mapLogin.containsKey(token)) {
+                        newPerson = mapLogin.get(token);
+                    }
+                    else {
+                        response.end("{\"status\":0}");
+                        return;
+                    }
+                    newHoldWorkShop = findThisHoldWorkShop(id);
+                    if (newHoldWorkShop == null) {
+                        response.end("{\"status\":0}");
+                        return;
+                    }
+                    else {
+                        boolean canSendRequest = true;
+                        Grader grader = (Grader) newPerson.findOurType("2");
+                        dataSave.saveInFile();
+                        JsonObject json2 = new JsonObject();
+                        json2 = PersonHoldWorkShopThatHaveInThisTime(newPerson, newHoldWorkShop.getStart(), newHoldWorkShop.getEnd(), newHoldWorkShop.getHourStart(), newHoldWorkShop.getHourEnd());
+                        if (!json2.isEmpty()) {
+                            response.end("{\"status\":5,\"workShopMustSpend\":" + json2 + "}");//have this WorkShopInThisTime
+                            return;
+                        }
+                        // bayad tozihat ye chiz ezafeh konam
+                        if (AddToRequestListINDataBase(new Grader_Request(massage,newHoldWorkShop,(grader)))) {
+                            response.end("{\"status\":1}");
+                            return;
+                        } else {
+                            response.end("{\"status\":2");// this person request before
+                            return;
+                        }
+                    }
+        });
+
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/requestStudent").handler(rc ->{
             JsonObject json = rc.getBodyAsJson();
@@ -650,6 +699,26 @@ public class VertxHttpServer extends AbstractVerticle {
             response.end("{\"status\":1\"information\":"+allRequestStudnet+"}");
 
         });
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/seeAllHoldWorkShopThatManagmentHave").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
@@ -713,6 +782,16 @@ public class VertxHttpServer extends AbstractVerticle {
                 response.end("{\"status\":03}");//this person have not installmentPay
             }
         });
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////////
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/payCompactly").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
@@ -746,6 +825,23 @@ public class VertxHttpServer extends AbstractVerticle {
                 response.end("{\"status\":1}");
             }
         });
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/AcceptRequestGreater").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
@@ -783,6 +879,12 @@ public class VertxHttpServer extends AbstractVerticle {
 
         });
 
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/AcceptRequestStudent").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
@@ -820,6 +922,17 @@ public class VertxHttpServer extends AbstractVerticle {
             else
                 response.end("{\"status\":3}");//this person don't pay it's payment Complite
         });
+
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/MakeNewGroup").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();

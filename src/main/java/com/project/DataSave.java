@@ -501,6 +501,7 @@ public class DataSave implements Serializable {
             }
 
         }
+        newGraderRequest.setId(this.requests.size()+1);
         requests.add(newGraderRequest);
         return true;
     }
