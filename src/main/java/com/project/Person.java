@@ -55,7 +55,9 @@ public class Person  implements Serializable {
     }
 
     public Person clone(){
-        return new Person(this.getName(),this.getLastName(),this.date_birthday,this.getUser(),this.nationalCode,this.getPhoneNumber(),this.getEmailAddress());
+        Person person = new Person(this.getName(),this.getLastName(),this.date_birthday,this.getUser(),this.nationalCode,this.getPhoneNumber(),this.getEmailAddress());
+        person.setId(this.id);
+        return person;
     }
     public void setRoleOfWorkShapes(ArrayList<RoleOfWorkShape> roleOfWorkShapes) {
         this.roleOfWorkShapes = roleOfWorkShapes;

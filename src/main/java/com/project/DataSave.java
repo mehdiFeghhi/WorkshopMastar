@@ -237,6 +237,7 @@ public class DataSave implements Serializable {
     public boolean addNewHoldWorkShop(HoldWorkShop holdWorkShop) {
         holdWorkShop.setId(holdWorkShops.size()+1);
         holdWorkShops.add(holdWorkShop);
+        this.saveInFile();
         return true;
     }
 
