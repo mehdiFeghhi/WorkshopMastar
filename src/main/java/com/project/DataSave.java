@@ -401,9 +401,10 @@ public class DataSave implements Serializable {
 
 
     public Person findPersonOfThisGreater(int id) {
-        Grader grader = null;
+        Grader grader = new Grader();
         for(Person i : persons){
-            if(i.is_this_role_in_our_person(Grader.class)){
+
+            if(i.is_this_role_in_our_person(grader)){
                 grader = (Grader) i.findOurType("2");
                 if(grader.getId() == id)
                     return i;

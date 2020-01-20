@@ -1304,7 +1304,8 @@ public class VertxHttpServer extends AbstractVerticle {
                 System.out.println("we have'nt this person in mplogin ");
                 response.end("{\"status\":0}");
             }
-            if(!newPerson.is_this_role_in_our_person(Grader.class)){
+            Grader grader = new Grader();
+            if(!newPerson.is_this_role_in_our_person(grader)){
                 System.out.println("this person have'nt any greateries");
                 response.end("{\"status\":0}");
             }
@@ -1366,18 +1367,19 @@ public class VertxHttpServer extends AbstractVerticle {
             HttpServerResponse response = rc.response();
             String token =  jsonObject.getString("token");
             JsonObject json = null;
+            Addmin addmin4 = new Addmin();
             if(mapLogin.containsKey(token))
                 newPerson = mapLogin.get(token);
             else
                 response.end("{\"status\":0}");
-            if(!newPerson.is_this_role_in_our_person(Addmin.class)){
+            if(!newPerson.is_this_role_in_our_person(addmin4)){
                 response.end("{\"status\":0}");
             }
             Addmin addmin2 = (Addmin)newPerson.findOurType("0");
             Person person = findPersonIndataBase(json.getString("user"),json.getString("nationCode"));
             if(person == null)
                 response.end("{\"status\":0}");
-            if(!person.is_this_role_in_our_person(Addmin.class) || addmin2.getAdminType() == AdminType.General){
+            if(!person.is_this_role_in_our_person(addmin4) || addmin2.getAdminType() == AdminType.General){
                 boolean activity = json.getBoolean("activity");
                 person.setIs_Active(activity);
                 response.end("{\"status\":1}");
@@ -1397,11 +1399,12 @@ public class VertxHttpServer extends AbstractVerticle {
             HttpServerResponse response = rc.response();
             String token =  jsonObject.getString("token");
             JsonObject json = null;
+            Addmin addmin3 = new Addmin();
             if(mapLogin.containsKey(token))
                 newPerson = mapLogin.get(token);
             else
                 response.end("{\"status\":0}");
-            if(!newPerson.is_this_role_in_our_person(Addmin.class)){
+            if(!newPerson.is_this_role_in_our_person(addmin3)){
                 response.end("{\"status\":0}");
             }
             Addmin addmin4 = (Addmin)newPerson.findOurType("0");
@@ -1414,8 +1417,9 @@ public class VertxHttpServer extends AbstractVerticle {
                 }
             }
             else{
+                Addmin addmin = new Addmin();
                 for (int i = 0 ; i < keys.size();i++){
-                    if (!mapLogin.get(keys.get(i)).is_this_role_in_our_person(Addmin.class))
+                    if (!mapLogin.get(keys.get(i)).is_this_role_in_our_person(addmin))
                         mapLogin.remove(keys.get(i));
                 }
 
