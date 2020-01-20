@@ -1195,7 +1195,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 JsonObject jsonObject1 = jsonObject.getJsonObject("HoldWorkShop");
                 holdWorkShop.setPayMoneyInHowTimes(jsonObject1.getInteger("payMoneyInHowTimes"));
                 holdWorkShop.setName(jsonObject1.getString("name"));
-                holdWorkShop.setIs_installment(jsonObject1.getBoolean("is_installment"));
+                holdWorkShop.setIs_installment(Boolean.parseBoolean(jsonObject1.getString("is_installment")));
                 holdWorkShop.setMoney(jsonObject1.getLong("money"));
                 holdWorkShop.setPayMoneyInHowTimes(jsonObject1.getInteger("payMoneyInHowTimes"));
                 holdWorkShop.setStart(new SimpleDateFormat("yyyy/MM/dd").parse(jsonObject1.getString("start")));
