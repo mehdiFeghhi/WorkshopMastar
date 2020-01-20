@@ -270,7 +270,7 @@ public class VertxHttpServer extends AbstractVerticle {
                             return;                                                                                             //
                         }                                                                                               //
                         // bayad tozihat ye chiz ezafeh konam                                                           //
-                        if (AddToRequestListINDataBase(new Grader_Request(massage,newHoldWorkShop,(grader)))) {        //
+                        if (AddToRequestListINDataBase(new Grader_Request(massage,newHoldWorkShop,grader))) {        //
                             response.end("{\"status\":1}");                                                         //
                             return;                                                                                    //
                         } else {
