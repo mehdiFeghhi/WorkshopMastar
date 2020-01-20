@@ -1174,30 +1174,49 @@ public class VertxHttpServer extends AbstractVerticle {
             String token =  jsonObject.getString("token");
             if(mapLogin.containsKey(token))
                 newPerson = mapLogin.get(token);
-            else
+            else {
                 response.end("{\"status\":0}");
+                return;
+            }
             Addmin addmin3 = new Addmin();
             if(!newPerson.is_this_role_in_our_person(addmin3)){
                 response.end("{\"status\":0}");
+                return;
             }
             ObjectMapper objectMapper = new ObjectMapper();
             Person person = findPersonByUser(jsonObject.getString("user"));
-            if(person == null)
+            if(person == null) {
                 response.end("{\"status\":4}");//can't find this person in dataBase
+                return;
+            }
             HoldWorkShop holdWorkShop = null;
             try {
                 holdWorkShop = objectMapper.readValue(jsonObject.getJsonObject("HoldWorkShop").toString(), HoldWorkShop.class);
             } catch (IOException e) {
                 e.printStackTrace();
                 response.end("{\"status\":0}");
+                return;
             }
+            Workshop workshop = findWorkShopeInDataBase(jsonObject.getInteger("idWorkShop"));
             holdWorkShop.setManagment((Managment) person.findOurType("3"));
             if(!addNewHoldWorkShop(holdWorkShop)) {
                 response.end("{\"status\":0}");
+                return;
             }
             dataSave.saveInFile();
             response.end("{\"status\":1}");
+            return;
         });
+        /////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+        /////////////////////////////////////////////////////////admin see all person
+
+
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/AdminSeeAllPerson").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
@@ -1232,6 +1251,21 @@ public class VertxHttpServer extends AbstractVerticle {
         });
 
         ////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /////////////////////////////////////////////////////////////////////// student of one group by user greater
+
 
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/studentOfOneGroupByUSerGreater").handler(rc ->{
@@ -1286,7 +1320,7 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             response.end("{\"status\":1,\"information\":"+json+"}");
         });
-
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -1327,6 +1361,13 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             response.end("{\"status\":13}");//Don't Access
         });
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////
+
+
+        ///////////////////////////// logout all person in System
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/LogoutAllPersonInSystem").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
@@ -1358,6 +1399,9 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             response.end("{\"status\":Ok}");
         });
+        ///////////////////////////////////////////////////////////////////////////////////
+
+
 
         httpServer
                 .requestHandler(router::accept)
@@ -1779,8 +1823,11 @@ public class VertxHttpServer extends AbstractVerticle {
         return dataSave.findPersonIndataBase2(user,email);
     }
 
-    private Workshop findWorkShopeInDataBase(String id, String name) {
-        return new Workshop(id,name);
+    private Workshop findWorkShopeInDataBase(int id, String name) {
+        return dataSave.findworkShopById(id);
+    }
+    private Workshop findWorkShopeInDataBase(int id){
+        return dataSave.findworkShopById(id);
     }
 
     private void updateInPersonINdataBase(Person person) {

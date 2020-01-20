@@ -557,4 +557,11 @@ public class DataSave implements Serializable {
     }
 
 
+    public Workshop findworkShopById(int id) {
+        for (Workshop i : this.getWorkshops()){
+            if (i.getId() == id)
+                return i;
+        }
+        return null;
+    }
 }

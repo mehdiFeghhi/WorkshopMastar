@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Form implements Serializable {
+
     AbsForm absForm;
     HoldWorkShop holdWorkShop;
     public Form(AbsForm absForm, HoldWorkShop holdWorkShop) {
