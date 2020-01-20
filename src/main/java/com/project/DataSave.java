@@ -262,7 +262,7 @@ public class DataSave implements Serializable {
         int id ;
         ArrayList<Workshop> workshops = new ArrayList<Workshop>();
         for (Object i : workShopPrerequisite){
-            id = Integer.getInteger((String) i);
+            id = Integer.parseInt((String) i);
             for (Workshop s : this.workshops){
                 if (s.getId() == id) {
                     workshops.add(s);
