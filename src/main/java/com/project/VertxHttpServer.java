@@ -1077,10 +1077,12 @@ public class VertxHttpServer extends AbstractVerticle {
                 newPerson = mapLogin.get(token);
             else {
                 response.end("{\"status\":0}");
+                return;
             }
             Managment managment = new Managment();
             if(!newPerson.is_this_role_in_our_person(managment)){
                 response.end("{\"status\":0}");
+                return;
             }
             managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
@@ -1090,8 +1092,10 @@ public class VertxHttpServer extends AbstractVerticle {
             int numberIdWorkShop = jsonObject.getInteger("IdGroup");
             int number_type = jsonObject.getInteger("type");
             GroupG groupG;
-            if((groupG = getOnGroupFromDataBase(numberGroup,groupName,numberIdWorkShop))== null)
+            if((groupG = getOnGroupFromDataBase(numberGroup,groupName,numberIdWorkShop))== null){
                     response.end("{\"status\":0}");
+                    return;
+            }
 
             Grader_Request graderRequest;
             if (number_type == 1){
@@ -1099,15 +1103,16 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             if((graderRequest = getOneRequestGreater(jsonObject.getInteger("RequestGreaterId")))== null)
                 response.end("{\"status\":0}");
-            if (newGraderRequest.getAccetply() != Accetply.Accept) {
-                newGraderRequest.setAccetply(Accetply.Accept);
+            if (graderRequest.getAccetply() != Accetply.Accept) {
+                graderRequest.setAccetply(Accetply.Accept);
                 GroupStatus groupStatus = new GroupStatus(groupG, graderRequest.getGrader());
                 AddNewGroupStatusToDatabase(groupStatus);
                 dataSave.saveInFile();
                 response.end("{\"status\":1}");
+                return;
             }
             response.end("{\"status\":0}");
-
+            return;
         });
 
 
