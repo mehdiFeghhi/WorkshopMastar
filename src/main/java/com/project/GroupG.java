@@ -15,6 +15,16 @@ public class GroupG implements Serializable {
 
     }
 
+    public GroupG() {
+
+    }
+
+    public GroupG(String name, String head, Integer number) {
+        this.name = name;
+        this.Head = head;
+        this.number = number;
+    }
+
     public int getNumber() {
         return number;
     }
