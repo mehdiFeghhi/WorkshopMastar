@@ -1015,8 +1015,10 @@ public class VertxHttpServer extends AbstractVerticle {
                 graderRequest.setAccetply(Accetply.Reject);
                 dataSave.saveInFile();
                 response.end("{\"status\":1}");
+                return;
             }
             response.end("{\"status\":0}");
+            return;
 
         });
 
