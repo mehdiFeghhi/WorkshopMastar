@@ -2299,7 +2299,9 @@ public class VertxHttpServer extends AbstractVerticle {
         return false;
 
     }
-
+    private ArrayList<RequestStudent> findAllRequestStudentOfworkShop(int idHoldWorkShop){
+        return dataSave.findAllRequestStudentOfworkShop(idHoldWorkShop);
+    }
     private ArrayList<RequestStudent> findAllRequestStudent(int id) {
         return dataSave.findAllRequestStudent(id);
     }

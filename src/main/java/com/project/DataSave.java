@@ -597,4 +597,18 @@ public class DataSave implements Serializable {
         }
         return grader_requests;
     }
+
+    public ArrayList<RequestStudent> findAllRequestStudentOfworkShop(int idHoldWorkShop) {
+        ArrayList<RequestStudent> Student_requests = new ArrayList<RequestStudent>();
+        RequestStudent  student_request = new RequestStudent();
+        for (Requests i : requests){
+            student_request = (RequestStudent) i;
+            if ((i instanceof  RequestStudent) && student_request.getHoldWorkShop().getId() == idHoldWorkShop){
+                Student_requests.add(student_request);
+            }
+
+        }
+        return Student_requests;
+    }
 }
+
