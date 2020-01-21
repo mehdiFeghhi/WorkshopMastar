@@ -757,11 +757,11 @@ public class VertxHttpServer extends AbstractVerticle {
                         .put("id", i.getId())
                         .put("Description", holdWorkShop.getWorkshop().getDescription());
                 if (holdWorkShop.getManagment()== null){
-                    jsonObject1.put("Managment","unKnown");
+                    jsonObject1.put("Management","unKnown");
                 }
                 else {
                     Person person = findPersonOfThisManagment(holdWorkShop.getManagment().id);
-                    jsonObject.put("Managment", person.getName()+"          "+person.getLastName());
+                    jsonObject.put("Management", person.getName()+"          "+person.getLastName());
                 }
                 allStudentWorkShop.put(String.valueOf(dd),jsonObject1);
                 ++dd;
@@ -785,17 +785,17 @@ public class VertxHttpServer extends AbstractVerticle {
                         .put("id", i.getId())
                         .put("Description", holdWorkShop.getWorkshop().getDescription());
                 if (holdWorkShop.getManagment()== null){
-                    jsonObject1.put("Managment","unKnown");
+                    jsonObject1.put("Management","unKnown");
                 }
                 else {
                     Person person = findPersonOfThisManagment(holdWorkShop.getManagment().id);
-                    jsonObject.put("Managment", person.getName()+"          "+person.getLastName());
+                    jsonObject.put("Management", person.getName()+"          "+person.getLastName());
                 }
                 allGrederWorkShop.put(String.valueOf(dd),jsonObject1);
                 ++dd;
             }
             JsonObject information = new JsonObject();
-            information.put("Managment",allWorkShopOfThisManagment)
+            information.put("Management",allWorkShopOfThisManagment)
                     .put("Student",allStudentWorkShop)
                     .put("Grader",allGrederWorkShop);
             response.end("{\"status\":1,\"information\":"+information+"}");
