@@ -1029,6 +1029,34 @@ public class VertxHttpServer extends AbstractVerticle {
 
 
 
+        ////////////////////////////////see all group of Workshop
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/RejectRequestGrader").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else {
+                response.end("{\"status\":0}");
+            }
+            Managment managment = new Managment();
+            if(!newPerson.is_this_role_in_our_person(managment)){
+                response.end("{\"status\":0}");
+            }
+            managment = (Managment) newPerson.findOurType("3");
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop"))) {
+                response.end("{\"status\":3}");//permissionDenaid
+                return;
+            }
+            JsonObject jsonObject1 = findAllGroupOfWorkShop(jsonObject.getInteger("IdWorkShop"));
+            response.end("{\"status\":1,\"status\":"+jsonObject1+"}");
+            return;
+
+        });
+
+
+
 
 
         //////////////////////////////////////////////////////////////////////////////////////////////
@@ -1036,7 +1064,7 @@ public class VertxHttpServer extends AbstractVerticle {
 
 
         router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.POST,"/AcceptRequestGreater").handler(rc ->{
+        router.route(HttpMethod.POST,"/AcceptRequestGrader").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
             HttpServerResponse response = rc.response();
             String token =  jsonObject.getString("token");
@@ -1739,6 +1767,10 @@ public class VertxHttpServer extends AbstractVerticle {
                 .listen(5000);
 
         }
+
+    private JsonObject findAllGroupOfWorkShop(Integer idWorkShop) {
+        return   dataSave.findAllGroupOfWorkShop(idWorkShop);
+    }
 
     private JsonObject seeAllHolderWorkShop() {
         ArrayList<HoldWorkShop> holdWorkShop = getALLHoldWorkShop();

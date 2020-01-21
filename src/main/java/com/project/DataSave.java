@@ -567,4 +567,19 @@ public class DataSave implements Serializable {
         }
         return null;
     }
+
+    public JsonObject findAllGroupOfWorkShop(Integer idWorkShop) {
+        JsonObject jsonObject = new JsonObject();
+        int dd = 0;
+        for (GroupG i : groupGS){
+            JsonObject jsonObject1 = new JsonObject();
+            if (i.getHoldWorkShop().getId() == idWorkShop){
+                jsonObject.put("name",i.getName())
+                          .put("number",i.getNumber())
+                          .put("id_Group",i.getId());
+                jsonObject.put(String.valueOf(dd),jsonObject1);
+            }
+        }
+        return jsonObject;
+    }
 }
