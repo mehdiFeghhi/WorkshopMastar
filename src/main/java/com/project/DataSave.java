@@ -575,7 +575,7 @@ public class DataSave implements Serializable {
         for (GroupG i : groupGS){
             JsonObject jsonObject1 = new JsonObject();
             if (i.getHoldWorkShop().getId() == idWorkShop){
-                jsonObject.put("name",i.getName())
+                jsonObject1.put("name",i.getName())
                           .put("number",i.getNumber())
                           .put("id_Group",i.getId());
                 jsonObject.put(String.valueOf(dd),jsonObject1);
