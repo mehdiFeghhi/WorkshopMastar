@@ -263,8 +263,7 @@ public class VertxHttpServer extends AbstractVerticle {
                     }                                                                                                 //
                     else {                                                                                            //
                         boolean canSendRequest = true;                                                                //
-                        Grader grader = (Grader) newPerson.findOurType("2");                                   //
-                        dataSave.saveInFile();                                                                        //
+                        Grader grader = (Grader) newPerson.findOurType("2");                                   ////
                         JsonObject json2 = new JsonObject();                                                          ////////////////////////////////////////////////////////////////////////////////
                         json2 = PersonHoldWorkShopThatHaveInThisTime(newPerson, newHoldWorkShop.getStart(), newHoldWorkShop.getEnd(), newHoldWorkShop.getHourStart(), newHoldWorkShop.getHourEnd());//
                         if (!json2.isEmpty()) {                                                                                ///////////////////////////////////////////////////////////////////////
@@ -273,6 +272,7 @@ public class VertxHttpServer extends AbstractVerticle {
                         }                                                                                             //
                         // bayad tozihat ye chiz ezafeh konam                                                         //
                         if (AddToRequestListINDataBase(new Grader_Request(massage,newHoldWorkShop,grader))) {         //
+                            dataSave.saveInFile();
                             response.end("{\"status\":1}");                                                        //
                             return;                                                                                   //
                         } else {
@@ -370,6 +370,7 @@ public class VertxHttpServer extends AbstractVerticle {
                     // bayad tozihat ye chiz ezafeh konam                                                                                      //
                     if (AddToRequestListINDataBase(newRequestStudent)) {                                                                       //
                         response.end("{\"status\":1}");
+                        dataSave.saveInFile();
                         return;                                                                                                                //
                     } else {                                                                                                                   //
                         response.end("{\"status\":2}");// this person request before
