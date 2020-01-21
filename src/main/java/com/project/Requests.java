@@ -19,7 +19,7 @@ abstract public class Requests implements Serializable {
         this.holdWorkShop = holdWorkShop;
     }
     public Requests() {
-
+        this.accetply = Accetply.Pending;
     }
 
     public HoldWorkShop getHoldWorkShop() {

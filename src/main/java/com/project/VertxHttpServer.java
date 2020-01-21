@@ -311,8 +311,10 @@ public class VertxHttpServer extends AbstractVerticle {
                 response.end("{\"status\":0}");                                                                                        //
                                                                                                                                           //
             newHoldWorkShop = findThisHoldWorkShop(id);                                                                                   //
-            if (newHoldWorkShop == null)                                                                                                  //
-                response.end("{\"status\":0}");                                                                                        //
+            if (newHoldWorkShop == null) {                                                                                                 //
+                response.end("{\"status\":0}");
+                return;//
+            }
             else {                                                                                                                        //
                 boolean canSendRequest = true;                                                                                            //
                 Student student = (Student) newPerson.findOurType("1");                                                            //
@@ -338,18 +340,23 @@ public class VertxHttpServer extends AbstractVerticle {
                         }                                                                                                                 //
                     }                                                                                                                     //
                     if(!canSendRequest){                                                                                                  //
-                        response.end("{\"status\":5,\"workShopMustSpend\":"+jsonObject+"}");//must spend this workshop befor           //
+                        response.end("{\"status\":5,\"workShopMustSpend\":"+jsonObject+"}");//must spend this workshop befor
+                        return;                                                                                                           //
                     }                                                                                                                     //
                                                                                                                                           //
                 }                                                                                                                         //
                 JsonObject json2 = new JsonObject();                                                                                      /////////////////////////////////////////////////
                 json2 = PersonHoldWorkShopThatHaveInThisTime(newPerson,newHoldWorkShop.getStart(),newHoldWorkShop.getEnd(),newHoldWorkShop.getHourStart(),newHoldWorkShop.getHourEnd());//
-                if (!json2.isEmpty())                                                                                                       /////////////////////////////////////////////
-                    response.end("{\"status\":5,\"workShopMustSpend\":"+json2+"}");//have this WorkShopInThisTime                        //
+                if (!json2.isEmpty()) {                                                                                                    /////////////////////////////////////////////
+                    response.end("{\"status\":5,\"workShopMustSpend\":" + json2 + "}");                                                  //
+                    return;                                                                                                                 //have this WorkShopInThisTime
+                }                                                                                                                           //
                 if (!this.isThisPersonIsInOneOfTheGroupOfThisWorkShop(newHoldWorkShop, student.getId())) {                                  //
                     if (pay.equals("2")) {                                                                                                  //
-                        if (!newHoldWorkShop.getIs_installment())                                                                           //
-                            response.end("{\"status\":3}");                                                                              //
+                        if (!newHoldWorkShop.getIs_installment()) {                                                                         //
+                            response.end("{\"status\":3}");
+                            return;
+                        }                                                                                                                   //
                     }                                                                                                                       //
                     if (pay.equals("2")) {                                                                                                  //
                         Installment payment = new Installment(newHoldWorkShop.getMoney(), newHoldWorkShop.getPayMoneyInHowTimes());         /////
@@ -360,9 +367,12 @@ public class VertxHttpServer extends AbstractVerticle {
                     }                                                                                                                          //
                     // bayad tozihat ye chiz ezafeh konam                                                                                      //
                     if (AddToRequestListINDataBase(newRequestStudent)) {                                                                       //
-                        response.end("{\"status\":1}");                                                                                     //
-                    } else                                                                                                                     //
-                        response.end("{\"status\":2");// this person request before                                                         //
+                        response.end("{\"status\":1}");
+                        return;                                                                                                                //
+                    } else {                                                                                                                   //
+                        response.end("{\"status\":2}");// this person request before
+                        return;
+                    }                                                                                                                          //
                 }                                                                                                                              //
                 response.end("{\"status\":0}");                                                                                             //
             }                                                                                                                                  //
