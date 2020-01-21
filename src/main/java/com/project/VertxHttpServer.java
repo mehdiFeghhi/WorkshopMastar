@@ -816,7 +816,7 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             JsonObject AllGreaterRequest = seeAllRequestGreater(jsonObject.getInteger("IdWorkShop"));
 
-            response.end("{\"status\":1\"information\":"+AllGreaterRequest.toString()+"}");
+            response.end("{\"status\":1,\"information\":"+AllGreaterRequest.toString()+"}");
 
             /////////////////////////////////////////////////////////////////////////////////////////
 
