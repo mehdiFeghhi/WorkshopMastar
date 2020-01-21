@@ -1055,7 +1055,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 return;
             }
             JsonObject jsonObject1 = findAllGroupOfWorkShop(jsonObject.getInteger("IdWorkShop"));
-            response.end("{\"status\":1,\"status\":"+jsonObject1+"}");
+            response.end("{\"status\":1,\"information\":"+jsonObject1+"}");
             return;
 
         });
