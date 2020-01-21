@@ -798,7 +798,7 @@ public class VertxHttpServer extends AbstractVerticle {
             information.put("Managment",allWorkShopOfThisManagment)
                     .put("Student",allHoldoWorkOfThisStudent)
                     .put("Grader",allGrederWorkShop);
-            response.end("{\"status\":1\"information\":"+information+"}");
+            response.end("{\"status\":1,\"information\":"+information+"}");
             return;
         });
 
