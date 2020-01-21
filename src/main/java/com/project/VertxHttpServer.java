@@ -368,9 +368,9 @@ public class VertxHttpServer extends AbstractVerticle {
                         newRequestStudent = new RequestStudent(massage, newHoldWorkShop, (Student) newPerson.findOurType("1"), payment);//
                     }                                                                                                                          //
                     // bayad tozihat ye chiz ezafeh konam                                                                                      //
-                    if (AddToRequestListINDataBase(newRequestStudent)) {                                                                       //
+                    if (AddToRequestListINDataBase(newRequestStudent)) {
+                        dataSave.saveInFile();                                                                                                 //
                         response.end("{\"status\":1}");
-                        dataSave.saveInFile();
                         return;                                                                                                                //
                     } else {                                                                                                                   //
                         response.end("{\"status\":2}");// this person request before
