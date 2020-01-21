@@ -1088,17 +1088,22 @@ public class VertxHttpServer extends AbstractVerticle {
             int numberGroup = jsonObject.getInteger("GroupNumber");
             String groupName = jsonObject.getString("GroupName");
             int numberIdWorkShop = jsonObject.getInteger("IdGroup");
+            int number_type = jsonObject.getInteger("type");
             GroupG groupG;
             if((groupG = getOnGroupFromDataBase(numberGroup,groupName,numberIdWorkShop))== null)
                     response.end("{\"status\":0}");
 
             Grader_Request graderRequest;
+            if (number_type == 1){
+                groupG.setHead(jsonObject.getString("user"));
+            }
             if((graderRequest = getOneRequestGreater(jsonObject.getInteger("RequestGreaterId")))== null)
                 response.end("{\"status\":0}");
             if (newGraderRequest.getAccetply() != Accetply.Accept) {
                 newGraderRequest.setAccetply(Accetply.Accept);
                 GroupStatus groupStatus = new GroupStatus(groupG, graderRequest.getGrader());
                 AddNewGroupStatusToDatabase(groupStatus);
+                dataSave.saveInFile();
                 response.end("{\"status\":1}");
             }
             response.end("{\"status\":0}");
