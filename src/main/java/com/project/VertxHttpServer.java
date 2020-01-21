@@ -2064,7 +2064,7 @@ public class VertxHttpServer extends AbstractVerticle {
     }
 
     private JsonObject seeAllRequestGreater(int id) {
-        ArrayList<Grader_Request> graderRequests = findAllRequestGreater(id);
+        ArrayList<Grader_Request> graderRequests = findAllRequestGreaterOfOnWorkShop(id);
         JsonObject jsonObject = new JsonObject();
         int d = 0;
         for (Grader_Request i : graderRequests){
@@ -2079,6 +2079,10 @@ public class VertxHttpServer extends AbstractVerticle {
             d++;
         }
         return jsonObject;
+    }
+
+    private ArrayList<Grader_Request> findAllRequestGreaterOfOnWorkShop(int id) {
+        return dataSave.findAllRequestGreaterOfOnWorkShop(id);
     }
 
     private Person findPersonOfThisGreater(int id) {

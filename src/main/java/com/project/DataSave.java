@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.omg.CORBA.Request;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -582,5 +583,18 @@ public class DataSave implements Serializable {
             }
         }
         return jsonObject;
+    }
+
+    public ArrayList<Grader_Request> findAllRequestGreaterOfOnWorkShop(int id) {
+        ArrayList<Grader_Request> grader_requests = new ArrayList<Grader_Request>();
+        Grader_Request  grader_request = new Grader_Request();
+        for (Requests i : requests){
+            grader_request = (Grader_Request) i;
+            if ((i instanceof  Grader_Request) && i.getHoldWorkShop().getId() == id){
+                    grader_requests.add(grader_request);
+            }
+
+        }
+        return grader_requests;
     }
 }
