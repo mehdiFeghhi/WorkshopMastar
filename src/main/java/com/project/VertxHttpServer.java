@@ -696,8 +696,111 @@ public class VertxHttpServer extends AbstractVerticle {
         //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///person holdwork shop
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/seeAllHoldWorkShopOfPerson").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else {
+                response.end("{\"status\":0}");
+                return;
+            }
+            Managment managment = new Managment();
+            if(!newPerson.is_this_role_in_our_person(managment)){
+                response.end("{\"status\":0}");
+                return;
+            }
+            managment = (Managment) newPerson.findOurType("3");
+            JsonObject allWorkShopOfThisManagment = null;
 
+            int dd = 0;
+            ArrayList<HoldWorkShop>Thathave  = findWorkShophaveThisManager(managment.id);
+            for(HoldWorkShop i: Thathave){
+                JsonObject jsonObject1 = new JsonObject();
+                jsonObject1.put("NameWorkShop", i.getName())
+                        .put("Management", newPerson.getName() + "  " + newPerson.getLastName())
+                        .put("DateStart", dateFormat.format(i.getStart()).toString())
+                        .put("DateEnd", dateFormat.format(i.getEnd()).toString())
+                        .put("HourStart",i.getHourStart().toString())
+                        .put("HourEnd",i.getHourEnd().toString())
+                        .put("Money", i.getMoney())
+                        .put("IsInstallment", i.getIs_installment())
+                        .put("Title", i.getWorkshop().getTitle())
+                        .put("id", i.getId())
+                        .put("Description", i.getWorkshop().getDescription());
+                allWorkShopOfThisManagment.put(String.valueOf(dd),jsonObject1);
+                dd++;
+            }
+            Student student = new Student();
+            student = (Student) newPerson.findOurType("1");
+            ArrayList<RequestStudent> requestStudents = findAllRequestStudent(student.getId());
+            JsonObject allHoldoWorkOfThisStudent = new JsonObject();
+            dd = 0;
+            JsonObject allStudentWorkShop = new JsonObject();
+            HoldWorkShop holdWorkShop = new HoldWorkShop();
+            for(RequestStudent i: requestStudents){
+                holdWorkShop = i.getHoldWorkShop();
+                JsonObject jsonObject1 = new JsonObject();
+                jsonObject1.put("NameWorkShop", holdWorkShop.getName())
+                        .put("DateStart", dateFormat.format(holdWorkShop.getStart()).toString())
+                        .put("DateEnd", dateFormat.format(holdWorkShop.getEnd()).toString())
+                        .put("HourStart",holdWorkShop.getHourStart().toString())
+                        .put("HourEnd",holdWorkShop.getHourEnd().toString())
+                        .put("Money", holdWorkShop.getMoney())
+                        .put("IsInstallment", holdWorkShop.getIs_installment())
+                        .put("Title", holdWorkShop.getWorkshop().getTitle())
+                        .put("id", i.getId())
+                        .put("Description", holdWorkShop.getWorkshop().getDescription());
+                if (holdWorkShop.getManagment()== null){
+                        jsonObject1.put("Managment","unKnown");
+                }
+                else {
+                     Person person = findPersonOfThisManagment(holdWorkShop.getManagment().id);
+                     jsonObject.put("Managment", person.getName()+"          "+person.getLastName());
+                }
+                allStudentWorkShop.put(String.valueOf(dd),jsonObject1);
+                ++dd;
+            }
+            JsonObject allGrederWorkShop =new JsonObject();
+            ArrayList<Grader_Request> grader_requests = new ArrayList<Grader_Request>();
+            Grader grader = (Grader) newPerson.findOurType("2");
+            grader_requests = findAllRequestGreater(grader.getId());
+            for (Grader_Request i : grader_requests){
+                holdWorkShop = i.getHoldWorkShop();
+                JsonObject jsonObject1 = new JsonObject();
+                jsonObject1.put("NameWorkShop", holdWorkShop.getName())
+                        .put("DateStart", dateFormat.format(holdWorkShop.getStart()).toString())
+                        .put("DateEnd", dateFormat.format(holdWorkShop.getEnd()).toString())
+                        .put("HourStart",holdWorkShop.getHourStart().toString())
+                        .put("HourEnd",holdWorkShop.getHourEnd().toString())
+                        .put("Money", holdWorkShop.getMoney())
+                        .put("IsInstallment", holdWorkShop.getIs_installment())
+                        .put("Title", holdWorkShop.getWorkshop().getTitle())
+                        .put("id", i.getId())
+                        .put("Description", holdWorkShop.getWorkshop().getDescription());
+                if (holdWorkShop.getManagment()== null){
+                    jsonObject1.put("Managment","unKnown");
+                }
+                else {
+                    Person person = findPersonOfThisManagment(holdWorkShop.getManagment().id);
+                    jsonObject.put("Managment", person.getName()+"          "+person.getLastName());
+                }
+                allGrederWorkShop.put(String.valueOf(dd),jsonObject1);
+                ++dd;
+            }
+            JsonObject information = new JsonObject();
+            information.put("Managment",allWorkShopOfThisManagment)
+                    .put("Student",allHoldoWorkOfThisStudent)
+                    .put("Grader",allGrederWorkShop);
+            response.end("{\"status\":1\"information\":"+information+"}");
+            return;
+        });
 
 
 
@@ -908,6 +1011,10 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             response.end("{\"status\":1\"information\":"+allWorkShopOfThisManagment.toString()+"}");
         });
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         router.route().handler(BodyHandler.create());
         router.route(HttpMethod.POST,"/InstallmentPay").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
