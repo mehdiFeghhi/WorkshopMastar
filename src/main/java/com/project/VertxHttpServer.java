@@ -1188,6 +1188,7 @@ public class VertxHttpServer extends AbstractVerticle {
             HoldWorkShop holdWorkShop = findThisHoldWorkShop(jsonObject.getInteger("IdWorkShop"));
             groupG.setHoldWorkShop(holdWorkShop);
             if(AddNewGroupTodatabase(groupG)) {
+                dataSave.saveInFile();
                 response.end("{\"status\":1}");
                 return;
             }
