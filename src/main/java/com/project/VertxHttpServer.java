@@ -70,12 +70,14 @@ public class VertxHttpServer extends AbstractVerticle {
 //        mehdi.addToArrayListOfRole(addmin);
 //        Workshop workshopOfs = new Workshop("Math","ArrahehMishaved");
 //        workshopOfs.setId(0);
-//        dataSave.getWorkshops().add(workshopOfs);
-//        dataSave.getPersons().add(mehdi);
-//        dataSave.getPersons().add(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
-//        dataSave.getHoldWorkShops().add(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,workshopOfs,true, (long) 10000000));
+//        AddNewWorkShopTOdataBase(workshopOfs);
+//
+//        AddPersonTodataBase(mehdi);
+//        AddPersonTodataBase(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
+//        addNewHoldWorkShop(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,workshopOfs,true, (long) 10000000));
 //        dataSave.saveInFile();
         Vertx vertx = Vertx.vertx() ;
+
        // MongoClient client = MongoClient.createShared(vertx,jsonMongo) ;
        // MongoDb MyDataBase = new MongoDb(client);
         HttpServer httpServer = vertx.createHttpServer();
@@ -1819,10 +1821,11 @@ public class VertxHttpServer extends AbstractVerticle {
         }
         ArrayList<Requests>  allRequestArrayList = dataSave.seeAllRequestArrayList(workShopID);
         ArrayList<GroupStatus> groupStatusArrayListr = getALLGroupStatuseINdataBaseOfThisWorkShope(workShopID);
+
         for(Requests i : allRequestArrayList){
             if(i instanceof RequestStudent){
                 requestStudent = (RequestStudent) i;
-                if (requestStudent.getId() == student.id) {
+                if (requestStudent.getStudent().getId() == student.id) {
                     if(requestStudent.getAccetply().equals(Accetply.Accept)){
                         for(GroupStatus s : groupStatusArrayListr){
                             if(s.getRoleOfWorkShape() instanceof Student) {
@@ -1849,7 +1852,7 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             if (i instanceof Grader_Request){
                 graderRequest = (Grader_Request) i;
-                if (graderRequest.getId() == grader.getId()){
+                if (graderRequest.getGrader().getId() == grader.getId()){
                     if (graderRequest.getAccetply().equals(Accetply.Accept)) {
                         for (GroupStatus s : groupStatusArrayListr) {
                             if (s.getGroupG().getHead().equals(person.getUser()))
