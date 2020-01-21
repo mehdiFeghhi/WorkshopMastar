@@ -1031,7 +1031,7 @@ public class VertxHttpServer extends AbstractVerticle {
 
         ////////////////////////////////see all group of Workshop
         router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.POST,"/RejectRequestGrader").handler(rc ->{
+        router.route(HttpMethod.POST,"/seeAllGroupOfHoldWorkShop").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
             HttpServerResponse response = rc.response();
             String token =  jsonObject.getString("token");
