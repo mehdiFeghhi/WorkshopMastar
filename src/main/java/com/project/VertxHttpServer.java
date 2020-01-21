@@ -983,7 +983,44 @@ public class VertxHttpServer extends AbstractVerticle {
         /////////////////////////////////////////////////////////////////////////////////////////
 
 
+        ///////////////////////////////////////////////////////////////////////////////////////
+        //////rejectRequest for grader
+        router.route().handler(BodyHandler.create());
+        router.route(HttpMethod.POST,"/AcceptRequestGreater").handler(rc ->{
+            JsonObject jsonObject = rc.getBodyAsJson();
+            HttpServerResponse response = rc.response();
+            String token =  jsonObject.getString("token");
+            if(mapLogin.containsKey(token))
+                newPerson = mapLogin.get(token);
+            else {
+                response.end("{\"status\":0}");
+            }
+            Managment managment = new Managment();
+            if(!newPerson.is_this_role_in_our_person(managment)){
+                response.end("{\"status\":0}");
+            }
+            managment = (Managment) newPerson.findOurType("3");
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+                response.end("{\"status\":3}");//permissionDenaid
+            Grader_Request graderRequest = new Grader_Request();
+            if((graderRequest = getOneRequestGreater(jsonObject.getInteger("RequestGraderId")))== null) {
+                response.end("{\"status\":0}");
+                return;
+            }
+            if (graderRequest.getHoldWorkShop().getId() != jsonObject.getInteger("IdWorkShop")){
+                response.end("{\"status\":3}");
+                return;
+            }
+            if (graderRequest.getAccetply() != Accetply.Reject) {
+                graderRequest.setAccetply(Accetply.Reject);
+                dataSave.saveInFile();
+                response.end("{\"status\":1}");
+            }
+            response.end("{\"status\":0}");
 
+        });
+
+        ///////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -1998,6 +2035,7 @@ public class VertxHttpServer extends AbstractVerticle {
             jsonObject1.put("name",person.getName());
             jsonObject1.put("lastName",person.getLastName());
             jsonObject1.put("userName",person.getUser());
+            jsonObject1.put("id_requerst",i.getId());
             jsonObject.put(String.valueOf(d),jsonObject1);
             d++;
         }
