@@ -590,7 +590,7 @@ public class DataSave implements Serializable {
         Grader_Request  grader_request = new Grader_Request();
         for (Requests i : requests){
             grader_request = (Grader_Request) i;
-            if ((i instanceof  Grader_Request) && i.getHoldWorkShop().getId() == id){
+            if ((i instanceof  Grader_Request) && grader_request.getHoldWorkShop().getId() == id){
                     grader_requests.add(grader_request);
             }
 
