@@ -713,7 +713,7 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             JsonObject allWorkShopOfThisManagment = new JsonObject();
             Managment managment = new Managment();
-            if(!newPerson.is_this_role_in_our_person(managment)){
+            if(newPerson.is_this_role_in_our_person(managment)){
                 managment = (Managment) newPerson.findOurType("3");
 
                 int dd = 0;
