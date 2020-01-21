@@ -740,7 +740,7 @@ public class VertxHttpServer extends AbstractVerticle {
             student = (Student) newPerson.findOurType("1");
             ArrayList<RequestStudent> requestStudents = findAllRequestStudent(student.getId());
             JsonObject allHoldoWorkOfThisStudent = new JsonObject();
-            dd = 0;
+            int dd = 0;
             JsonObject allStudentWorkShop = new JsonObject();
             HoldWorkShop holdWorkShop = new HoldWorkShop();
             for(RequestStudent i: requestStudents){
@@ -766,8 +766,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 allStudentWorkShop.put(String.valueOf(dd),jsonObject1);
                 ++dd;
             }
-            int dd = 0;
-            HoldWorkShop holdWorkShop = new HoldWorkShop();
+            dd = 0;
             JsonObject allGrederWorkShop =new JsonObject();
             ArrayList<Grader_Request> grader_requests = new ArrayList<Grader_Request>();
             Grader grader = (Grader) newPerson.findOurType("2");
