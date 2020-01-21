@@ -796,7 +796,7 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             JsonObject information = new JsonObject();
             information.put("Managment",allWorkShopOfThisManagment)
-                    .put("Student",allHoldoWorkOfThisStudent)
+                    .put("Student",allStudentWorkShop)
                     .put("Grader",allGrederWorkShop);
             response.end("{\"status\":1,\"information\":"+information+"}");
             return;
