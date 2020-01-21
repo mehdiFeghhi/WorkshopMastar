@@ -813,7 +813,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenaid
 
-            JsonObject AllGreaterRequest = seeAllRequestGreater(jsonObject.getInteger("WorkShopId"));
+            JsonObject AllGreaterRequest = seeAllRequestGreater(jsonObject.getInteger("IdWorkShop"));
 
             response.end("{\"status\":1\"information\":"+AllGreaterRequest.toString()+"}");
 
