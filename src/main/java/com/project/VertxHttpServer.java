@@ -158,9 +158,11 @@ public class VertxHttpServer extends AbstractVerticle {
                     e.printStackTrace();                                                                            //
                 }                                                                                                   //
                 response.end("{\"status\":1,\"person\":"+jason+"}");                                             //
+                return;
             }                                                                                                       //
             else {                                                                                                  //
                 response.end("{\"status\":0}");                                                                  //
+                return;
             }                                                                                                       //
                                                                                                                     //
         });                                                                                                         //
@@ -1149,8 +1151,10 @@ public class VertxHttpServer extends AbstractVerticle {
             groupG.setHoldWorkShop(holdWorkShop);
             if(AddNewGroupTodatabase(groupG)) {
                 response.end("{\"status\":1}");
+                return;
             }
             response.end("{\"status\":0}");
+            return;
         });
 
 
