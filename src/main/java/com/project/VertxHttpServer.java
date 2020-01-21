@@ -986,7 +986,7 @@ public class VertxHttpServer extends AbstractVerticle {
         ///////////////////////////////////////////////////////////////////////////////////////
         //////rejectRequest for grader
         router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.POST,"/AcceptRequestGreater").handler(rc ->{
+        router.route(HttpMethod.POST,"/RejectRequestGrader").handler(rc ->{
             JsonObject jsonObject = rc.getBodyAsJson();
             HttpServerResponse response = rc.response();
             String token =  jsonObject.getString("token");
