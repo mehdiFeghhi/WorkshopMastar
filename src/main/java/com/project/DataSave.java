@@ -362,9 +362,9 @@ public class DataSave implements Serializable {
         return true;
     }
 
-    public GroupG getOneGroupFrommDataBase(int numberGroup, String groupName, int numberIdWorkShop) {
+    public GroupG getOneGroupFrommDataBase(int numberGroup, String groupName, int idGroup) {
         for (GroupG i : groupGS){
-            if(i.getHoldWorkShop().getId() == numberIdWorkShop  && i.getNumber() == numberGroup && i.getName().equals(groupName)){
+            if(i.getId() == idGroup  && i.getNumber() == numberGroup && i.getName().equals(groupName)){
                 return i;
             }
         }

@@ -261,7 +261,7 @@ public class VertxHttpServer extends AbstractVerticle {
                     newHoldWorkShop = findThisHoldWorkShop(id);                                                       //
                     if (newHoldWorkShop == null) {                                                                    //
                          response.end("{\"status\":0}");                                                           //
-                        return;                                                                                       //
+                         return;                                                                                       //
                     }                                                                                                 //
                     else {                                                                                            //
                         boolean canSendRequest = true;                                                                //
@@ -1001,14 +1001,18 @@ public class VertxHttpServer extends AbstractVerticle {
                 newPerson = mapLogin.get(token);
             else {
                 response.end("{\"status\":0}");
+                return;
             }
             Managment managment = new Managment();
             if(!newPerson.is_this_role_in_our_person(managment)){
                 response.end("{\"status\":0}");
+                return;
             }
             managment = (Managment) newPerson.findOurType("3");
-            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop"))) {
                 response.end("{\"status\":3}");//permissionDenaid
+                return;
+            }
             Grader_Request graderRequest = new Grader_Request();
             if((graderRequest = getOneRequestGreater(jsonObject.getInteger("RequestGraderId")))== null) {
                 response.end("{\"status\":0}");
@@ -1092,7 +1096,7 @@ public class VertxHttpServer extends AbstractVerticle {
             int numberIdWorkShop = jsonObject.getInteger("IdGroup");
             int number_type = jsonObject.getInteger("type");
             GroupG groupG;
-            if((groupG = getOnGroupFromDataBase(numberGroup,groupName,numberIdWorkShop))== null){
+            if((groupG = getOnGroupFromDataBase(numberGroup,groupName,numberIdWorkShop)) == null){
                     response.end("{\"status\":0}");
                     return;
             }
@@ -1101,8 +1105,10 @@ public class VertxHttpServer extends AbstractVerticle {
             if (number_type == 1){
                 groupG.setHead(jsonObject.getString("user"));
             }
-            if((graderRequest = getOneRequestGreater(jsonObject.getInteger("RequestGreaterId")))== null)
+            if((graderRequest = getOneRequestGreater(jsonObject.getInteger("RequestGreaterId")))== null) {
                 response.end("{\"status\":0}");
+                return;
+            }
             if (graderRequest.getAccetply() != Accetply.Accept) {
                 graderRequest.setAccetply(Accetply.Accept);
                 GroupStatus groupStatus = new GroupStatus(groupG, graderRequest.getGrader());
