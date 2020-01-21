@@ -448,7 +448,7 @@ public class DataSave implements Serializable {
     public ArrayList<HoldWorkShop> findWorkShophaveThisManager(int id) {
         ArrayList<HoldWorkShop>holdWorkShops = new ArrayList<HoldWorkShop>();
         for(HoldWorkShop i : this.holdWorkShops){
-            if (i.getManagment().id == id)
+            if (i.getManagment()!= null && i.getManagment().id == id)
                 holdWorkShops.add(i);
         }
         return holdWorkShops;
