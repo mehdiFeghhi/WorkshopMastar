@@ -532,9 +532,14 @@ public class VertxHttpServer extends AbstractVerticle {
             if (mapLogin.containsKey(token))                                                                 //
                 newPerson = mapLogin.get(token);                                                             //
             else                                                                                             //
+            {
+
                 response.end("{\"status\":0}");                                                           //
+                return;
+            }
             String number = situationInThisHoldWorkshop(workShopID,username1);                               //
             response.end("{\"status\":"+number+"}");                                                      //
+            return;
         });                                                                                                  //
                                                                                                              //
         //////////////////////////////////////////////////////////////////////////////////////////////////////
