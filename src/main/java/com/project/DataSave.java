@@ -156,8 +156,9 @@ public class DataSave implements Serializable {
 
     public boolean isthisMangmentOfTHisWorkShop(int id, int idWorkShop) {
         for (HoldWorkShop i : this.holdWorkShops){
-            if(i.getId() == idWorkShop && i.getManagment().id == id)
+            if(i.getId() == idWorkShop && i.getManagment().id == id) {
                 return true;
+            }
         }
         return false;
     }

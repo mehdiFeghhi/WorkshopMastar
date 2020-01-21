@@ -810,9 +810,10 @@ public class VertxHttpServer extends AbstractVerticle {
                 response.end("{\"status\":0}");
             }
             managment = (Managment) newPerson.findOurType("3");
-            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop"))) {
                 response.end("{\"status\":3}");//permissionDenaid
-
+                return;
+            }
             JsonObject AllGreaterRequest = seeAllRequestGreater(jsonObject.getInteger("IdWorkShop"));
 
             response.end("{\"status\":1\"information\":"+AllGreaterRequest.toString()+"}");
