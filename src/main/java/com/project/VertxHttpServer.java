@@ -2002,7 +2002,7 @@ public class VertxHttpServer extends AbstractVerticle {
             jsonObject1.put("lastName",person.getLastName());
             jsonObject1.put("userName",person.getUser());
             jsonObject.put(String.valueOf(d),jsonObject);
-
+            d++;
         }
         return jsonObject;
     }
