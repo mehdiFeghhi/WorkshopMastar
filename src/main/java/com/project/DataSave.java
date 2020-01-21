@@ -197,12 +197,12 @@ public class DataSave implements Serializable {
     }
 
     public Person findPersonOfThisManagment(int id) {
-        Grader grader = null;
+        Managment managment = new Managment();
         for (Person i : persons){
             for(RoleOfWorkShape s : i.getRoleOfWorkShapes()){
-                if(s instanceof Grader){
-                    grader = (Grader) s;
-                    if(grader.getId() == id)
+                if(s instanceof Managment){
+                    managment = (Managment) s;
+                    if(managment.id == id)
                         return i;
 
                 }
