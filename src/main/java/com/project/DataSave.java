@@ -578,6 +578,7 @@ public class DataSave implements Serializable {
                           .put("number",i.getNumber())
                           .put("id_Group",i.getId());
                 jsonObject.put(String.valueOf(dd),jsonObject1);
+                dd++;
             }
         }
         return jsonObject;
