@@ -423,7 +423,7 @@ public class DataSave implements Serializable {
         for(Requests i : requests){
             if(i instanceof Grader_Request){
                     graderRequest = (Grader_Request) i;
-                    if(graderRequest.getId() == id)
+                    if(graderRequest.getGrader().getId() == id)
                         graderRequests.add(graderRequest);
 
             }
@@ -436,7 +436,7 @@ public class DataSave implements Serializable {
         for(Requests i : requests){
             if(i instanceof RequestStudent){
                 requestStudent = (RequestStudent) i;
-                if(requestStudent.getId() == id)
+                if(requestStudent.getStudent().getId() == id)
                     requestStudents.add(requestStudent);
 
             }
@@ -585,12 +585,12 @@ public class DataSave implements Serializable {
         return jsonObject;
     }
 
-    public ArrayList<Grader_Request> findAllRequestGreaterOfOnWorkShop(int id) {
+    public ArrayList<Grader_Request> findAllRequestGreaterOfOnWorkShop(int idHOldWorkShop) {
         ArrayList<Grader_Request> grader_requests = new ArrayList<Grader_Request>();
         Grader_Request  grader_request = new Grader_Request();
         for (Requests i : requests){
             grader_request = (Grader_Request) i;
-            if ((i instanceof  Grader_Request) && grader_request.getHoldWorkShop().getId() == id){
+            if ((i instanceof  Grader_Request) && grader_request.getHoldWorkShop().getId() == idHOldWorkShop){
                     grader_requests.add(grader_request);
             }
 
