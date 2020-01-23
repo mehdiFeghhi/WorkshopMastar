@@ -360,12 +360,14 @@ public class VertxHttpServer extends AbstractVerticle {
                         if (!newHoldWorkShop.getIs_installment()) {                                                                         //
                             response.end("{\"status\":3}");
                             return;
-                        }                                                                                                                   //
-                    }                                                                                                                       //
-                    if (pay.equals("2")) {                                                                                                  //
+                        }
+                        else{
                         Installment payment = new Installment(newHoldWorkShop.getMoney(), newHoldWorkShop.getPayMoneyInHowTimes());         /////
+
                         newRequestStudent = new RequestStudent(massage, newHoldWorkShop, (Student) newPerson.findOurType("1"), payment);//
-                    } else {                                                                                                                   //
+                        }
+                    }
+                    else {                                                                                                                   //
                         Pay payment = new Pay(newHoldWorkShop.getMoney(), newHoldWorkShop.getIs_installment());                                //
                         newRequestStudent = new RequestStudent(massage, newHoldWorkShop, (Student) newPerson.findOurType("1"), payment);//
                     }                                                                                                                          //
