@@ -483,7 +483,7 @@ public class DataSave implements Serializable {
          for (Requests i : requests){
              if(i instanceof RequestStudent){
                 requestStudent = (RequestStudent) i;
-                if (requestStudent.student.id == requestStudent.getStudent().getId() && requestStudent.getHoldWorkShop().getId() == newRequestStudent.getHoldWorkShop().getId())
+                if (requestStudent.student.id == newRequestStudent.getStudent().getId() && requestStudent.getHoldWorkShop().getId() == newRequestStudent.getHoldWorkShop().getId())
                     return false;
              }
 
