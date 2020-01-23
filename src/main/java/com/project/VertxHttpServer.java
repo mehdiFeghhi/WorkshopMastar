@@ -761,7 +761,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 }
                 else {
                     Person person = findPersonOfThisManagment(holdWorkShop.getManagment().id);
-                    jsonObject.put("Management", person.getName()+"          "+person.getLastName());
+                    jsonObject1.put("Management", person.getName()+"          "+person.getLastName());
                 }
                 allStudentWorkShop.put(String.valueOf(dd),jsonObject1);
                 ++dd;
@@ -789,7 +789,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 }
                 else {
                     Person person = findPersonOfThisManagment(holdWorkShop.getManagment().id);
-                    jsonObject.put("Management", person.getName()+"          "+person.getLastName());
+                    jsonObject1.put("Management", person.getName()+"          "+person.getLastName());
                 }
                 allGrederWorkShop.put(String.valueOf(dd),jsonObject1);
                 ++dd;
