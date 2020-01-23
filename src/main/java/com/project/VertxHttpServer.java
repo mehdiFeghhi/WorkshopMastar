@@ -363,13 +363,12 @@ public class VertxHttpServer extends AbstractVerticle {
                         }
                         else{
                         Installment payment = new Installment(newHoldWorkShop.getMoney(), newHoldWorkShop.getPayMoneyInHowTimes());         /////
-
-                        newRequestStudent = new RequestStudent(massage, newHoldWorkShop, (Student) newPerson.findOurType("1"), payment);//
+                        newRequestStudent = new RequestStudent(massage, newHoldWorkShop, student, payment);//
                         }
                     }
                     else {                                                                                                                   //
                         Pay payment = new Pay(newHoldWorkShop.getMoney(), newHoldWorkShop.getIs_installment());                                //
-                        newRequestStudent = new RequestStudent(massage, newHoldWorkShop, (Student) newPerson.findOurType("1"), payment);//
+                        newRequestStudent = new RequestStudent(massage, newHoldWorkShop, student, payment);//
                     }                                                                                                                          //
                     // bayad tozihat ye chiz ezafeh konam                                                                                      //
                     if (AddToRequestListINDataBase(newRequestStudent)) {
