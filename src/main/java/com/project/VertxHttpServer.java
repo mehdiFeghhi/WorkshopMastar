@@ -1055,16 +1055,23 @@ public class VertxHttpServer extends AbstractVerticle {
                     return;
                 }
                 //updateThisRequestInDataBase(requestStudent);
-                dataSave.saveInFile();
-                response.end("{\"status\":1}");
-                return;
+                if (requestStudent.getPay().isPayComplite()){
+                    dataSave.saveInFile();
+                    response.end("{\"status\":5}");//this person pay complitly
+                    return;
+                }
+                else {
+                    dataSave.saveInFile();
+                    response.end("{\"status\":1}");
+                    return;
+                }
             }
             else {
                 if (howMuchPay == 1){
                     requestStudent.getPay().ChangePayComplite();
                     //updateThisRequestInDataBase(requestStudent);
                     dataSave.saveInFile();
-                    response.end("{\"status\":1}");
+                    response.end("{\"status\":5}");
                     return;
                 }
                 response.end("{\"status\":10}");//this person must pay compeletly
