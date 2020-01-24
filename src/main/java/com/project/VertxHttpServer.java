@@ -946,20 +946,25 @@ public class VertxHttpServer extends AbstractVerticle {
                 newPerson = mapLogin.get(token);
             else {
                 response.end("{\"status\":0}");
+                return;
             }
             Managment managment = new Managment();
             if(!newPerson.is_this_role_in_our_person(managment)){
                 response.end("{\"status\":0}");
+                return;
             }
             managment = (Managment) newPerson.findOurType("3");
-            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop"))) {
                 response.end("{\"status\":3}");//permissionDenaid
-
+                return;
+            }
             JsonObject allRequestStudnet = seeAllRequestStudent(jsonObject.getInteger("IdWorkShop"));
-            if (allRequestStudnet == null)
+            if (allRequestStudnet == null) {
                 response.end("{\"status\":3}");//we haven't any Student Request
+                return;
+            }
             response.end("{\"status\":1\"information\":"+allRequestStudnet+"}");
-
+            return;
         });
 
 
