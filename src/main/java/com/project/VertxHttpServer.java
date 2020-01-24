@@ -219,9 +219,9 @@ public class VertxHttpServer extends AbstractVerticle {
             if (mapLogin.containsKey(json.getString("token"))){                                                  //
                 Person newPersonX = new Person();
                 //
-                try {                                                                                                 //
-                    if (this.searchInDataBase(newPerson.getUser())) {
-                        newPersonX.setName(json.getString("user"));
+                try {
+                    newPersonX.setName(json.getString("user"));//
+                    if (this.searchInDataBase(newPersonX.getUser())) {
                         newPersonX.setPhoneNumber(json.getString("phoneNumber"));
 //                        newPersonX.setName(json.getString("name"));//
 //                        newPersonX.setEmailAddress(json.getString("email"));
