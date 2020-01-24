@@ -1054,7 +1054,7 @@ public class VertxHttpServer extends AbstractVerticle {
                     response.end("{\"status\":4}");//we can haven't this mount
                     return;
                 }
-                updateThisRequestInDataBase(requestStudent);
+                //updateThisRequestInDataBase(requestStudent);
                 dataSave.saveInFile();
                 response.end("{\"status\":1}");
                 return;
@@ -1062,7 +1062,7 @@ public class VertxHttpServer extends AbstractVerticle {
             else {
                 if (howMuchPay == 1){
                     requestStudent.getPay().ChangePayComplite();
-                    updateThisRequestInDataBase(requestStudent);
+                    //updateThisRequestInDataBase(requestStudent);
                     dataSave.saveInFile();
                     response.end("{\"status\":1}");
                     return;
