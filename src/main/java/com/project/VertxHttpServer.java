@@ -1776,19 +1776,25 @@ public class VertxHttpServer extends AbstractVerticle {
             int dd = 0;
             Addmin addmin3 = (Addmin)newPerson.findOurType("0");
             for(Person i : persons){
+
                 if(!i.is_this_role_in_our_person(addmin4)|| (addmin3.getAdminType() == AdminType.General)) {
-                    JsonObject jsonObject1 = new JsonObject().put("setId", i.getId())
-                            .put("setGender", i.getGender())
-                            .put("setUser", i.getUser())
-                            .put("setName",i.getName())
-                            .put("setNationalCode",i.getNationalCode())
-                            .put("Gander",i.getGender().toString())
-                            .put("Gender",i.getGender().toString())
-                            .put("setLastName",i.getLastName())
-                            .put("setDate_birthday",i.getDate_birthday())
-                            .put("setActivity",i.getIs_Active());
-                    json.put(String.valueOf(dd),jsonObject1);
-                    dd++;
+                    try {
+                        JsonObject jsonObject1 = new JsonObject().put("setId", i.getId())
+                                .put("setGender", i.getGender())
+                                .put("setUser", i.getUser())
+                                .put("setName", i.getName())
+                                .put("setNationalCode", i.getNationalCode())
+                                .put("Gander", i.getGender().toString())
+                                .put("Gender", i.getGender().toString())
+                                .put("setLastName", i.getLastName())
+                                .put("setDate_birthday", i.getDate_birthday())
+                                .put("setActivity", i.getIs_Active());
+                        json.put(String.valueOf(dd), jsonObject1);
+                        dd++;
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
             response.end("{\"status\":1,\"information\":"+json+"}");
