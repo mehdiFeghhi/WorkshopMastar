@@ -1318,6 +1318,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 if (requestStudent.getAccetply() != Accetply.Accept) {
                     requestStudent.setAccetply(Accetply.Accept);
                     GroupStatus groupStatus = new GroupStatus(groupG, requestStudent.getStudent());
+                    groupStatus.setStatues(-1);
                     AddNewGroupStatusToDatabase(groupStatus);
                     response.end("{\"status\":1}");
                     return;
