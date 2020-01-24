@@ -180,7 +180,7 @@ public class VertxHttpServer extends AbstractVerticle {
         //with this code I Logged person in maplogin   and remove it's token in this array
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         router.route().handler(BodyHandler.create());                                                                 //
-        router.route(HttpMethod.GET, "/logOut").handler(rc -> {                                                    //
+        router.route(HttpMethod.POST, "/logOut").handler(rc -> {                                                    //
             JsonObject json = rc.getBodyAsJson();                                                                     //
                                                                                                                       //
             System.out.println("ya ali");                                                                             //
