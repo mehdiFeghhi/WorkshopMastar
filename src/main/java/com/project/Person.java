@@ -36,6 +36,7 @@ public class Person  implements Serializable {
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
         this.is_Active = true;
+        this.gender = Gender.male;
     }
 
     public Person(String name, String lastName, String date_birthday, String user,String nationalCode, String phoneNumber, String emailAddress) {
@@ -47,6 +48,7 @@ public class Person  implements Serializable {
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
         this.is_Active = true;
+        this.gender = Gender.male;
     }
 
     public Person(String user, String email) {
@@ -57,6 +59,7 @@ public class Person  implements Serializable {
     public Person clone(){
         Person person = new Person(this.getName(),this.getLastName(),this.date_birthday,this.getUser(),this.nationalCode,this.getPhoneNumber(),this.getEmailAddress());
         person.setId(this.id);
+        this.gender = Gender.male;
         return person;
     }
     public void setRoleOfWorkShapes(ArrayList<RoleOfWorkShape> roleOfWorkShapes) {

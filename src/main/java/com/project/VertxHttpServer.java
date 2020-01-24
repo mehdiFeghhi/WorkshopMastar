@@ -1723,6 +1723,8 @@ public class VertxHttpServer extends AbstractVerticle {
                             .put("setUser", i.getUser())
                             .put("setName",i.getName())
                             .put("setNationalCode",i.getNationalCode())
+                            .put("Gander",i.getGender().toString())
+                            .put("Gender",i.getGender().toString())
                             .put("setLastName",i.getLastName())
                             .put("setDate_birthday",i.getDate_birthday())
                             .put("setActivity",i.getIs_Active());
@@ -1794,6 +1796,7 @@ public class VertxHttpServer extends AbstractVerticle {
                                     .put("setUser", i.getUser())
                                     .put("setName", i.getName())
                                     .put("setNationalCode", i.getNationalCode())
+                                    .put("Gender",i.getGender().toString())
                                     .put("setLastName", i.getLastName())
                                     .put("setDate_birthday", i.getDate_birthday())
                                     .put("setActivity", i.getIs_Active());
