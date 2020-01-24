@@ -2142,7 +2142,7 @@ public class VertxHttpServer extends AbstractVerticle {
                                 if (student1.id == student.getId()){
                                     if(s.getStatues()>10)
                                         return "PsssStudent";
-                                    else if(s.getStatues()<10)
+                                    else if(s.getStatues()<10 && s.getStatues()>=0)
                                         return "FailStudent";
                                     else if (s.getStatues() == -1)
                                         return "AcceptStudent_PandingMark";
@@ -2403,7 +2403,6 @@ public class VertxHttpServer extends AbstractVerticle {
                     return true;
         }
         return false;
-
     }
     private ArrayList<RequestStudent> findAllRequestStudentOfworkShop(int idHoldWorkShop){
         return dataSave.findAllRequestStudentOfworkShop(idHoldWorkShop);
