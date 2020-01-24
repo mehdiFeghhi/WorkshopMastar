@@ -323,9 +323,11 @@ public class DataSave implements Serializable {
 
 
     public boolean searchInDataBase(String user) {
-        for (Person i : persons)
-            if (i.getUser().equals(user))
+        for (Person i : persons) {
+            if (i.getUser().equals(user)) {
                 return true;
+            }
+        }
         return false;
     }
 

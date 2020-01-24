@@ -220,7 +220,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 Person newPersonX = new Person();
                 //
                 try {
-                    newPersonX.setName(json.getString("user"));//
+                    newPersonX.setUser(json.getString("user"));//
                     if (this.searchInDataBase(newPersonX.getUser())) {
                         newPersonX.setPhoneNumber(json.getString("phoneNumber"));
 //                        newPersonX.setName(json.getString("name"));//
