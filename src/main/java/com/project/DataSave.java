@@ -170,9 +170,8 @@ public class DataSave implements Serializable {
     }
 
     public JsonObject seeAllRequestStudent(int workShopId) {
-        JsonObject jsonObject = new JsonObject();
         JsonObject jsonObject1 = new JsonObject();
-        JsonObject jsonObject2 = new JsonObject();
+
         Person person = null;
         int n = 0;
         RequestStudent requestStudent = new RequestStudent();
@@ -181,6 +180,7 @@ public class DataSave implements Serializable {
                 requestStudent  = (RequestStudent)i;
                 if(requestStudent.getHoldWorkShop().getId() == workShopId) {
                     person = findPersonOfThisStudent(requestStudent.getStudent().getId());
+                    JsonObject jsonObject2 = new JsonObject();
                     jsonObject2.put("getMassage", requestStudent.getMassage())
                             .put("getAcceptly", requestStudent.getAccetply().toString())
                             .put("getRequestId", requestStudent.getId())
@@ -190,13 +190,12 @@ public class DataSave implements Serializable {
                             .put("getGender", person.getGender())
                             .put("getUser", person.getUser());
                     jsonObject1.put(String.valueOf(n), jsonObject2);
-                    jsonObject2.clear();
                     n++;
                 }
             }
 
         }
-        return jsonObject.put(String.valueOf(workShopId),jsonObject1);
+        return jsonObject1 ;
     }
 
     public Person findPersonOfThisManagment(int id) {
