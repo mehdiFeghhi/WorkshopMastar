@@ -1298,7 +1298,7 @@ public class VertxHttpServer extends AbstractVerticle {
             }
             managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop"))) {
-                response.end("{\"status\":3}");//permissionDenaid
+                response.end("{\"status\":30}");//permissionDenaid
                 return;
             }
             RequestStudent requestStudent;
