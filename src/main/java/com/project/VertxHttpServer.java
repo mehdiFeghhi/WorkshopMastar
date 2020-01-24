@@ -240,6 +240,10 @@ public class VertxHttpServer extends AbstractVerticle {
                         else{
                             newPersonX.setPass(null);
                         }
+                        newPersonX.setName(null);
+                        newPersonX.setDate_birthday(null);
+                        newPersonX.setNationalCode(null);
+                        newPersonX.setGender(null);
                         newPersonX.setTozihat(json.getString("descry"));
                         updateInPersonINdataBase(newPersonX);
                         dataSave.saveInFile();
@@ -440,20 +444,25 @@ public class VertxHttpServer extends AbstractVerticle {
                     codeValidation = make_Password(6);                                                                                                                   //
                     OurEmail ourEmail = new OurEmail();                                                                                                                       //
                     new Thread(new Runnable() {                                                                                                                               //
-                        @Override                                                                                                                                             //
+                        @Override
+                        //
                         public void run() {                                                                                                                                   //
                             System.out.println("akdjvxnskjdvn");                                                                                                              //
                             if (ourEmail.sendMail(email, codeValidation)) //if email send succesful we add to our list of valicationCods string validation                    //
-                                mapValidtionCode.put(mapValidtionCode.size()+1,new ValidationProperty(new Date(),user,codeValidation));                                    //
+                                mapValidtionCode.put(mapValidtionCode.size() + 1, new ValidationProperty(new Date(), user, codeValidation));                                    //
                         }                                                                                                                                                     //
                     }).start();                                                                                                                                               //
                     SaveFIle.saveHashMap("mapLogin123.ser", (HashMap) this.mapLogin);                                                                                //
                     SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);                                                                  //
-                    response.end("{\"status\": 1 }");                                                                                                                      //
-                } else                                                                                                                                                        //
-                    response.end("{\"status\":0}");                                                                                                                        //
-            }                                                                                                                                                                 //
-            else {                                                                                                                                                            //
+                    response.end("{\"status\": 1 }");
+                    return;//
+                } else {                                                                                                                                                   //
+                    response.end("{\"status\":0}");
+                    return;//
+                }
+
+                //
+            } else {                                                                                                                                                            //
                 if ((newPerson = findPersonByUser(user)) != null){                                                                                                            //
                     response.end("{\"status\":0}");                                                                                                                        //
                 }                                                                                                                                                             //
@@ -702,23 +711,24 @@ public class VertxHttpServer extends AbstractVerticle {
             JsonObject json = rc.getBodyAsJson();                                                                                                                           //
             HttpServerResponse response = rc.response();                                                                                                                    //
             response.putHeader("content-type", "application/json");                                                                                                  //
-            ObjectMapper objectMapper = new ObjectMapper();                                                                                                                 //
-                                                                                                                                                                            //
-            if (json.containsKey("token") && mapLogin.containsKey(json.containsKey("token"))) {                                                                             //
-                if (findInDataBase2(json.getJsonObject("person").getString("setUser"), json.getJsonObject("person").getString("setEmailAddress")) != null) {      //
-                    try {                                                                                                                                                   //
-                        newPerson = objectMapper.readValue(json.getJsonObject("person").toString(),Person.class);                                                           //
-                    } catch (IOException e) {                                                                                                                               //
-                        response.end("{\"status\":0}");                                                                                                                  //
-                        e.printStackTrace();                                                                                                                                //
-                    }                                                                                                                                                       //
-                    updateInPersonINdataBase(newPerson);                                                                                                                    //
-                    response.end("{\"status\":1}");                                                                                                                      //
-                } else                                                                                                                                                      //
-                    response.end("{\"status\":0}");                                                                                                                      //
+            ObjectMapper objectMapper = new ObjectMapper();
+            Person person2 = new Person();                                                                                                                                                                //
+            if (json.containsKey("token") && mapValidtionCode.containsKey(json.getString("token"))) {                                                                             //
+                if ((person2 = findInDataBase2(mapValidtionCode.get(json.getString("token")).user,json.getString("email")))!= null) {      //
+                    person2.setPass(json.getString("newPassword"));
+                    dataSave.saveInFile();//
+                    response.end("{\"status\":1}");//change password succssful
+                    return;//
+                }
+                else {                                                                                                                                                     //
+                    response.end("{\"status\":0}");
+                    return;
+                }//
             }                                                                                                                                                               //
-            else                                                                                                                                                            //
-                response.end("{\"status\":0}");                                                                                                                          //
+            else {                                                                                                                                                           //
+                response.end("{\"status\":0}");
+                return;
+            }//
         });                                                                                                                                                                  //
         //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
