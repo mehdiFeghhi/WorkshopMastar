@@ -1060,7 +1060,14 @@ public class VertxHttpServer extends AbstractVerticle {
                 return;
             }
             else {
-                response.end("{\"status\":30}");//this person have not installmentPay
+                if (howMuchPay == 1){
+                    requestStudent.getPay().ChangePayComplite();
+                    updateThisRequestInDataBase(requestStudent);
+                    dataSave.saveInFile();
+                    response.end("{\"status\":1}");
+                    return;
+                }
+                response.end("{\"status\":10}");//this person must pay compeletly
                 return;
             }
         });
@@ -1311,8 +1318,10 @@ public class VertxHttpServer extends AbstractVerticle {
                 response.end("{\"status\":0}");
                 return;
             }
-            else
-                response.end("{\"status\":3}");//this person don't pay it's payment Complite
+            else {
+                response.end("{\"status\":3}");//this person don't pay it's payment Complite/
+                return;
+            }
         });
 
 
