@@ -2397,7 +2397,7 @@ public class VertxHttpServer extends AbstractVerticle {
         return dataSave.AddToRequestListINDataBase(graderRequest);
     }
     private boolean isThisPersonIsInOneOfTheGroupOfThisWorkShop(HoldWorkShop newWorkshop, int id) {
-        ArrayList<RequestStudent> requestStudents = findAllRequestStudent(newWorkshop.getId());
+        ArrayList<RequestStudent> requestStudents = findAllRequestStudentOfworkShop(newWorkshop.getId());
         for (RequestStudent i : requestStudents){
                 if (i.student.getId() == id)
                     return true;
