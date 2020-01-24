@@ -2164,7 +2164,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 if (graderRequest.getGrader().getId() == grader.getId()){
                     if (graderRequest.getAccetply().equals(Accetply.Accept)) {
                         for (GroupStatus s : groupStatusArrayListr) {
-                            if (s.getGroupG().getHead().equals(person.getUser()))
+                            if (s.getGroupG().getHead() != null && s.getGroupG().getHead().equals(person.getUser()))
                                 return "AcceptHeadGrader";
                         }
                         return "AcceptGrader";
