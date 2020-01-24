@@ -1322,7 +1322,7 @@ public class VertxHttpServer extends AbstractVerticle {
                     response.end("{\"status\":1}");
                     return;
                 }
-                response.end("{\"status\":0}");
+                response.end("{\"status\":2}");
                 return;
             }
             else {
