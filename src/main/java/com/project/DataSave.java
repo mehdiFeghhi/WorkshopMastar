@@ -179,19 +179,20 @@ public class DataSave implements Serializable {
         for(Requests i : this.requests){
             if (i instanceof RequestStudent){
                 requestStudent  = (RequestStudent)i;
-                if(requestStudent.getHoldWorkShop().getId() == workShopId)
+                if(requestStudent.getHoldWorkShop().getId() == workShopId) {
                     person = findPersonOfThisStudent(requestStudent.getStudent().getId());
-                    jsonObject2.put("getMassage",requestStudent.getMassage())
-                                .put("getAcceptly",requestStudent.getAccetply().toString())
-                                .put("getRequestId",requestStudent.getId())
-                                .put("getIdStudent",requestStudent.getStudent().getId())
-                                .put("getName",person.getName())
-                                .put("getLastName",person.getLastName())
-                                .put("getGender",person.getGender())
-                                .put("getUser",person.getUser());
-                    jsonObject1.put(String.valueOf(n),jsonObject2);
+                    jsonObject2.put("getMassage", requestStudent.getMassage())
+                            .put("getAcceptly", requestStudent.getAccetply().toString())
+                            .put("getRequestId", requestStudent.getId())
+                            .put("getIdStudent", requestStudent.getStudent().getId())
+                            .put("getName", person.getName())
+                            .put("getLastName", person.getLastName())
+                            .put("getGender", person.getGender())
+                            .put("getUser", person.getUser());
+                    jsonObject1.put(String.valueOf(n), jsonObject2);
                     jsonObject2.clear();
                     n++;
+                }
             }
 
         }
@@ -214,7 +215,7 @@ public class DataSave implements Serializable {
     }
 
     public Person findPersonOfThisStudent(int id) {
-        Student student = null;
+        Student student = new Student();
         for (Person i : persons){
             for(RoleOfWorkShape s : i.getRoleOfWorkShapes()){
                 if(s instanceof Student){

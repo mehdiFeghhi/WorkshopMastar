@@ -1021,36 +1021,46 @@ public class VertxHttpServer extends AbstractVerticle {
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         router.route().handler(BodyHandler.create());
-        router.route(HttpMethod.POST,"/InstallmentPay").handler(rc ->{
+        router.route(HttpMethod.POST,"/InstallmentPay").handler(rc -> {
             JsonObject jsonObject = rc.getBodyAsJson();
             HttpServerResponse response = rc.response();
-            String token =  jsonObject.getString("token");
+            String token = jsonObject.getString("token");
             RequestStudent requestStudent;
-            if((requestStudent = getOneRequestStudent(jsonObject.getInteger("RequestStudentId")))== null)
+            if ((requestStudent = getOneRequestStudent(jsonObject.getInteger("RequestStudentId"))) == null){
                 response.end("{\"status\":0}");
+                return;
+            }
             int howMuchPay  = jsonObject.getInteger("HowMuchPay");
 
             if(mapLogin.containsKey(token))
                 newPerson = mapLogin.get(token);
             else {
                 response.end("{\"status\":0}");
+                return;
             }
             Managment managment = new Managment();
             if(!newPerson.is_this_role_in_our_person(managment)){
                 response.end("{\"status\":0}");
+                return;
             }
             managment = (Managment) newPerson.findOurType("3");
-            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop"))) {
                 response.end("{\"status\":3}");//permissionDenaid
+                return;
+            }
             if (requestStudent.getPay() instanceof Installment){
                 Installment installment = (Installment) requestStudent.getPay();
-                if(!installment.decreseInstallment(howMuchPay))
+                if(!installment.decreseInstallment(howMuchPay)) {
                     response.end("{\"status\":4}");//we can haven't this mount
+                    return;
+                }
                 updateThisRequestInDataBase(requestStudent);
                 response.end("{\"status\":1}");
+                return;
             }
             else {
                 response.end("{\"status\":30}");//this person have not installmentPay
+                return;
             }
         });
 
@@ -1069,31 +1079,41 @@ public class VertxHttpServer extends AbstractVerticle {
             HttpServerResponse response = rc.response();
             String token =  jsonObject.getString("token");
             RequestStudent requestStudent;
-            if((requestStudent = getOneRequestStudent(jsonObject.getInteger("RequestStudentId")))== null)
+            if((requestStudent = getOneRequestStudent(jsonObject.getInteger("RequestStudentId")))== null) {
                 response.end("{\"status\":0}");
+                return;
+            }
             if(mapLogin.containsKey(token))
                 newPerson = mapLogin.get(token);
             else {
                 response.end("{\"status\":0}");
+                return;
             }
             Managment managment = new Managment();
             if(!newPerson.is_this_role_in_our_person(managment)){
                 response.end("{\"status\":0}");
+                return;
             }
             managment = (Managment) newPerson.findOurType("3");
-            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop"))) {
                 response.end("{\"status\":3}");//permissionDenaid
+                return;
+            }
             if (requestStudent.getPay() instanceof Installment){
                 Installment installment = (Installment) requestStudent.getPay();
-                if(!installment.decreseInstallment(installment.getHow_much_installment_must_pay()))
+                if(!installment.decreseInstallment(installment.getHow_much_installment_must_pay())) {
                     response.end("{\"status\":4}");//we can haven't this mount
+                    return;
+                }
                 updateThisRequestInDataBase(requestStudent);
                 response.end("{\"status\":1}");
+                return;
             }
             else {
                 requestStudent.getPay().ChangePayComplite();
                 updateThisRequestInDataBase(requestStudent);
                 response.end("{\"status\":1}");
+                return;
             }
         });
 
