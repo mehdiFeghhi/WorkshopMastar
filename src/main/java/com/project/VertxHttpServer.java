@@ -955,7 +955,7 @@ public class VertxHttpServer extends AbstractVerticle {
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
                 response.end("{\"status\":3}");//permissionDenaid
 
-            JsonObject allRequestStudnet = seeAllRequestStudent(jsonObject.getInteger("WorkShopId"));
+            JsonObject allRequestStudnet = seeAllRequestStudent(jsonObject.getInteger("IdWorkShop"));
             if (allRequestStudnet == null)
                 response.end("{\"status\":3}");//we haven't any Student Request
             response.end("{\"status\":1\"information\":"+allRequestStudnet+"}");
