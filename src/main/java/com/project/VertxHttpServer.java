@@ -712,25 +712,20 @@ public class VertxHttpServer extends AbstractVerticle {
             HttpServerResponse response = rc.response();                                                                                                                    //
             response.putHeader("content-type", "application/json");                                                                                                  //
             ObjectMapper objectMapper = new ObjectMapper();
-            Person person2 = new Person();                                                                                                                                                                //
-            if (json.containsKey("token") && mapValidtionCode.containsKey(json.getString("token"))) {                                                                             //
-                if ((person2 = findInDataBase2(mapValidtionCode.get(json.getString("token")).user,json.getString("email")))!= null) {      //
+                                                                                                                                                                            //
+            if (json.containsKey("token") && mapLogin.containsKey(json.getString("token"))) {                                                                          //
+                    Person person2 = findPersonByUser(mapLogin.get("token").getUser());
                     person2.setPass(json.getString("newPassword"));
                     dataSave.saveInFile();//
                     response.end("{\"status\":1}");//change password succssful
-                    return;//
+                    return;                                                                                                                                                //
                 }
-                else {                                                                                                                                                     //
+                else {                                                                                                                                                      //
                     response.end("{\"status\":0}");
                     return;
-                }//
-            }                                                                                                                                                               //
-            else {                                                                                                                                                           //
-                response.end("{\"status\":0}");
-                return;
-            }//
-        });                                                                                                                                                                  //
-        //
+                }                                                                                                                                                           //                                                                                                                                                         //
+        });                                                                                                                                                                 //
+                                                                                                                                                                            //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
