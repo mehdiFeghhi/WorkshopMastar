@@ -604,8 +604,9 @@ public class DataSave implements Serializable {
         ArrayList<RequestStudent> Student_requests = new ArrayList<RequestStudent>();
         RequestStudent  student_request = new RequestStudent();
         for (Requests i : requests){
-            student_request = (RequestStudent) i;
+
             if ((i instanceof  RequestStudent) && student_request.getHoldWorkShop().getId() == idHoldWorkShop){
+                student_request = (RequestStudent) i;
                 Student_requests.add(student_request);
             }
 
