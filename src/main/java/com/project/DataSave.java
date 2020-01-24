@@ -350,6 +350,8 @@ public class DataSave implements Serializable {
                     i.setPhoneNumber(person.getPhoneNumber());
                 if (person.getDate_birthday() != null)
                     i.setDate_birthday(person.getDate_birthday());
+                if(person.getTozihat() != null)
+                    i.setTozihat(person.getTozihat());
             }
         }
     }
