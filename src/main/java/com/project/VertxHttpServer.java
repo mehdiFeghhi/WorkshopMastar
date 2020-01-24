@@ -1055,6 +1055,7 @@ public class VertxHttpServer extends AbstractVerticle {
                     return;
                 }
                 updateThisRequestInDataBase(requestStudent);
+                dataSave.saveInFile();
                 response.end("{\"status\":1}");
                 return;
             }
@@ -1106,6 +1107,7 @@ public class VertxHttpServer extends AbstractVerticle {
                     return;
                 }
                 updateThisRequestInDataBase(requestStudent);
+                dataSave.saveInFile();
                 response.end("{\"status\":1}");
                 return;
             }
@@ -1180,10 +1182,12 @@ public class VertxHttpServer extends AbstractVerticle {
                 newPerson = mapLogin.get(token);
             else {
                 response.end("{\"status\":0}");
+                return;
             }
             Managment managment = new Managment();
             if(!newPerson.is_this_role_in_our_person(managment)){
                 response.end("{\"status\":0}");
+                return;
             }
             managment = (Managment) newPerson.findOurType("3");
             if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop"))) {
@@ -1221,8 +1225,10 @@ public class VertxHttpServer extends AbstractVerticle {
                 return;
             }
             managment = (Managment) newPerson.findOurType("3");
-            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop"))) {
                 response.end("{\"status\":3}");//permissionDenaid
+                return;
+            }
             int numberGroup = jsonObject.getInteger("GroupNumber");
             String groupName = jsonObject.getString("GroupName");
             int numberIdWorkShop = jsonObject.getInteger("IdGroup");
@@ -1266,32 +1272,43 @@ public class VertxHttpServer extends AbstractVerticle {
             String token =  jsonObject.getString("token");
             if(mapLogin.containsKey(token))
                 newPerson = mapLogin.get(token);
-            else
+            else {
                 response.end("{\"status\":0}");
+                return;
+            }
             Managment managment = new Managment();
             if(!newPerson.is_this_role_in_our_person(managment)){
                 response.end("{\"status\":0}");
+                return;
             }
             managment = (Managment) newPerson.findOurType("3");
-            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop")))
+            if (!isthisMangmentOfTHisWorkShop(managment.id,jsonObject.getInteger("IdWorkShop"))) {
                 response.end("{\"status\":3}");//permissionDenaid
+                return;
+            }
             RequestStudent requestStudent;
-            if((requestStudent = getOneRequestStudent(jsonObject.getInteger("RequestStudentId")))== null)
+            if((requestStudent = getOneRequestStudent(jsonObject.getInteger("RequestStudentId")))== null) {
                 response.end("{\"status\":0}");
+                return;
+            }
             if(requestStudent.getPay().isPayComplite()) {
                 int numberGroup = jsonObject.getInteger("GroupNumber");
                 String groupName = jsonObject.getString("GroupName");
                 int numberIdWorkShop = jsonObject.getInteger("IdGroup");
                 GroupG groupG;
-                if((groupG = getOnGroupFromDataBase(numberGroup, groupName, numberIdWorkShop))== null)
+                if((groupG = getOnGroupFromDataBase(numberGroup, groupName, numberIdWorkShop))== null) {
                     response.end("{\"status\":0}");
+                    return;
+                }
                 if (requestStudent.getAccetply() != Accetply.Accept) {
                     requestStudent.setAccetply(Accetply.Accept);
                     GroupStatus groupStatus = new GroupStatus(groupG, requestStudent.getStudent());
                     AddNewGroupStatusToDatabase(groupStatus);
                     response.end("{\"status\":1}");
+                    return;
                 }
                 response.end("{\"status\":0}");
+                return;
             }
             else
                 response.end("{\"status\":3}");//this person don't pay it's payment Complite
