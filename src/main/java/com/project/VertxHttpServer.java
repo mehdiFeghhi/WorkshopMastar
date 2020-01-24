@@ -217,20 +217,39 @@ public class VertxHttpServer extends AbstractVerticle {
             response.putHeader("content-type","application/json");                                             //
             ObjectMapper objectMapper = new ObjectMapper();                                                           //
             if (mapLogin.containsKey(json.getString("token"))){                                                  //
-                newPerson = null;                                                                                     //
+                Person newPersonX = new Person();
+                //
                 try {                                                                                                 //
-                    newPerson = objectMapper.readValue(json.getJsonObject("person").toString(), Person.class);        //
-                    if (this.searchInDataBase(newPerson.getUser())) {                                                 //
+                    if (this.searchInDataBase(newPerson.getUser())) {
+                        newPersonX.setName(json.getString("user"));
+                        newPersonX.setName(json.getString("name"));//
+                        newPersonX.setEmailAddress(json.getString("email"));
+                        newPersonX.setLastName(json.getString("lastName"));
+                        String gender = json.getString("Gender");
+                        if (gender.equals("male")){
+                            newPersonX.setGender(Gender.male);
+                        }
+                        else if (gender.equals("female")){
+                            newPersonX.setGender(Gender.female);
+                        }
+                        newPersonX.setDate_birthday(json.getString("birthDay"));
+                        newPersonX.setTozihat(json.getString("descry"));
                         updateInPersonINdataBase(newPerson);                                                          //
-                        response.end("{\"status\":1}");                                                            //
-                    } else                                                                                            //
-                        response.end("{\"status\":0}");                                                            //
-                } catch (IOException e) {                                                                             //
+                        response.end("{\"status\":1}");
+                        return;//
+                    } else {                                                                                            //
+                        response.end("{\"status\":0}");
+                        return;
+                    }//
+                } catch (Exception e) {                                                                             //
                     e.printStackTrace();                                                                              //
-                    response.end("{\"status\":0}");                                                                //
+                    response.end("{\"status\":0}");
+                    return;//
                 }                                                                                                     //
-            }else                                                                                                     //
-                response.end("{\"status\":0}");                                                                    //
+            }else {                                                                                                    //
+                response.end("{\"status\":0}");//
+                return;
+            }
         });                                                                                                           //
      ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
