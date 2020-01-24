@@ -234,7 +234,7 @@ public class VertxHttpServer extends AbstractVerticle {
 //                            newPersonX.setGender(Gender.female);
 //                        }
 //                        newPersonX.setDate_birthday(json.getString("birthDay"));
-                        if (json.getString("pass") != null) {
+                        if (json.getString("pass") != "") {
                             newPersonX.setPass(json.getString("pass"));
                         }
                         else{
