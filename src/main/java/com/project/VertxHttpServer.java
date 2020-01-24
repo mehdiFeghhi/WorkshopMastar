@@ -1114,6 +1114,7 @@ public class VertxHttpServer extends AbstractVerticle {
             else {
                 requestStudent.getPay().ChangePayComplite();
                 updateThisRequestInDataBase(requestStudent);
+                dataSave.saveInFile();
                 response.end("{\"status\":1}");
                 return;
             }
