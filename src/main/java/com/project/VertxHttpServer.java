@@ -963,7 +963,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 response.end("{\"status\":3}");//we haven't any Student Request
                 return;
             }
-            response.end("{\"status\":1\"information\":"+allRequestStudnet+"}");
+            response.end("{\"status\":1,\"information\":"+allRequestStudnet+"}");
             return;
         });
 
@@ -1014,7 +1014,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 allWorkShopOfThisManagment.put(String.valueOf(dd),json2);
                 dd++;
             }
-            response.end("{\"status\":1\"information\":"+allWorkShopOfThisManagment.toString()+"}");
+            response.end("{\"status\":1,\"information\":"+allWorkShopOfThisManagment.toString()+"}");
         });
 
 
@@ -1050,7 +1050,7 @@ public class VertxHttpServer extends AbstractVerticle {
                 response.end("{\"status\":1}");
             }
             else {
-                response.end("{\"status\":03}");//this person have not installmentPay
+                response.end("{\"status\":30}");//this person have not installmentPay
             }
         });
 
