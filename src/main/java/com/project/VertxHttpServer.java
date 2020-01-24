@@ -222,19 +222,27 @@ public class VertxHttpServer extends AbstractVerticle {
                 try {                                                                                                 //
                     if (this.searchInDataBase(newPerson.getUser())) {
                         newPersonX.setName(json.getString("user"));
-                        newPersonX.setName(json.getString("name"));//
-                        newPersonX.setEmailAddress(json.getString("email"));
-                        newPersonX.setLastName(json.getString("lastName"));
-                        String gender = json.getString("Gender");
-                        if (gender.equals("male")){
-                            newPersonX.setGender(Gender.male);
+                        newPersonX.setPhoneNumber(json.getString("phoneNumber"));
+//                        newPersonX.setName(json.getString("name"));//
+//                        newPersonX.setEmailAddress(json.getString("email"));
+//                        newPersonX.setLastName(json.getString("lastName"));
+//                        String gender = json.getString("Gender");
+//                        if (gender.equals("male")){
+//                            newPersonX.setGender(Gender.male);
+//                        }
+//                        else if (gender.equals("female")){
+//                            newPersonX.setGender(Gender.female);
+//                        }
+//                        newPersonX.setDate_birthday(json.getString("birthDay"));
+                        if (json.getString("pass") != null) {
+                            newPersonX.setPass(json.getString("pass"));
                         }
-                        else if (gender.equals("female")){
-                            newPersonX.setGender(Gender.female);
+                        else{
+                            newPersonX.setPass(null);
                         }
-                        newPersonX.setDate_birthday(json.getString("birthDay"));
                         newPersonX.setTozihat(json.getString("descry"));
-                        updateInPersonINdataBase(newPersonX);                                                          //
+                        updateInPersonINdataBase(newPersonX);
+                        dataSave.saveInFile();
                         response.end("{\"status\":1}");
                         return;//
                     } else {                                                                                            //
