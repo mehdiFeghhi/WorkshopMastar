@@ -234,7 +234,7 @@ public class VertxHttpServer extends AbstractVerticle {
                         }
                         newPersonX.setDate_birthday(json.getString("birthDay"));
                         newPersonX.setTozihat(json.getString("descry"));
-                        updateInPersonINdataBase(newPerson);                                                          //
+                        updateInPersonINdataBase(newPersonX);                                                          //
                         response.end("{\"status\":1}");
                         return;//
                     } else {                                                                                            //
