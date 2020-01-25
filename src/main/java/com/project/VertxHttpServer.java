@@ -714,9 +714,9 @@ public class VertxHttpServer extends AbstractVerticle {
             ObjectMapper objectMapper = new ObjectMapper();
                                                                                                                                                                             //
             if (json.containsKey("token") && mapLogin.containsKey(json.getString("token"))) {                                                                          //
-                    Person person2 = findPersonByUser(mapLogin.get("token").getUser());
+                    Person person2 = findPersonByUser(mapLogin.get(json.getString("token")).getUser());
                     person2.setPass(json.getString("newPassword"));
-                    dataSave.saveInFile();//
+                    dataSave.saveInFile();                                                                                                                                 //
                     response.end("{\"status\":1}");//change password succssful
                     return;                                                                                                                                                //
                 }
