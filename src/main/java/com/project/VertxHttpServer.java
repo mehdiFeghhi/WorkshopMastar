@@ -17,6 +17,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -50,31 +51,31 @@ public class VertxHttpServer extends AbstractVerticle {
     }
     @Override
     public void start() throws Exception {
-//        SaveFIle.saveHashMap("mapLogin123.ser",null);
-//        SaveFIle.saveHashMap("mapValiditionCode.ser",null);
-//        SaveFIle.saveArrayListInFile("workshopsArrayList.ser",null);
-//        SaveFIle.saveArrayListInFile("holdWorkShopsArrayList.ser",null);
-//        SaveFIle.saveArrayListInFile("groupsArrayList.ser",null);
-//        SaveFIle.saveArrayListInFile("requestsArrayList.ser",null);
-//        SaveFIle.saveArrayListInFile("requirmentsArrayList.ser",null);
-//        SaveFIle.saveArrayListInFile("personsArrayList.ser",null);
-//        SaveFIle.saveArrayListInFile("groupStatus.ser",null);
-//        String string = "January 2, 2022";
-//        DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-//        String string2 = "February 12, 2022";
-//        DateFormat format1 = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-//        LocalTime time = LocalTime.of(10,45,00);
-//        LocalTime time2 = LocalTime.of(12,30,00);
-//        Person mehdi = new Person("mehdi","feghhi","1378-12-16","mf1378mf","1850427933","1850427933","0937837990","mf1378mf@yahoo.com");
-//        Addmin addmin = new Addmin(AdminType.General);
-//        mehdi.addToArrayListOfRole(addmin);
-//        Workshop workshopOfs = new Workshop("Math","ArrahehMishaved");
-//        workshopOfs.setId(0);
-//        AddNewWorkShopTOdataBase(workshopOfs);
-//
-//        AddPersonTodataBase(mehdi);
-//        AddPersonTodataBase(new Person("Ramin","Roshan","1378-10-27","ramin153","12345678","2560443090","09397021876","raminrowshan153@gmail.com"));
-//        addNewHoldWorkShop(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,workshopOfs,true, (long) 10000000));
+        SaveFIle.saveHashMap("mapLogin123.ser",null);
+        SaveFIle.saveHashMap("mapValiditionCode.ser",null);
+        SaveFIle.saveArrayListInFile("workshopsArrayList.ser",null);
+        SaveFIle.saveArrayListInFile("holdWorkShopsArrayList.ser",null);
+        SaveFIle.saveArrayListInFile("groupsArrayList.ser",null);
+        SaveFIle.saveArrayListInFile("requestsArrayList.ser",null);
+        SaveFIle.saveArrayListInFile("requirmentsArrayList.ser",null);
+        SaveFIle.saveArrayListInFile("personsArrayList.ser",null);
+        SaveFIle.saveArrayListInFile("groupStatus.ser",null);
+        String string = "January 2, 2022";
+        DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+        String string2 = "February 12, 2022";
+        DateFormat format1 = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+        LocalTime time = LocalTime.of(10,45,00);
+        LocalTime time2 = LocalTime.of(12,30,00);
+        Person mehdi = new Person("mehdi","feghhi","1378-12-16","mf1378mf",MyHash.encryptThisString("1850427933"),"1850427933","0937837990","mf1378mf@yahoo.com");
+        Addmin addmin = new Addmin(AdminType.General);
+        mehdi.addToArrayListOfRole(addmin);
+        Workshop workshopOfs = new Workshop("Math","ArrahehMishaved");
+        workshopOfs.setId(0);
+        AddNewWorkShopTOdataBase(workshopOfs);
+
+        AddPersonTodataBase(mehdi);
+        AddPersonTodataBase(new Person("Ramin","Roshan","1378-10-27","ramin153",MyHash.encryptThisString("12345678"),"2560443090","09397021876","raminrowshan153@gmail.com"));
+        addNewHoldWorkShop(new HoldWorkShop(time,time2,format.parse(string),format1.parse(string),"python",0,null,workshopOfs,true, (long) 10000000));
 //        dataSave.saveInFile();
         Vertx vertx = Vertx.vertx() ;
 
@@ -692,10 +693,12 @@ public class VertxHttpServer extends AbstractVerticle {
                     mapLogin.put(token, new Person(user,email));                                                     //
                     SaveFIle.saveHashMap("maplagin123.ser", (HashMap) this.mapLogin);                       //
                     SaveFIle.saveHashMap("mapValiditionCode.ser", (HashMap) this.mapValidtionCode);         //
-                    response.end("{\"status\":1 ,\"token\":" + token + "}");                                     //
+                    response.end("{\"status\":1 ,\"token\":" + token + "}");
+                    return;//
                 }                                                                                                   //
             }                                                                                                       //
-            response.end("{\"status\":0}");                                                                      //
+            response.end("{\"status\":0}");
+            return;                                                                                                 //
         });                                                                                                         //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
